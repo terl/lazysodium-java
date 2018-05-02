@@ -14,7 +14,7 @@ plugins {
 }
 
 group 'com.goterl.lazycode'
-version = '0.0.1'
+version = '0.1.0'
 
 mainClassName = "com.goterl.lazycode.lazysodium.LazySodium"
 

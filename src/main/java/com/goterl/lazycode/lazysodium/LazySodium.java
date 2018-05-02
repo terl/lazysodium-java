@@ -201,10 +201,22 @@ public class LazySodium implements
     }
 
     @Override
-    public byte[] cryptoPwHash(byte[] password, byte[] salt, long opsLimit, int memLimit, int alg) {
-        byte[] bs = new byte[];
+    public Byte[] cryptoPwHash(byte[] password, byte[] salt, long opsLimit, int memLimit, int alg) {
+        if (wrongLen(salt.length, PwHash.PWHASH_SALTBYTES)) {
+            return null;
+        }
+        if (!PwHash.Checker.passwordIsWrongLen(password.length)) {
+            return null;
+        }
+        if (!PwHash.Checker.opsLimitIsWrongLen(opsLimit)) {
+            return null;
+        }
+        if (!PwHash.Checker.memLimitIsWrongLen(memLimit)) {
+            return null;
+        }
+        byte[] bs = new byte[0];
         cryptoPwHash(bs, bs.length, password, password.length, salt, opsLimit, memLimit, alg);
-        return
+        return new Byte[2];
     }
 
 
@@ -238,7 +250,15 @@ public class LazySodium implements
         return byteLength != shouldBe;
     }
 
+    @Override
+    public boolean wrongLen(int byteLength, long shouldBe) {
+        return byteLength != shouldBe;
+    }
 
+    @Override
+    public boolean isBetween(int num, long min, long max) {
+        return min <= num && max >= num;
+    }
 
 
 

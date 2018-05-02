@@ -15,4 +15,6 @@ public interface Base {
     String str(byte[] bs);
     boolean wrongLen(byte[] bs, int shouldBeLen);
     boolean wrongLen(int byteLength, int shouldBeLen);
+    boolean wrongLen(int byteLength, long shouldBeLen);
+    boolean isBetween(int num, long min, long max);
 }
