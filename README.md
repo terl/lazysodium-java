@@ -21,13 +21,15 @@ Lazysodium for Java requires:
 * Gradle 4.7 or higher (if compiling and building).
 * No effort whatsoever.
 
-## Installation
+## Get started
 
-Include Lazysodium in your Java projects using [Maven/Gradle/SBT](#):
+If you're using Gradle, this is how to get started with Lazysodium in your Java projects:
 
 ```sh
-$ implementation "com.goterl.lazycode:lazysodium-java:+"
+implementation "com.goterl.lazycode:lazysodium-java:+"
 ```
+
+
 
 
 ## Documentation and Usage
@@ -35,7 +37,7 @@ For the documentation we invite you to head over to the [wiki](https://github.co
 
 
 
-## Contributions
+## Contributing
 All contributions are appreciated and very welcome. There are many forms that contributions could take.
 
 **It could be a simple suggestion.** For example, "*It would be great if Lazysodium implemented feature X.*" If you are suggesting a feature, please make sure it's within the scope of what Lazysodium actually does - which is to wrap Java functions around the native C functions provided by Libsodium.
