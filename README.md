@@ -27,6 +27,12 @@ Include Lazysodium in your Java projects using [Maven/Gradle/SBT](#):
 $ implementation "com.goterl.lazycode:lazysodium-java:+"
 ```
 
+
+### Documentation and Usage
+For the documentation we invite you to head over to the [wiki](https://github.com/terl/lazysodium-java/wiki) for more information on running and building Lazysodium.
+
+
+
 ### Contributions
 All contributions are appreciated and very welcome. There are many forms that contributions could take.
 
