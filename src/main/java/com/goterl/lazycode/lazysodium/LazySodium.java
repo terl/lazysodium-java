@@ -169,7 +169,15 @@ public class LazySodium implements
                                 long opsLimit,
                                 int memLimit,
                                 int alg) {
-        return false;
+        int res = nacl.crypto_pwhash(outputHash,
+                outputHashLen,
+                password,
+                passwordLen,
+                salt,
+                opsLimit,
+                memLimit,
+                alg);
+        return boolify(res);
     }
 
     @Override
@@ -178,19 +186,26 @@ public class LazySodium implements
                                    long passwordLen,
                                    long opsLimit,
                                    int memLimit) {
-        return false;
+        int res = nacl.crypto_pwhash_str(outputStr, password, passwordLen, opsLimit, memLimit);
+        return boolify(res);
     }
 
     @Override
     public boolean cryptoPwHashStrVerify(byte[] hash, byte[] password, long passwordLen) {
-        return false;
+        return boolify(nacl.crypto_pwhash_str_verify(hash, password, passwordLen));
     }
 
     @Override
     public boolean cryptoPwHashStrNeedsRehash(byte[] hash, long opsLimit, int memLimit) {
-        return false;
+        return boolify(nacl.crypto_pwhash_str_needs_rehash(hash, opsLimit, memLimit));
     }
 
+    @Override
+    public byte[] cryptoPwHash(byte[] password, byte[] salt, long opsLimit, int memLimit, int alg) {
+        byte[] bs = new byte[];
+        cryptoPwHash(bs, bs.length, password, password.length, salt, opsLimit, memLimit, alg);
+        return
+    }
 
 
 
@@ -237,7 +252,5 @@ public class LazySodium implements
         Sodium sodium = new Sodium();
         LazySodium lazySodium = new LazySodium(sodium);
     }
-
-
 
 }

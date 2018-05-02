@@ -12,13 +12,13 @@ import java.nio.charset.Charset;
 
 public interface KeyDerivation {
 
-    public static final int
-            KDF_MASTER_KEY_BYTES = 32,
-            KDF_CONTEXT_BYTES = 8,
-            KDF_BLAKE2B_BYTES_MIN = 16,
-            KDF_BLAKE2B_BYTES_MAX = 64,
-            KDF_BYTES_MIN = KDF_BLAKE2B_BYTES_MIN,
-            KDF_BYTES_MAX = KDF_BLAKE2B_BYTES_MAX;
+    int
+        KDF_MASTER_KEY_BYTES = 32,
+        KDF_CONTEXT_BYTES = 8,
+        KDF_BLAKE2B_BYTES_MIN = 16,
+        KDF_BLAKE2B_BYTES_MAX = 64,
+        KDF_BYTES_MIN = KDF_BLAKE2B_BYTES_MIN,
+        KDF_BYTES_MAX = KDF_BLAKE2B_BYTES_MAX;
 
     interface Native {
         void cryptoKdfKeygen(byte[] masterKey);
