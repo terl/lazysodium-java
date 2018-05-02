@@ -39,6 +39,7 @@ public class Sodium {
     //// PADDING
     //// -------------------------------------------|
     native int sodium_pad(int paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize, int maxBufLen);
+
     native int sodium_unpad(int paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize);
 
 
@@ -46,8 +47,11 @@ public class Sodium {
     //// RANDOM
     //// -------------------------------------------|
     native byte randombytes_random();
+
     native byte randombytes_uniform(byte upperBound);
+
     native void randombytes_buf(byte[] buffer, int size);
+
     native void randombytes_buf_deterministic(byte[] buffer, int size, byte[] seed);
 
 
@@ -64,15 +68,15 @@ public class Sodium {
                                  int memLimit,
                                  int alg);
 
-
     native int crypto_pwhash_str(byte[] outputStr,
                                      byte[] password,
                                      long passwordLen,
                                      long opsLimit,
                                      int memLimit);
 
-
     native int crypto_pwhash_str_verify(byte[] hash, byte[] password, long passwordLen);
+
+    native int crypto_pwhash_str_needs_rehash(byte[] hash, long opsLimit, int memLimit);
 
 
 
@@ -80,6 +84,7 @@ public class Sodium {
     //// KEY DERIVATION FUNCTIONS
     //// -------------------------------------------|
     native void crypto_kdf_keygen(byte[] masterKey);
+
     native int crypto_kdf_derive_from_key(byte[] subkey,
                                           int subkeyLen,
                                           long subkeyId,

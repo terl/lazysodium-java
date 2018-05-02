@@ -19,6 +19,7 @@ public class LazySodium implements
         Random,
         Padding.Native, Padding.Lazy,
         Helpers.Native, Helpers.Lazy,
+        PwHash.Native, PwHash.Lazy,
         KeyDerivation.Native, KeyDerivation.Lazy {
 
     private final Sodium nacl;
@@ -154,6 +155,45 @@ public class LazySodium implements
     }
 
 
+
+    //// -------------------------------------------|
+    //// PASSWORD HASHING
+    //// -------------------------------------------|
+
+    @Override
+    public boolean cryptoPwHash(byte[] outputHash,
+                                long outputHashLen,
+                                byte[] password,
+                                long passwordLen,
+                                byte[] salt,
+                                long opsLimit,
+                                int memLimit,
+                                int alg) {
+        return false;
+    }
+
+    @Override
+    public boolean cryptoPwHashStr(byte[] outputStr,
+                                   byte[] password,
+                                   long passwordLen,
+                                   long opsLimit,
+                                   int memLimit) {
+        return false;
+    }
+
+    @Override
+    public boolean cryptoPwHashStrVerify(byte[] hash, byte[] password, long passwordLen) {
+        return false;
+    }
+
+    @Override
+    public boolean cryptoPwHashStrNeedsRehash(byte[] hash, long opsLimit, int memLimit) {
+        return false;
+    }
+
+
+
+
     //// -------------------------------------------|
     //// CONVENIENCE
     //// -------------------------------------------|
@@ -197,6 +237,7 @@ public class LazySodium implements
         Sodium sodium = new Sodium();
         LazySodium lazySodium = new LazySodium(sodium);
     }
+
 
 
 }

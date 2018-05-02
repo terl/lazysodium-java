@@ -12,11 +12,37 @@ package com.goterl.lazycode.lazysodium.interfaces;
 public interface PwHash {
 
     interface Native {
-        boolean sodiumPad(int paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize, int maxBufLen);
-        boolean sodiumUnpad(int paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize);
+        boolean cryptoPwHash(byte[] outputHash,
+                             long outputHashLen,
+                             byte[] password,
+                             long passwordLen,
+                             byte[] salt,
+                             long opsLimit,
+                             int memLimit,
+                             int alg);
+
+        boolean cryptoPwHashStr(byte[] outputStr,
+                              byte[] password,
+                              long passwordLen,
+                              long opsLimit,
+                              int memLimit);
+
+        boolean cryptoPwHashStrVerify(byte[] hash, byte[] password, long passwordLen);
+
+        boolean cryptoPwHashStrNeedsRehash(byte[] hash, long opsLimit, int memLimit);
+
     }
 
     interface Lazy {
+
+        boolean cryptoPwHash(byte[] outputHash,
+                             long outputHashLen,
+                             byte[] password,
+                             long passwordLen,
+                             byte[] salt,
+                             long opsLimit,
+                             int memLimit,
+                             int alg);
 
     }
 
