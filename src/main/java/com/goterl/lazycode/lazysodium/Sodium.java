@@ -51,6 +51,31 @@ public class Sodium {
     native void randombytes_buf_deterministic(byte[] buffer, int size, byte[] seed);
 
 
+
+    //// -------------------------------------------|
+    //// PASSWORD HASHING
+    //// -------------------------------------------|
+    native int crypto_pwhash(byte[] outputHash,
+                                 long outputHashLen,
+                                 byte[] password,
+                                 long passwordLen,
+                                 byte[] salt,
+                                 long opsLimit,
+                                 int memLimit,
+                                 int alg);
+
+
+    native int crypto_pwhash_str(byte[] outputStr,
+                                     byte[] password,
+                                     long passwordLen,
+                                     long opsLimit,
+                                     int memLimit);
+
+
+    native int crypto_pwhash_str_verify(byte[] hash, byte[] password, long passwordLen);
+
+
+
     //// -------------------------------------------|
     //// KEY DERIVATION FUNCTIONS
     //// -------------------------------------------|
