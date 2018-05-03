@@ -9,16 +9,24 @@
 package com.goterl.lazycode.lazysodium.interfaces;
 
 
+import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
+import com.goterl.lazycode.lazysodium.utils.BaseChecker;
 import com.goterl.lazycode.lazysodium.utils.Constants;
 
+import java.util.Map;
+
 import static com.goterl.lazycode.lazysodium.utils.Constants.SIZE_MAX;
+import static java.util.Arrays.stream;
+import static java.util.stream.Collectors.toMap;
 
 public interface PwHash {
 
+
     int
-            PWHASH_ALG_DEFAULT = 0,
             PWHASH_ALG_ARGON2I13 = 1,
-            PWHASH_ALG_ARGON2ID13 = 2;
+            PWHASH_ALG_ARGON2ID13 = 2,
+            PWHASH_ALG_DEFAULT = PWHASH_ALG_ARGON2ID13;
+
 
     long
             PWHASH_ARGON2ID_PASSWD_MIN = 0L,
@@ -31,10 +39,20 @@ public interface PwHash {
 
             PWHASH_ARGON2ID_OPSLIMIT_MIN = 1L,
             PWHASH_ARGON2ID_OPSLIMIT_MAX = Constants.UNISGNED_INT,
+            PWHASH_ARGON2ID_OPSLIMIT_INTERACTIVE = 2L,
+            PWHASH_ARGON2ID_OPSLIMIT_MODERATE = 3L,
+            PWHASH_ARGON2ID_OPSLIMIT_SENSITIVE = 4L,
 
             PWHASH_ARGON2ID_MEMLIMIT_MIN = 8192L,
             PWHASH_ARGON2ID_MEMLIMIT_MAX = ((SIZE_MAX >= 4398046510080L) ? 4398046510080L : (SIZE_MAX >= 2147483648L) ? 2147483648L : 32768L),
+            PWHASH_ARGON2ID_MEMLIMIT_INTERATIVE = 67108864L,
+            PWHASH_ARGON2ID_MEMLIMIT_MODERATE = 268435456L,
+            PWHASH_ARGON2ID_MEMLIMIT_SENSITIVE = 1073741824L,
 
+
+
+            // Should use these values rather than the above
+            // as the above values are likely to change
             PWHASH_PASSWD_MIN = PWHASH_ARGON2ID_PASSWD_MIN,
             PWHASH_PASSWD_MAX = PWHASH_ARGON2ID_PASSWD_MAX,
 
@@ -50,15 +68,37 @@ public interface PwHash {
             PWHASH_MEMLIMIT_MAX = PWHASH_ARGON2ID_MEMLIMIT_MAX;
 
 
-    class Checker {
-        public static boolean passwordIsWrongLen(long len) {
-            return PwHash.PWHASH_BYTES_MIN <= len && PwHash.PWHASH_BYTES_MAX >= len;
+    class Checker extends BaseChecker {
+        public static boolean saltIsCorrect(long saltLen) {
+            return correctLen(saltLen, PwHash.PWHASH_SALTBYTES);
         }
-        public static boolean opsLimitIsWrongLen(long ops) {
-            return PwHash.PWHASH_OPSLIMIT_MIN <= ops && PwHash.PWHASH_OPSLIMIT_MAX >= ops;
+        public static boolean passwordIsCorrect(long len) {
+            return isBetween(len, PwHash.PWHASH_BYTES_MIN, PwHash.PWHASH_BYTES_MAX);
         }
-        public static boolean memLimitIsWrongLen(long len) {
-            return PwHash.PWHASH_MEMLIMIT_MAX <= len && PwHash.PWHASH_MEMLIMIT_MAX >= len;
+        public static boolean opsLimitIsCorrect(long ops) {
+            return isBetween(ops, PwHash.PWHASH_OPSLIMIT_MIN, PwHash.PWHASH_OPSLIMIT_MAX);
+        }
+        public static boolean memLimitIsCorrect(long len) {
+            return isBetween(len, PwHash.PWHASH_MEMLIMIT_MIN, PwHash.PWHASH_MEMLIMIT_MAX);
+        }
+
+        public static boolean checkAll(long passwordBytesLen,
+                                       long saltBytesLen,
+                                       long opsLimit,
+                                       long memLimit)
+                throws SodiumException {
+            if (!PwHash.Checker.saltIsCorrect(saltBytesLen)) {
+                throw new SodiumException("The salt provided is not the correct length.");
+            }
+            if (!PwHash.Checker.passwordIsCorrect(passwordBytesLen)) {
+                throw new SodiumException("The password provided is not the correct length.");
+            }
+            if (!PwHash.Checker.opsLimitIsCorrect(opsLimit)) {
+                throw new SodiumException("The opsLimit provided is not the correct value.");
+            }
+            if (!PwHash.Checker.memLimitIsCorrect(memLimit)) {
+                throw new SodiumException("The memLimit provided is not the correct value.");
+            }
         }
     }
 
@@ -90,8 +130,32 @@ public interface PwHash {
                             byte[] salt,
                              long opsLimit,
                              int memLimit,
-                             int alg);
+                             Alg alg) throws SodiumException;
 
+    }
+
+
+    enum Alg {
+        PWHASH_ALG_ARGON2I13(1),
+        PWHASH_ALG_ARGON2ID13(2),
+        PWHASH_ALG_DEFAULT(PWHASH_ALG_ARGON2ID13.val);
+
+        private final int val;
+
+        Alg(final int val) {
+            this.val = val;
+        }
+
+        public int getValue() {
+            return val;
+        }
+
+        public static Alg valueOf(int alg) {
+            return map.get(alg);
+        }
+
+        private final static Map<Integer, Alg> map =
+                stream(Alg.values()).collect(toMap(alg -> alg.val, alg -> alg));
     }
 
 

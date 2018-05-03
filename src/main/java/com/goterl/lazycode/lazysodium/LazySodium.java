@@ -9,6 +9,7 @@
 package com.goterl.lazycode.lazysodium;
 
 import com.google.common.io.BaseEncoding;
+import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.*;
 
 import java.nio.charset.Charset;
@@ -201,21 +202,13 @@ public class LazySodium implements
     }
 
     @Override
-    public Byte[] cryptoPwHash(byte[] password, byte[] salt, long opsLimit, int memLimit, int alg) {
-        if (wrongLen(salt.length, PwHash.PWHASH_SALTBYTES)) {
-            return null;
-        }
-        if (!PwHash.Checker.passwordIsWrongLen(password.length)) {
-            return null;
-        }
-        if (!PwHash.Checker.opsLimitIsWrongLen(opsLimit)) {
-            return null;
-        }
-        if (!PwHash.Checker.memLimitIsWrongLen(memLimit)) {
-            return null;
-        }
+    public Byte[] cryptoPwHash(byte[] password, byte[] salt, long opsLimit, int memLimit, PwHash.Alg alg)
+            throws SodiumException {
+
+        PwHash.Checker.checkAll(password.length, salt.length, opsLimit, memLimit);
+
         byte[] bs = new byte[0];
-        cryptoPwHash(bs, bs.length, password, password.length, salt, opsLimit, memLimit, alg);
+        cryptoPwHash(bs, bs.length, password, password.length, salt, opsLimit, memLimit, alg.getValue());
         return new Byte[2];
     }
 
@@ -253,11 +246,6 @@ public class LazySodium implements
     @Override
     public boolean wrongLen(int byteLength, long shouldBe) {
         return byteLength != shouldBe;
-    }
-
-    @Override
-    public boolean isBetween(int num, long min, long max) {
-        return min <= num && max >= num;
     }
 
 
