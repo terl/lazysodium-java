@@ -16,21 +16,23 @@ Thus, Lazysodium was born with the blessings of *Lazycode*, a part of [Terl](htt
 
 ## Get started
 
-### Requirements
+This section will help you get started with Lazysodium quickly (and with utmost laziness).
+
+### Check
 Lazysodium for Java requires:
 
 * JDK 8 or higher.
 * Gradle 4.7 or higher (if compiling and building).
 * No effort whatsoever.
 
-### 1. Add the library
+### Add 
 If you're using Gradle, this is how to get started with Lazysodium in your Java projects:
 
 ```sh
 implementation "com.goterl.lazycode:lazysodium-java:+"
 ```
 
-### 2. Learn about Lazysodium
+### Learn
 For **documentation, roadmap, compiling, usage, etc** we invite you to head over to the [wiki](https://github.com/terl/lazysodium-java/wiki).
 
 
