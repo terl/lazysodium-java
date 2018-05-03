@@ -85,9 +85,8 @@ public class PwHashTest {
             fail("cryptoPwHashStrTestModerate did not succeed.");
         }
 
-        byte[] cleanHash = lazySodium.removeNulls(outputHash);
         boolean isCorrect = pwHash.cryptoPwHashStrVerify(
-                cleanHash,
+                outputHash,
                 PASSWORD_BYTES,
                 PASSWORD_BYTES_LEN
         );
@@ -104,15 +103,29 @@ public class PwHashTest {
 
     @Test
     public void cryptoPwHashStrLazy() throws SodiumException {
-        String hashed = pwHashLazy.cryptoPwHashEncoded(
-                PASSWORD_BYTES,
-                lazySodium.randomBytesBuf(PwHash.PWHASH_SALTBYTES),
-                PwHash.PWHASH_ARGON2ID_OPSLIMIT_MIN,
-                PwHash.PWHASH_ARGON2ID_OPSLIMIT_MAX
+        String hashed = pwHashLazy.cryptoPwHashStr(
+                PASSWORD,
+                PwHash.PWHASH_ARGON2ID_OPSLIMIT_MODERATE,
+                PwHash.PWHASH_ARGON2ID_MEMLIMIT_MODERATE
+        );
+        boolean verified = pwHashLazy.cryptoPwHashStrVerify(hashed, PASSWORD);
+        assertTrue("Lazy hashing failed.", verified);
+    }
+
+    @Test
+    public void cryptoPwHashStrTrimmedLazy() throws SodiumException {
+        String hashed = pwHashLazy.cryptoPwHashStrTrimmed(
+                PASSWORD,
+                PwHash.PWHASH_ARGON2ID_OPSLIMIT_MODERATE,
+                PwHash.PWHASH_ARGON2ID_MEMLIMIT_MODERATE
         );
 
-        assertNotNull("Lazy hashing failed.", hashed);
+
+        boolean verified = pwHashLazy.cryptoPwHashStrVerify(hashed, PASSWORD);
+
+        assertTrue("Lazy hashing failed.", verified);
     }
+
 
 
 }

@@ -157,16 +157,33 @@ public interface PwHash {
                               long memLimit);
 
         /**
-         * Verifies a hashed password.
+         * Verifies a hashed password. If you're passing {@code password} as
+         * a null terminated string use this function. However, if you're
+         * using a non-null terminated string, like the one received from
+         * {@link PwHash.Lazy#cryptoPwHashStrTrimmed(String, long, long)},
+         * then it's recommended to disregard this function. Instead, use any verify function
+         * provided in {@link PwHash.Lazy}.
          * @param hash The hash of the password.
          * @param password The password to check if it equals the hash's password.
          * @param passwordLen The checking password's length.
          * @return True if the password matches the unhashed hash.
+         * @see PwHash.Lazy#cryptoPwHashStrVerify(String, String)
          */
         boolean cryptoPwHashStrVerify(byte[] hash, byte[] password, long passwordLen);
 
 
-        boolean cryptoPwHashStrNeedsRehash(byte[] hash, long opsLimit, long memLimit);
+        /**
+         * Check if a password verification string str matches the parameters opslimit and memlimit, and the current default algorithm.
+         * @param hash The hashed password.
+         * @param opsLimit The number of cycles to perform whilst hashing.
+         *                 Between {@link PwHash#PWHASH_OPSLIMIT_MIN} and {@link PwHash#PWHASH_OPSLIMIT_MAX}.
+         * @param memLimit The amount of memory to use.
+         *                 Between {@link PwHash#PWHASH_MEMLIMIT_MIN} and {@link PwHash#PWHASH_MEMLIMIT_MAX}.
+         * @return The function returns 1 if the string appears to be correct, but doesn't match the given parameters. In that situation, applications may want to compute a new hash using the current parameters the next time the user logs in.
+         *         The function returns 0 if the parameters already match the given ones.
+         *         It returns -1 on error. If it happens, applications may want to compute a correct hash the next time the user logs in.
+         */
+        int cryptoPwHashStrNeedsRehash(byte[] hash, long opsLimit, long memLimit);
 
     }
 
@@ -195,6 +212,12 @@ public interface PwHash {
          * The most minimal way of hashing a given password.
          * We auto-generate the salt and use the default
          * hashing algorithm {@link PwHash#PWHASH_ALG_DEFAULT}.
+         *
+         * WARNING: This method may return null bytes at the end
+         * of the returned byte array. See {@link #cryptoPwHashStrTrimmed(String, long, long)}
+         * for an implementation of this method which auto-removes those null
+         * bytes.
+         *
          * @param password The password string to hash.
          * @param opsLimit The number of cycles to perform whilst hashing.
          *                 Between {@link PwHash#PWHASH_OPSLIMIT_MIN}
@@ -202,12 +225,35 @@ public interface PwHash {
          * @param memLimit The amount of memory to use.
          *                 Between {@link PwHash#PWHASH_MEMLIMIT_MIN}
          *                 and {@link PwHash#PWHASH_MEMLIMIT_MAX}.
-         * @return
-         * @throws SodiumException
+         * @return Hashed password.
+         * @throws SodiumException If the hashing fails.
+         * @see #cryptoPwHashStrTrimmed(String, long, long)
          */
         String cryptoPwHashStr(String password,
                                long opsLimit,
                                long memLimit) throws SodiumException;
+
+        /**
+         * The most minimal way of hashing a given password.
+         * We auto-generate the salt and use the default
+         * hashing algorithm {@link PwHash#PWHASH_ALG_DEFAULT}.
+         * This method is
+         * recommended over {@link #cryptoPwHashStr(String, long, long)}
+         * as this one removes all the null bytes.
+         * @see #cryptoPwHashStr(String, long, long)
+         */
+        String cryptoPwHashStrTrimmed(String password,
+                                       long opsLimit,
+                                       long memLimit) throws SodiumException;
+
+        /**
+         * Verify a given password with a hash.
+         * @param hash The hash
+         * @param password The password
+         * @return True if the password 'unlocks' the hash.
+         */
+        boolean cryptoPwHashStrVerify(String hash,
+                                     String password);
 
     }
 

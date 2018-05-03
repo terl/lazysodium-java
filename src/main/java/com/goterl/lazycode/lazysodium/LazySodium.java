@@ -8,7 +8,9 @@
 
 package com.goterl.lazycode.lazysodium;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.io.BaseEncoding;
+import com.google.common.primitives.Bytes;
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.*;
 
@@ -193,26 +195,32 @@ public class LazySodium implements
 
     @Override
     public boolean cryptoPwHashStrVerify(byte[] hash, byte[] password, long passwordLen) {
-        return boolify(nacl.crypto_pwhash_str_verify(hash, password, passwordLen));
+        int res = nacl.crypto_pwhash_str_verify(hash, password, passwordLen);
+        return boolify(res);
     }
 
     @Override
-    public boolean cryptoPwHashStrNeedsRehash(byte[] hash, long opsLimit, long memLimit) {
-        return boolify(nacl.crypto_pwhash_str_needs_rehash(hash, opsLimit, memLimit));
+    public int cryptoPwHashStrNeedsRehash(byte[] hash, long opsLimit, long memLimit) {
+        return nacl.crypto_pwhash_str_needs_rehash(hash, opsLimit, memLimit);
     }
 
     @Override
     public byte[] cryptoPwHash(byte[] password, byte[] salt, long opsLimit, long memLimit, PwHash.Alg alg)
             throws SodiumException {
         PwHash.Checker.checkAll(password.length, salt.length, opsLimit, memLimit);
-        byte[] hash = new byte[CryptoBox.CRYPTO_BOX_SEEDBYTES];
-        cryptoPwHash(hash, hash.length, password, password.length, salt, opsLimit, memLimit, alg);
+        byte[] hash = new byte[(int) PwHash.PWHASH_BYTES_MIN + 32];
+        boolean hashed = cryptoPwHash(hash, hash.length, password, password.length, salt, opsLimit, memLimit, alg);
+
+        if (!hashed) {
+            throw new SodiumException("Could not hash password.");
+        }
+
         return hash;
     }
 
     @Override
     public String cryptoPwHashStr(String password, long opsLimit, long memLimit) throws SodiumException {
-        byte[] hash = new byte[CryptoBox.CRYPTO_BOX_SEEDBYTES];
+        byte[] hash = new byte[PwHash.PWHASH_STR_BYTES];
         byte[] passwordBytes = bytes(password);
         boolean res = cryptoPwHashStr(hash, passwordBytes, passwordBytes.length, opsLimit, memLimit);
         if (!res) {
@@ -221,6 +229,26 @@ public class LazySodium implements
         return str(hash);
     }
 
+    @Override
+    public String cryptoPwHashStrTrimmed(String password, long opsLimit, long memLimit) throws SodiumException {
+        String hashed = cryptoPwHashStr(password, opsLimit, memLimit);
+        char c = (char) 0;
+        String cleaned = CharMatcher.is(c).removeFrom(hashed);
+        return cleaned;
+    }
+
+
+    @Override
+    public boolean cryptoPwHashStrVerify(String hash, String password) {
+        byte[] passwordBytes = bytes(password);
+        byte[] hashBytes = bytes(hash);
+
+        if (hashBytes[hashBytes.length - 1] != 0) {
+            hashBytes = Bytes.concat(hashBytes, new byte[] { 0 });
+        }
+
+        return cryptoPwHashStrVerify(hashBytes, passwordBytes, passwordBytes.length);
+    }
 
     //// -------------------------------------------|
     //// CONVENIENCE
@@ -263,6 +291,7 @@ public class LazySodium implements
 
     @Override
     public byte[] removeNulls(byte[] bs) {
+
         // First determine how many bytes to
         // cut off the end by checking total of null bytes
         int totalBytesToCut = 0;
@@ -270,6 +299,8 @@ public class LazySodium implements
             byte b = bs[i];
             if (b == 0) {
                 totalBytesToCut++;
+            } else {
+                break;
             }
         }
 
@@ -311,11 +342,10 @@ public class LazySodium implements
                 PwHash.PWHASH_ARGON2ID_MEMLIMIT_MODERATE
         );
 
-        byte[] nullsRemoved = lazySodium.removeNulls(outputHash);
-        boolean correct = pwHash.cryptoPwHashStrVerify(nullsRemoved, passwordBytes, passwordBytes.length);
+        boolean correct = pwHash.cryptoPwHashStrVerify(outputHash, passwordBytes, passwordBytes.length);
 
         System.out.println(hash);
-        System.out.println(new String(nullsRemoved, StandardCharsets.UTF_8));
+        System.out.println(new String(outputHash, StandardCharsets.UTF_8));
         System.out.println(correct);
 
     }
