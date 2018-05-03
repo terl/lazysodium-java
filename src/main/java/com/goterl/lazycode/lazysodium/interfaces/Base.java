@@ -16,4 +16,5 @@ public interface Base {
     boolean wrongLen(byte[] bs, int shouldBeLen);
     boolean wrongLen(int byteLength, int shouldBeLen);
     boolean wrongLen(int byteLength, long shouldBeLen);
+    byte[] removeNulls(byte[] bs);
 }

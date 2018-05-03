@@ -11,9 +11,15 @@ package com.goterl.lazycode.lazysodium;
 import com.google.common.io.BaseEncoding;
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.*;
+import com.sun.jna.Memory;
+import com.sun.jna.Native;
+import com.sun.jna.Pointer;
 
+import java.awt.*;
+import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 public class LazySodium implements
         Base,
@@ -168,8 +174,8 @@ public class LazySodium implements
                                 long passwordLen,
                                 byte[] salt,
                                 long opsLimit,
-                                int memLimit,
-                                int alg) {
+                                long memLimit,
+                                PwHash.Alg alg) {
         int res = nacl.crypto_pwhash(outputHash,
                 outputHashLen,
                 password,
@@ -177,7 +183,7 @@ public class LazySodium implements
                 salt,
                 opsLimit,
                 memLimit,
-                alg);
+                alg.getValue());
         return boolify(res);
     }
 
@@ -186,7 +192,7 @@ public class LazySodium implements
                                    byte[] password,
                                    long passwordLen,
                                    long opsLimit,
-                                   int memLimit) {
+                                   long memLimit) {
         int res = nacl.crypto_pwhash_str(outputStr, password, passwordLen, opsLimit, memLimit);
         return boolify(res);
     }
@@ -197,19 +203,17 @@ public class LazySodium implements
     }
 
     @Override
-    public boolean cryptoPwHashStrNeedsRehash(byte[] hash, long opsLimit, int memLimit) {
+    public boolean cryptoPwHashStrNeedsRehash(byte[] hash, long opsLimit, long memLimit) {
         return boolify(nacl.crypto_pwhash_str_needs_rehash(hash, opsLimit, memLimit));
     }
 
     @Override
-    public Byte[] cryptoPwHash(byte[] password, byte[] salt, long opsLimit, int memLimit, PwHash.Alg alg)
+    public byte[] cryptoPwHash(byte[] password, byte[] salt, long opsLimit, long memLimit, PwHash.Alg alg)
             throws SodiumException {
-
         PwHash.Checker.checkAll(password.length, salt.length, opsLimit, memLimit);
-
-        byte[] bs = new byte[0];
-        cryptoPwHash(bs, bs.length, password, password.length, salt, opsLimit, memLimit, alg.getValue());
-        return new Byte[2];
+        byte[] hash = new byte[CryptoBox.CRYPTO_BOX_SEEDBYTES];
+        cryptoPwHash(hash, hash.length, password, password.length, salt, opsLimit, memLimit, alg);
+        return hash;
     }
 
 
@@ -248,7 +252,26 @@ public class LazySodium implements
         return byteLength != shouldBe;
     }
 
+    @Override
+    public byte[] removeNulls(byte[] bs) {
+        // First determine how many bytes to
+        // cut off the end by checking total of null bytes
+        int totalBytesToCut = 0;
+        for (int i = bs.length - 1; i >= 0; i--) {
+            byte b = bs[i];
+            if (b == 0) {
+                totalBytesToCut++;
+            }
+        }
 
+        // ... then we now can copy across the array
+        // without the null bytes.
+        int newLengthOfBs = bs.length - totalBytesToCut;
+        byte[] trimmed = new byte[newLengthOfBs];
+        System.arraycopy(bs, 0, trimmed, 0, newLengthOfBs);
+
+        return trimmed;
+    }
 
     // --
     //// -------------------------------------------|
@@ -256,9 +279,36 @@ public class LazySodium implements
     //// -------------------------------------------|
     // --
 
+
     public static void main(String[] args) {
         Sodium sodium = new Sodium();
         LazySodium lazySodium = new LazySodium(sodium);
+        Random random = (Random) lazySodium;
+
+        byte[] salt = new byte[16];
+        String password = "0090i0ijojnno9iwjdadandadjadujadadbcancsmaosdkas92018309218390123091830912830129380129380192381092381093810293810238012";
+        byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
+
+        byte[] outputHash = new byte[PwHash.PWHASH_STR_BYTES];
+
+
+        PwHash.Native pwHash = (PwHash.Native) lazySodium;
+
+        boolean hash = pwHash.cryptoPwHashStr(
+                outputHash,
+                passwordBytes,
+                passwordBytes.length,
+                PwHash.PWHASH_ARGON2ID_OPSLIMIT_MODERATE,
+                PwHash.PWHASH_ARGON2ID_MEMLIMIT_MODERATE
+        );
+
+        byte[] nullsRemoved = lazySodium.removeNulls(outputHash);
+        boolean correct = pwHash.cryptoPwHashStrVerify(nullsRemoved, passwordBytes, passwordBytes.length);
+
+        System.out.println(hash);
+        System.out.println(new String(nullsRemoved, StandardCharsets.UTF_8));
+        System.out.println(correct);
+
     }
 
 }

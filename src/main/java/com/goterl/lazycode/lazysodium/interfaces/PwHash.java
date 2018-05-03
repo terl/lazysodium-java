@@ -25,16 +25,19 @@ public interface PwHash {
     int
             PWHASH_ALG_ARGON2I13 = 1,
             PWHASH_ALG_ARGON2ID13 = 2,
-            PWHASH_ALG_DEFAULT = PWHASH_ALG_ARGON2ID13;
+            PWHASH_ALG_DEFAULT = PWHASH_ALG_ARGON2ID13,
+            PWHASH_ARGON2ID_SALTBYTES = 16,
+            PWHASH_ARGON2ID_BYTES_MIN = 16,
+            PWHASH_SALTBYTES = PWHASH_ARGON2ID_SALTBYTES,
+
+            PWHASH_ARGON2ID_STR_BYTES = 128,
+            PWHASH_STR_BYTES = PWHASH_ARGON2ID_STR_BYTES;
+
 
 
     long
             PWHASH_ARGON2ID_PASSWD_MIN = 0L,
             PWHASH_ARGON2ID_PASSWD_MAX = Constants.UNISGNED_INT,
-
-            PWHASH_ARGON2ID_SALTBYTES = 16L,
-
-            PWHASH_ARGON2ID_BYTES_MIN = 16L,
             PWHASH_ARGON2ID_BYTES_MAX = Constants.UNISGNED_INT,
 
             PWHASH_ARGON2ID_OPSLIMIT_MIN = 1L,
@@ -45,7 +48,7 @@ public interface PwHash {
 
             PWHASH_ARGON2ID_MEMLIMIT_MIN = 8192L,
             PWHASH_ARGON2ID_MEMLIMIT_MAX = ((SIZE_MAX >= 4398046510080L) ? 4398046510080L : (SIZE_MAX >= 2147483648L) ? 2147483648L : 32768L),
-            PWHASH_ARGON2ID_MEMLIMIT_INTERATIVE = 67108864L,
+            PWHASH_ARGON2ID_MEMLIMIT_INTERACTIVE = 67108864L,
             PWHASH_ARGON2ID_MEMLIMIT_MODERATE = 268435456L,
             PWHASH_ARGON2ID_MEMLIMIT_SENSITIVE = 1073741824L,
 
@@ -56,7 +59,6 @@ public interface PwHash {
             PWHASH_PASSWD_MIN = PWHASH_ARGON2ID_PASSWD_MIN,
             PWHASH_PASSWD_MAX = PWHASH_ARGON2ID_PASSWD_MAX,
 
-            PWHASH_SALTBYTES = PWHASH_ARGON2ID_SALTBYTES,
 
             PWHASH_BYTES_MIN = PWHASH_ARGON2ID_BYTES_MIN,
             PWHASH_BYTES_MAX = PWHASH_ARGON2ID_BYTES_MAX,
@@ -73,7 +75,7 @@ public interface PwHash {
             return correctLen(saltLen, PwHash.PWHASH_SALTBYTES);
         }
         public static boolean passwordIsCorrect(long len) {
-            return isBetween(len, PwHash.PWHASH_BYTES_MIN, PwHash.PWHASH_BYTES_MAX);
+            return isBetween(len, PwHash.PWHASH_PASSWD_MIN, PwHash.PWHASH_PASSWD_MAX);
         }
         public static boolean opsLimitIsCorrect(long ops) {
             return isBetween(ops, PwHash.PWHASH_OPSLIMIT_MIN, PwHash.PWHASH_OPSLIMIT_MAX);
@@ -99,37 +101,75 @@ public interface PwHash {
             if (!PwHash.Checker.memLimitIsCorrect(memLimit)) {
                 throw new SodiumException("The memLimit provided is not the correct value.");
             }
+            return true;
         }
     }
 
     interface Native {
+
+        /**
+         * Based on a password you provide, hash that
+         * password and put the output into {@code outputHash}.
+         *
+         * Take note that the output of this does NOT output a traditional
+         * Argon 2 string as the underlying native implementation calls argon2id_hash_raw
+         * instead of argon2id_hash_encoded. If you want an Argon 2 encoded string please refer
+         * to {@link #cryptoPwHashStr(byte[], byte[], long, long, long)} instead.
+         * @param outputHash Where to store the resulting password hash.
+         * @param outputHashLen The password hash's length. Must be at least {@link PwHash#PWHASH_BYTES_MIN}.
+         * @param password The password that you want to hash.
+         * @param passwordLen The length of the password's bytes.
+         * @param salt A salt that's randomly generated.
+         * @param opsLimit The number of cycles to perform whilst hashing.
+         * @param memLimit The amount of memory to use.
+         * @param alg The algorithm to use. Please use {@link PwHash#PWHASH_ALG_ARGON2ID13} for now.
+         * @return True if the hash succeeded.
+         */
         boolean cryptoPwHash(byte[] outputHash,
                              long outputHashLen,
                              byte[] password,
                              long passwordLen,
                              byte[] salt,
                              long opsLimit,
-                             int memLimit,
-                             int alg);
+                             long memLimit,
+                             Alg alg);
 
+        /**
+         * Hashes a password and stores it into an array. The output is
+         * an ASCII encoded string in a byte array.
+         * @param outputStr An array to hold the hash. Must be at least {@link PwHash#PWHASH_STR_BYTES}.
+         * @param password A password that you want to hash.
+         * @param passwordLen The password's byte length.
+         * @param opsLimit The number of cycles to perform whilst hashing.
+         * @param memLimit The amount of memory to use.
+         * @return True if the hash succeeded.
+         * @see #cryptoPwHashStrVerify(byte[], byte[], long)
+         */
         boolean cryptoPwHashStr(byte[] outputStr,
                               byte[] password,
                               long passwordLen,
                               long opsLimit,
-                              int memLimit);
+                              long memLimit);
 
+        /**
+         * Verifies a hashed password.
+         * @param hash The hash of the password.
+         * @param password The password to check if it equals the hash's password.
+         * @param passwordLen The checking password's length.
+         * @return True if the password matches the unhashed hash.
+         */
         boolean cryptoPwHashStrVerify(byte[] hash, byte[] password, long passwordLen);
 
-        boolean cryptoPwHashStrNeedsRehash(byte[] hash, long opsLimit, int memLimit);
+        boolean cryptoPwHashStrNeedsRehash(byte[] hash, long opsLimit, long memLimit);
 
     }
 
     interface Lazy {
 
-        Byte[] cryptoPwHash(byte[] password,
+        byte[] cryptoPwHash(byte[] password,
                             byte[] salt,
                              long opsLimit,
-                             int memLimit,
+                             long memLimit,
                              Alg alg) throws SodiumException;
 
     }
@@ -137,8 +177,7 @@ public interface PwHash {
 
     enum Alg {
         PWHASH_ALG_ARGON2I13(1),
-        PWHASH_ALG_ARGON2ID13(2),
-        PWHASH_ALG_DEFAULT(PWHASH_ALG_ARGON2ID13.val);
+        PWHASH_ALG_ARGON2ID13(2);
 
         private final int val;
 
