@@ -11,15 +11,9 @@ package com.goterl.lazycode.lazysodium;
 import com.google.common.io.BaseEncoding;
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.*;
-import com.sun.jna.Memory;
-import com.sun.jna.Native;
-import com.sun.jna.Pointer;
 
-import java.awt.*;
-import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 public class LazySodium implements
         Base,
@@ -216,6 +210,16 @@ public class LazySodium implements
         return hash;
     }
 
+    @Override
+    public String cryptoPwHashStr(String password, long opsLimit, long memLimit) throws SodiumException {
+        byte[] hash = new byte[CryptoBox.CRYPTO_BOX_SEEDBYTES];
+        byte[] passwordBytes = bytes(password);
+        boolean res = cryptoPwHashStr(hash, passwordBytes, passwordBytes.length, opsLimit, memLimit);
+        if (!res) {
+            throw new SodiumException("Password hashing failed.");
+        }
+        return str(hash);
+    }
 
 
     //// -------------------------------------------|
@@ -235,6 +239,11 @@ public class LazySodium implements
     @Override
     public String str(byte[] bs) {
         return new String(bs, charset);
+    }
+
+    @Override
+    public byte[] bytes(String s) {
+        return s.getBytes(charset);
     }
 
     @Override

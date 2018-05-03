@@ -10,9 +10,22 @@ package com.goterl.lazycode.lazysodium.interfaces;
 
 
 public interface Base {
+
+    // --- Result handling
+
     boolean boolify(int res);
     <T> T res(int res, T object);
+
+
+
+    // --- Conversion handling
+
     String str(byte[] bs);
+    byte[] bytes(String s);
+
+
+    // --- Convenience
+
     boolean wrongLen(byte[] bs, int shouldBeLen);
     boolean wrongLen(int byteLength, int shouldBeLen);
     boolean wrongLen(int byteLength, long shouldBeLen);

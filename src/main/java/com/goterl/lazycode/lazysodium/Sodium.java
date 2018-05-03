@@ -79,7 +79,6 @@ public class Sodium {
     native int crypto_pwhash_str_needs_rehash(byte[] hash, long opsLimit, long memLimit);
 
 
-
     //// -------------------------------------------|
     //// KEY DERIVATION FUNCTIONS
     //// -------------------------------------------|

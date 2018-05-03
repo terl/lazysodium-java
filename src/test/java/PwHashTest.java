@@ -19,8 +19,7 @@ import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class PwHashTest {
 
@@ -30,6 +29,9 @@ public class PwHashTest {
 
     private LazySodium lazySodium;
     private Random random;
+    private PwHash.Native pwHash;
+    private PwHash.Lazy pwHashLazy;
+
 
 
     @Before
@@ -37,12 +39,12 @@ public class PwHashTest {
         Sodium sodium = new Sodium("sodium");
         this.lazySodium = new LazySodium(sodium);
         this.random = (Random) lazySodium;
+        this.pwHash = (PwHash.Native) lazySodium;
+        this.pwHashLazy = (PwHash.Lazy) lazySodium;
     }
 
     @Test
     public void cryptoPwHashStrTestMin() {
-        PwHash.Native pwHash = (PwHash.Native) lazySodium;
-
         byte[] outputHash = new byte[PwHash.PWHASH_STR_BYTES];
 
         boolean success = pwHash.cryptoPwHashStr(
@@ -69,8 +71,6 @@ public class PwHashTest {
 
     @Test
     public void cryptoPwHashStrTestModerate() {
-        PwHash.Native pwHash = (PwHash.Native) lazySodium;
-
         byte[] outputHash = new byte[PwHash.PWHASH_STR_BYTES];
 
         boolean success = pwHash.cryptoPwHashStr(
@@ -82,7 +82,7 @@ public class PwHashTest {
         );
 
         if (!success) {
-            fail("cryptoPwHashStr did not succeed.");
+            fail("cryptoPwHashStrTestModerate did not succeed.");
         }
 
         byte[] cleanHash = lazySodium.removeNulls(outputHash);
@@ -99,6 +99,19 @@ public class PwHashTest {
     // will fail on most machines
     public void cryptoPwHashStrTestSensitive() {
 
+    }
+
+
+    @Test
+    public void cryptoPwHashStrLazy() throws SodiumException {
+        String hashed = pwHashLazy.cryptoPwHashEncoded(
+                PASSWORD_BYTES,
+                lazySodium.randomBytesBuf(PwHash.PWHASH_SALTBYTES),
+                PwHash.PWHASH_ARGON2ID_OPSLIMIT_MIN,
+                PwHash.PWHASH_ARGON2ID_OPSLIMIT_MAX
+        );
+
+        assertNotNull("Lazy hashing failed.", hashed);
     }
 
 

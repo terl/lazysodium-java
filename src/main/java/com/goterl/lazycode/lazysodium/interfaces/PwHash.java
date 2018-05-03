@@ -70,6 +70,7 @@ public interface PwHash {
             PWHASH_MEMLIMIT_MAX = PWHASH_ARGON2ID_MEMLIMIT_MAX;
 
 
+
     class Checker extends BaseChecker {
         public static boolean saltIsCorrect(long saltLen) {
             return correctLen(saltLen, PwHash.PWHASH_SALTBYTES);
@@ -121,7 +122,9 @@ public interface PwHash {
          * @param passwordLen The length of the password's bytes.
          * @param salt A salt that's randomly generated.
          * @param opsLimit The number of cycles to perform whilst hashing.
+         *                 Between {@link PwHash#PWHASH_OPSLIMIT_MIN} and {@link PwHash#PWHASH_OPSLIMIT_MAX}.
          * @param memLimit The amount of memory to use.
+         *                 Between {@link PwHash#PWHASH_MEMLIMIT_MIN} and {@link PwHash#PWHASH_MEMLIMIT_MAX}.
          * @param alg The algorithm to use. Please use {@link PwHash#PWHASH_ALG_ARGON2ID13} for now.
          * @return True if the hash succeeded.
          */
@@ -141,7 +144,9 @@ public interface PwHash {
          * @param password A password that you want to hash.
          * @param passwordLen The password's byte length.
          * @param opsLimit The number of cycles to perform whilst hashing.
+         *                 Between {@link PwHash#PWHASH_OPSLIMIT_MIN} and {@link PwHash#PWHASH_OPSLIMIT_MAX}.
          * @param memLimit The amount of memory to use.
+         *                 Between {@link PwHash#PWHASH_MEMLIMIT_MIN} and {@link PwHash#PWHASH_MEMLIMIT_MAX}.
          * @return True if the hash succeeded.
          * @see #cryptoPwHashStrVerify(byte[], byte[], long)
          */
@@ -160,17 +165,49 @@ public interface PwHash {
          */
         boolean cryptoPwHashStrVerify(byte[] hash, byte[] password, long passwordLen);
 
+
         boolean cryptoPwHashStrNeedsRehash(byte[] hash, long opsLimit, long memLimit);
 
     }
 
     interface Lazy {
 
+        /**
+         * Hashes a given password.
+         * @param password The password to hash.
+         * @param salt A salt to use with the hash, generated randomly.
+         * @param opsLimit The number of cycles to perform whilst hashing.
+         *                 Between {@link PwHash#PWHASH_OPSLIMIT_MIN} and {@link PwHash#PWHASH_OPSLIMIT_MAX}.
+         * @param memLimit The amount of memory to use.
+         *                 Between {@link PwHash#PWHASH_MEMLIMIT_MIN} and {@link PwHash#PWHASH_MEMLIMIT_MAX}.
+         * @param alg The algorithm to use. Defaults to {@link PwHash#PWHASH_ALG_ARGON2ID13}.
+         * @return A hash of the password in bytes.
+         * @throws SodiumException If the password is too short or the opsLimit is not correct.
+         */
         byte[] cryptoPwHash(byte[] password,
                             byte[] salt,
-                             long opsLimit,
-                             long memLimit,
-                             Alg alg) throws SodiumException;
+                            long opsLimit,
+                            long memLimit,
+                            Alg alg) throws SodiumException;
+
+
+        /**
+         * The most minimal way of hashing a given password.
+         * We auto-generate the salt and use the default
+         * hashing algorithm {@link PwHash#PWHASH_ALG_DEFAULT}.
+         * @param password The password string to hash.
+         * @param opsLimit The number of cycles to perform whilst hashing.
+         *                 Between {@link PwHash#PWHASH_OPSLIMIT_MIN}
+         *                 and {@link PwHash#PWHASH_OPSLIMIT_MAX}.
+         * @param memLimit The amount of memory to use.
+         *                 Between {@link PwHash#PWHASH_MEMLIMIT_MIN}
+         *                 and {@link PwHash#PWHASH_MEMLIMIT_MAX}.
+         * @return
+         * @throws SodiumException
+         */
+        String cryptoPwHashStr(String password,
+                               long opsLimit,
+                               long memLimit) throws SodiumException;
 
     }
 
@@ -187,6 +224,10 @@ public interface PwHash {
 
         public int getValue() {
             return val;
+        }
+
+        public static Alg getDefault() {
+            return PWHASH_ALG_ARGON2ID13;
         }
 
         public static Alg valueOf(int alg) {
