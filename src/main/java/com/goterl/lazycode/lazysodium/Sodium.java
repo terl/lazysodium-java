@@ -9,18 +9,12 @@
 package com.goterl.lazycode.lazysodium;
 
 import com.sun.jna.Native;
-import com.sun.jna.Platform;
 
 public class Sodium {
 
 
     public Sodium() {
         String path = "sodium";
-        if (Platform.isWindows()) {
-            path = "libsodium.dll";
-        } else if (Platform.isLinux()) {
-            path = "libsodium.so";
-        }
         register(path);
     }
 
