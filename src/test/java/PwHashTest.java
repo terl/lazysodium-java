@@ -44,7 +44,7 @@ public class PwHashTest {
     }
 
     @Test
-    public void cryptoPwHashStrTestMin() {
+    public void cryptoPwHashStrMin() {
         byte[] outputHash = new byte[PwHash.PWHASH_STR_BYTES];
 
         boolean success = pwHash.cryptoPwHashStr(
@@ -56,7 +56,7 @@ public class PwHashTest {
         );
 
         if (!success) {
-            fail("cryptoPwHashStr did not succeed.");
+            fail("cryptoPwHashStrMin did not succeed.");
         }
 
         byte[] cleanHash = lazySodium.removeNulls(outputHash);
@@ -66,11 +66,15 @@ public class PwHashTest {
                 PASSWORD_BYTES_LEN
         );
 
-        assertTrue("Minimum hashing failed.", isCorrect);
+        assertTrue("Minimum hashing failed. It's okay if " +
+                "hashing does not pass on Moderate, but on Min, it's not okay.", isCorrect);
     }
 
+
+    // This also may fail depending on your system.
+    // But we'll test it anyway.
     @Test
-    public void cryptoPwHashStrTestModerate() {
+    public void cryptoPwHashStrModerate() {
         byte[] outputHash = new byte[PwHash.PWHASH_STR_BYTES];
 
         boolean success = pwHash.cryptoPwHashStr(
@@ -81,8 +85,13 @@ public class PwHashTest {
                 PwHash.PWHASH_ARGON2ID_MEMLIMIT_MODERATE
         );
 
+        String failureMsg =
+                "Did not pass. But this may be okay " +
+                "as your system may not be adequately equipped to " +
+                "perform a Moderate hash.";
+
         if (!success) {
-            fail("cryptoPwHashStrTestModerate did not succeed.");
+            fail(failureMsg);
         }
 
         byte[] cleanHash = lazySodium.removeNulls(outputHash);
@@ -92,7 +101,7 @@ public class PwHashTest {
                 PASSWORD_BYTES_LEN
         );
 
-        assertTrue("Moderate hashing failed.", isCorrect);
+        assertTrue(failureMsg, isCorrect);
     }
 
     // We don't test for this as it's pretty demanding and
@@ -104,14 +113,13 @@ public class PwHashTest {
 
     @Test
     public void cryptoPwHashStrLazy() throws SodiumException {
-        String hashed = pwHashLazy.cryptoPwHashEncoded(
-                PASSWORD_BYTES,
-                lazySodium.randomBytesBuf(PwHash.PWHASH_SALTBYTES),
+        String hashed = pwHashLazy.cryptoPwHashStr(
+                PASSWORD,
                 PwHash.PWHASH_ARGON2ID_OPSLIMIT_MIN,
-                PwHash.PWHASH_ARGON2ID_OPSLIMIT_MAX
+                PwHash.PWHASH_ARGON2ID_MEMLIMIT_MIN
         );
 
-        assertNotNull("Lazy hashing failed.", hashed);
+        assertNotNull("cryptoPwHashStrLazy failed.", hashed);
     }
 
 

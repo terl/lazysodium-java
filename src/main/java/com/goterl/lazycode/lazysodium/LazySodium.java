@@ -44,58 +44,6 @@ public class LazySodium implements
 
 
     //// -------------------------------------------|
-    //// KDF KEYGEN
-    //// -------------------------------------------|
-
-    @Override
-    public void cryptoKdfKeygen(byte[] masterKey) {
-        nacl.crypto_kdf_keygen(masterKey);
-    }
-
-    @Override
-    public String cryptoKdfKeygen(Charset charset) {
-        byte[] masterKeyInBytes = new byte[KeyDerivation.KDF_MASTER_KEY_BYTES];
-        nacl.crypto_kdf_keygen(masterKeyInBytes);
-        return str(masterKeyInBytes);
-    }
-
-    @Override
-    public String cryptoKdfKeygen() {
-        byte[] masterKey = new byte[KeyDerivation.KDF_MASTER_KEY_BYTES];
-        nacl.crypto_kdf_keygen(masterKey);
-        return str(masterKey);
-    }
-
-    @Override
-    public String cryptoKdfDeriveFromKey(long subKeyId, String context, byte[] masterKey) {
-        if (wrongLen(masterKey, KeyDerivation.KDF_MASTER_KEY_BYTES)) {
-            return null;
-        }
-        return cryptoKdfDeriveFromKey(subKeyId, context, str(masterKey));
-    }
-
-    @Override
-    public String cryptoKdfDeriveFromKey(long subKeyId, String context, String masterKey) {
-        byte[] subKey = new byte[KeyDerivation.KDF_BYTES_MIN];
-        byte[] contextAsBytes = context.getBytes(charset);
-        byte[] masterKeyAsBytes = context.getBytes(charset);
-        int res = nacl.crypto_kdf_derive_from_key(
-                subKey,
-                KeyDerivation.KDF_BYTES_MIN,
-                subKeyId,
-                contextAsBytes,
-                masterKeyAsBytes
-        );
-        return res(res, str(subKey));
-    }
-
-    @Override
-    public int cryptoKdfDeriveFromKey(byte[] subKey, int subKeyLen, long subKeyId, byte[] context, byte[] masterKey) {
-        return nacl.crypto_kdf_derive_from_key(subKey, subKeyLen, subKeyId, context, masterKey);
-    }
-
-
-    //// -------------------------------------------|
     //// HELPERS
     //// -------------------------------------------|
 
@@ -154,6 +102,61 @@ public class LazySodium implements
     public boolean sodiumUnpad(int unPaddedBuffLen, char[] buf, int paddedBufLen, int blockSize) {
         return boolify(nacl.sodium_unpad(unPaddedBuffLen, buf, paddedBufLen, blockSize));
     }
+
+
+
+
+    //// -------------------------------------------|
+    //// KDF KEYGEN
+    //// -------------------------------------------|
+
+    @Override
+    public void cryptoKdfKeygen(byte[] masterKey) {
+        nacl.crypto_kdf_keygen(masterKey);
+    }
+
+    @Override
+    public String cryptoKdfKeygen(Charset charset) {
+        byte[] masterKeyInBytes = new byte[KeyDerivation.KDF_MASTER_KEY_BYTES];
+        nacl.crypto_kdf_keygen(masterKeyInBytes);
+        return str(masterKeyInBytes);
+    }
+
+    @Override
+    public String cryptoKdfKeygen() {
+        byte[] masterKey = new byte[KeyDerivation.KDF_MASTER_KEY_BYTES];
+        nacl.crypto_kdf_keygen(masterKey);
+        return str(masterKey);
+    }
+
+    @Override
+    public String cryptoKdfDeriveFromKey(long subKeyId, String context, byte[] masterKey) {
+        if (wrongLen(masterKey, KeyDerivation.KDF_MASTER_KEY_BYTES)) {
+            return null;
+        }
+        return cryptoKdfDeriveFromKey(subKeyId, context, str(masterKey));
+    }
+
+    @Override
+    public String cryptoKdfDeriveFromKey(long subKeyId, String context, String masterKey) {
+        byte[] subKey = new byte[KeyDerivation.KDF_BYTES_MIN];
+        byte[] contextAsBytes = context.getBytes(charset);
+        byte[] masterKeyAsBytes = context.getBytes(charset);
+        int res = nacl.crypto_kdf_derive_from_key(
+                subKey,
+                KeyDerivation.KDF_BYTES_MIN,
+                subKeyId,
+                contextAsBytes,
+                masterKeyAsBytes
+        );
+        return res(res, str(subKey));
+    }
+
+    @Override
+    public int cryptoKdfDeriveFromKey(byte[] subKey, int subKeyLen, long subKeyId, byte[] context, byte[] masterKey) {
+        return nacl.crypto_kdf_derive_from_key(subKey, subKeyLen, subKeyId, context, masterKey);
+    }
+
 
 
 
@@ -282,41 +285,15 @@ public class LazySodium implements
         return trimmed;
     }
 
+
+
     // --
     //// -------------------------------------------|
     //// MAIN
     //// -------------------------------------------|
     // --
-
-
     public static void main(String[] args) {
-        Sodium sodium = new Sodium();
-        LazySodium lazySodium = new LazySodium(sodium);
-        Random random = (Random) lazySodium;
-
-        byte[] salt = new byte[16];
-        String password = "0090i0ijojnno9iwjdadandadjadujadadbcancsmaosdkas92018309218390123091830912830129380129380192381092381093810293810238012";
-        byte[] passwordBytes = password.getBytes(StandardCharsets.UTF_8);
-
-        byte[] outputHash = new byte[PwHash.PWHASH_STR_BYTES];
-
-
-        PwHash.Native pwHash = (PwHash.Native) lazySodium;
-
-        boolean hash = pwHash.cryptoPwHashStr(
-                outputHash,
-                passwordBytes,
-                passwordBytes.length,
-                PwHash.PWHASH_ARGON2ID_OPSLIMIT_MODERATE,
-                PwHash.PWHASH_ARGON2ID_MEMLIMIT_MODERATE
-        );
-
-        byte[] nullsRemoved = lazySodium.removeNulls(outputHash);
-        boolean correct = pwHash.cryptoPwHashStrVerify(nullsRemoved, passwordBytes, passwordBytes.length);
-
-        System.out.println(hash);
-        System.out.println(new String(nullsRemoved, StandardCharsets.UTF_8));
-        System.out.println(correct);
+        // Can implement some code here to test
 
     }
 
