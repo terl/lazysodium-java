@@ -33,7 +33,6 @@ public class PwHashTest {
     private PwHash.Lazy pwHashLazy;
 
 
-
     @Before
     public void setUp() {
         Sodium sodium = new Sodium();

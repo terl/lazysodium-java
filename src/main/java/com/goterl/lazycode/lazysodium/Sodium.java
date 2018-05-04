@@ -9,12 +9,17 @@
 package com.goterl.lazycode.lazysodium;
 
 import com.sun.jna.Native;
+import com.sun.jna.Platform;
+
+import java.io.File;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 public class Sodium {
 
 
     public Sodium() {
-        String path = "sodium";
+        String path = getLibSodiumFromResources();
         register(path);
     }
 
@@ -27,6 +32,27 @@ public class Sodium {
         Native.register(path);
     }
 
+    private String getLibSodiumFromResources() {
+        ClassLoader loader = this.getClass().getClassLoader();
+        String path = null;
+        try {
+            path = getSodiumLib(loader, "windows", "libsodium.dll");
+            if (Platform.isLinux()) {
+                path = getSodiumLib(loader, "linux", "libsodium.so");
+            } else if (Platform.isMac()) {
+                path = getSodiumLib(loader, "mac", "libsodium.dylib");
+            }
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        return path;
+    }
+
+    private String getSodiumLib(ClassLoader loader, String folder, String name) throws URISyntaxException {
+        URL url = loader.getResource(folder);
+        return new File(url.toURI()).toPath().resolve(name).toString();
+    }
 
     //// -------------------------------------------|
     //// HELPERS
