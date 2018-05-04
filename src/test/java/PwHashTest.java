@@ -36,7 +36,7 @@ public class PwHashTest {
 
     @Before
     public void setUp() {
-        Sodium sodium = new Sodium("sodium");
+        Sodium sodium = new Sodium();
         this.lazySodium = new LazySodium(sodium);
         this.random = (Random) lazySodium;
         this.pwHash = (PwHash.Native) lazySodium;
