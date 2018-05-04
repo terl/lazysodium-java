@@ -25,6 +25,10 @@ Lazysodium for Java requires:
 * Gradle 4.7 or higher (if compiling and building).
 * No effort whatsoever.
 
+**PLEASE NOTE**: The included `libsodium.so` library for Linux will only work on Ubuntu 17.04 or above. This is a limitation of the libsodium 1.0.16 library as it requires a newer Ubuntu version. 
+
+It's not recommended to use anything lower than 1.0.16 as it has bug fixes to the Argon2 password hashing scheme. You could specify a path to your own `libsodium.so` but there's high chance that it won't work and will fail with `Error in '/usr/lib/jvm/java-8-oracle/bin/java': free(): invalid next size (fast): 0x00007f1754064880`.
+
 ### Add 
 If you're using Gradle, this is how to get started with Lazysodium in your Java projects:
 
