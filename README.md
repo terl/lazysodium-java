@@ -6,12 +6,15 @@
 Lazysodium is a **Java 8+** crypto wrapper around a **near complete** implementation of the [Libsodium](https://github.com/jedisct1/libsodium) library, providing developer's with a **smooth and effortless** experience. 
 
 
+[![Build Status](https://semaphoreci.com/api/v1/terl/lazysodium-java/branches/master/badge.svg)](https://semaphoreci.com/terl/lazysodium-java)
+
 ## Why Lazysodium
 We created Lazysodium because we really wanted a solid cryptography library that would just work without fuss.
 
 We were exasperated and annoyed with current Libsodium implementations as some of them were just poorly maintained, poorly managed and, plain and simply, poorly architected.
 
 Thus, Lazysodium was born with the blessings of *Lazycode*, a part of [Terl](https://terl.co) that specialises in giving developer's easy-to-use software and tools that just work. Read more about us below.
+
 
 
 ## Get started
