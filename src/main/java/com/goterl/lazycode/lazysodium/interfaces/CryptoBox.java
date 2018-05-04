@@ -14,10 +14,8 @@ import com.goterl.lazycode.lazysodium.utils.BaseChecker;
 public interface CryptoBox {
 
 
-    int
-            CRYPTO_BOX_CURVE25519XSALSA20POLY1305_SEEDBYTES = 32,
-
-            CRYPTO_BOX_SEEDBYTES = CRYPTO_BOX_CURVE25519XSALSA20POLY1305_SEEDBYTES;
+    int CURVE25519XSALSA20POLY1305_SEEDBYTES = 32,
+        SEEDBYTES = CURVE25519XSALSA20POLY1305_SEEDBYTES;
 
 
     class Checker extends BaseChecker {

@@ -23,60 +23,60 @@ public interface PwHash {
 
 
     int
-            PWHASH_ALG_ARGON2I13 = 1,
-            PWHASH_ALG_ARGON2ID13 = 2,
-            PWHASH_ALG_DEFAULT = PWHASH_ALG_ARGON2ID13,
-            PWHASH_ARGON2ID_SALTBYTES = 16,
-            PWHASH_ARGON2ID_BYTES_MIN = 16,
-            PWHASH_SALTBYTES = PWHASH_ARGON2ID_SALTBYTES,
+            ALG_ARGON2I13 = 1,
+            ALG_ARGON2ID13 = 2,
+            ALG_DEFAULT = ALG_ARGON2ID13,
+            ARGON2ID_SALTBYTES = 16,
+            ARGON2ID_BYTES_MIN = 16,
+            SALTBYTES = ARGON2ID_SALTBYTES,
 
-            PWHASH_ARGON2ID_STR_BYTES = 128,
-            PWHASH_STR_BYTES = PWHASH_ARGON2ID_STR_BYTES;
+            ARGON2ID_STR_BYTES = 128,
+            STR_BYTES = ARGON2ID_STR_BYTES;
 
 
 
     long
-            PWHASH_ARGON2ID_PASSWD_MIN = 0L,
-            PWHASH_ARGON2ID_PASSWD_MAX = Constants.UNISGNED_INT,
-            PWHASH_ARGON2ID_BYTES_MAX = Constants.UNISGNED_INT,
+            ARGON2ID_PASSWD_MIN = 0L,
+            ARGON2ID_PASSWD_MAX = Constants.UNISGNED_INT,
+            ARGON2ID_BYTES_MAX = Constants.UNISGNED_INT,
 
-            PWHASH_ARGON2ID_OPSLIMIT_MIN = 1L,
-            PWHASH_ARGON2ID_OPSLIMIT_MAX = Constants.UNISGNED_INT,
-            PWHASH_ARGON2ID_OPSLIMIT_INTERACTIVE = 2L,
-            PWHASH_ARGON2ID_OPSLIMIT_MODERATE = 3L,
-            PWHASH_ARGON2ID_OPSLIMIT_SENSITIVE = 4L,
+            ARGON2ID_OPSLIMIT_MIN = 1L,
+            ARGON2ID_OPSLIMIT_MAX = Constants.UNISGNED_INT,
+            ARGON2ID_OPSLIMIT_INTERACTIVE = 2L,
+            ARGON2ID_OPSLIMIT_MODERATE = 3L,
+            ARGON2ID_OPSLIMIT_SENSITIVE = 4L,
 
-            PWHASH_ARGON2ID_MEMLIMIT_MIN = 8192L,
-            PWHASH_ARGON2ID_MEMLIMIT_MAX = ((SIZE_MAX >= 4398046510080L) ? 4398046510080L : (SIZE_MAX >= 2147483648L) ? 2147483648L : 32768L),
-            PWHASH_ARGON2ID_MEMLIMIT_INTERACTIVE = 67108864L,
-            PWHASH_ARGON2ID_MEMLIMIT_MODERATE = 268435456L,
-            PWHASH_ARGON2ID_MEMLIMIT_SENSITIVE = 1073741824L,
+            ARGON2ID_MEMLIMIT_MIN = 8192L,
+            ARGON2ID_MEMLIMIT_MAX = ((SIZE_MAX >= 4398046510080L) ? 4398046510080L : (SIZE_MAX >= 2147483648L) ? 2147483648L : 32768L),
+            ARGON2ID_MEMLIMIT_INTERACTIVE = 67108864L,
+            ARGON2ID_MEMLIMIT_MODERATE = 268435456L,
+            ARGON2ID_MEMLIMIT_SENSITIVE = 1073741824L,
 
 
 
             // Should use these values rather than the above
             // as the above values are likely to change
-            PWHASH_PASSWD_MIN = PWHASH_ARGON2ID_PASSWD_MIN,
-            PWHASH_PASSWD_MAX = PWHASH_ARGON2ID_PASSWD_MAX,
+            PASSWD_MIN = ARGON2ID_PASSWD_MIN,
+            PWHASH_PASSWD_MAX = ARGON2ID_PASSWD_MAX,
 
 
-            PWHASH_BYTES_MIN = PWHASH_ARGON2ID_BYTES_MIN,
-            PWHASH_BYTES_MAX = PWHASH_ARGON2ID_BYTES_MAX,
+            PWHASH_BYTES_MIN = ARGON2ID_BYTES_MIN,
+            PWHASH_BYTES_MAX = ARGON2ID_BYTES_MAX,
 
-            PWHASH_OPSLIMIT_MIN = PWHASH_ARGON2ID_OPSLIMIT_MIN,
-            PWHASH_OPSLIMIT_MAX = PWHASH_ARGON2ID_OPSLIMIT_MAX,
+            PWHASH_OPSLIMIT_MIN = ARGON2ID_OPSLIMIT_MIN,
+            PWHASH_OPSLIMIT_MAX = ARGON2ID_OPSLIMIT_MAX,
 
-            PWHASH_MEMLIMIT_MIN = PWHASH_ARGON2ID_MEMLIMIT_MIN,
-            PWHASH_MEMLIMIT_MAX = PWHASH_ARGON2ID_MEMLIMIT_MAX;
+            PWHASH_MEMLIMIT_MIN = ARGON2ID_MEMLIMIT_MIN,
+            PWHASH_MEMLIMIT_MAX = ARGON2ID_MEMLIMIT_MAX;
 
 
 
     class Checker extends BaseChecker {
         public static boolean saltIsCorrect(long saltLen) {
-            return correctLen(saltLen, PwHash.PWHASH_SALTBYTES);
+            return correctLen(saltLen, PwHash.SALTBYTES);
         }
         public static boolean passwordIsCorrect(long len) {
-            return isBetween(len, PwHash.PWHASH_PASSWD_MIN, PwHash.PWHASH_PASSWD_MAX);
+            return isBetween(len, PwHash.PASSWD_MIN, PwHash.PWHASH_PASSWD_MAX);
         }
         public static boolean opsLimitIsCorrect(long ops) {
             return isBetween(ops, PwHash.PWHASH_OPSLIMIT_MIN, PwHash.PWHASH_OPSLIMIT_MAX);
@@ -125,7 +125,7 @@ public interface PwHash {
          *                 Between {@link PwHash#PWHASH_OPSLIMIT_MIN} and {@link PwHash#PWHASH_OPSLIMIT_MAX}.
          * @param memLimit The amount of memory to use.
          *                 Between {@link PwHash#PWHASH_MEMLIMIT_MIN} and {@link PwHash#PWHASH_MEMLIMIT_MAX}.
-         * @param alg The algorithm to use. Please use {@link PwHash#PWHASH_ALG_ARGON2ID13} for now.
+         * @param alg The algorithm to use. Please use {@link PwHash#ALG_ARGON2ID13} for now.
          * @return True if the hash succeeded.
          */
         boolean cryptoPwHash(byte[] outputHash,
@@ -140,7 +140,7 @@ public interface PwHash {
         /**
          * Hashes a password and stores it into an array. The output is
          * an ASCII encoded string in a byte array.
-         * @param outputStr An array to hold the hash. Must be at least {@link PwHash#PWHASH_STR_BYTES}.
+         * @param outputStr An array to hold the hash. Must be at least {@link PwHash#STR_BYTES}.
          * @param password A password that you want to hash.
          * @param passwordLen The password's byte length.
          * @param opsLimit The number of cycles to perform whilst hashing.
@@ -180,7 +180,7 @@ public interface PwHash {
          *                 Between {@link PwHash#PWHASH_OPSLIMIT_MIN} and {@link PwHash#PWHASH_OPSLIMIT_MAX}.
          * @param memLimit The amount of memory to use.
          *                 Between {@link PwHash#PWHASH_MEMLIMIT_MIN} and {@link PwHash#PWHASH_MEMLIMIT_MAX}.
-         * @param alg The algorithm to use. Defaults to {@link PwHash#PWHASH_ALG_ARGON2ID13}.
+         * @param alg The algorithm to use. Defaults to {@link PwHash#ALG_ARGON2ID13}.
          * @return A hash of the password in bytes.
          * @throws SodiumException If the password is too short or the opsLimit is not correct.
          */
@@ -194,7 +194,7 @@ public interface PwHash {
         /**
          * The most minimal way of hashing a given password.
          * We auto-generate the salt and use the default
-         * hashing algorithm {@link PwHash#PWHASH_ALG_DEFAULT}.
+         * hashing algorithm {@link PwHash#ALG_DEFAULT}.
          * @param password The password string to hash.
          * @param opsLimit The number of cycles to perform whilst hashing.
          *                 Between {@link PwHash#PWHASH_OPSLIMIT_MIN}

@@ -117,34 +117,42 @@ public class LazySodium implements
 
     @Override
     public String cryptoKdfKeygen(Charset charset) {
-        byte[] masterKeyInBytes = new byte[KeyDerivation.KDF_MASTER_KEY_BYTES];
+        byte[] masterKeyInBytes = new byte[KeyDerivation.MASTER_KEY_BYTES];
         nacl.crypto_kdf_keygen(masterKeyInBytes);
-        return str(masterKeyInBytes);
+        return sodiumBin2Hex(masterKeyInBytes);
     }
 
     @Override
     public String cryptoKdfKeygen() {
-        byte[] masterKey = new byte[KeyDerivation.KDF_MASTER_KEY_BYTES];
+        byte[] masterKey = new byte[KeyDerivation.MASTER_KEY_BYTES];
         nacl.crypto_kdf_keygen(masterKey);
-        return str(masterKey);
+        return sodiumBin2Hex(masterKey);
     }
 
     @Override
-    public String cryptoKdfDeriveFromKey(long subKeyId, String context, byte[] masterKey) {
-        if (wrongLen(masterKey, KeyDerivation.KDF_MASTER_KEY_BYTES)) {
-            return null;
+    public String cryptoKdfDeriveFromKey(int lengthOfSubkey, long subKeyId, String context, byte[] masterKey)
+            throws SodiumException {
+        return cryptoKdfDeriveFromKey(lengthOfSubkey, subKeyId, context, sodiumBin2Hex(masterKey));
+    }
+
+    @Override
+    public String cryptoKdfDeriveFromKey(int lengthOfSubkey, long subKeyId, String context, String masterKey)
+            throws SodiumException {
+        if (!KeyDerivation.Checker.subKeyIsCorrect(lengthOfSubkey)) {
+            throw new SodiumException("Subkey is not between the correct lengths.");
         }
-        return cryptoKdfDeriveFromKey(subKeyId, context, str(masterKey));
-    }
-
-    @Override
-    public String cryptoKdfDeriveFromKey(long subKeyId, String context, String masterKey) {
-        byte[] subKey = new byte[KeyDerivation.KDF_BYTES_MIN];
-        byte[] contextAsBytes = context.getBytes(charset);
-        byte[] masterKeyAsBytes = context.getBytes(charset);
+        if (!KeyDerivation.Checker.masterKeyIsCorrect(sodiumHex2Bin(masterKey).length)) {
+            throw new SodiumException("Master key is not the correct length.");
+        }
+        if (!KeyDerivation.Checker.contextIsCorrect(bytes(context).length)) {
+            throw new SodiumException("Context is not the correct length.");
+        }
+        byte[] subKey = new byte[lengthOfSubkey];
+        byte[] contextAsBytes = bytes(context);
+        byte[] masterKeyAsBytes = sodiumHex2Bin(masterKey);
         int res = nacl.crypto_kdf_derive_from_key(
                 subKey,
-                KeyDerivation.KDF_BYTES_MIN,
+                lengthOfSubkey,
                 subKeyId,
                 contextAsBytes,
                 masterKeyAsBytes
@@ -208,14 +216,14 @@ public class LazySodium implements
     public byte[] cryptoPwHash(byte[] password, byte[] salt, long opsLimit, long memLimit, PwHash.Alg alg)
             throws SodiumException {
         PwHash.Checker.checkAll(password.length, salt.length, opsLimit, memLimit);
-        byte[] hash = new byte[CryptoBox.CRYPTO_BOX_SEEDBYTES];
+        byte[] hash = new byte[CryptoBox.SEEDBYTES];
         cryptoPwHash(hash, hash.length, password, password.length, salt, opsLimit, memLimit, alg);
         return hash;
     }
 
     @Override
     public String cryptoPwHashStr(String password, long opsLimit, long memLimit) throws SodiumException {
-        byte[] hash = new byte[PwHash.PWHASH_STR_BYTES];
+        byte[] hash = new byte[PwHash.STR_BYTES];
         byte[] passwordBytes = bytes(password);
         boolean res = cryptoPwHashStr(hash, passwordBytes, passwordBytes.length, opsLimit, memLimit);
         if (!res) {
