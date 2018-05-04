@@ -1,4 +1,4 @@
-<img width="150" style="display: inline;" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/logo_full_colour.png" />
+<img width="300" style="display: inline;" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/lazysodium.png" />
 
 
 # Lazysodium for Java
@@ -28,9 +28,6 @@ Lazysodium for Java requires:
 * Gradle 4.7 or higher (if compiling and building).
 * No effort whatsoever.
 
-**PLEASE NOTE**: The included `libsodium.so` library for Linux will only work on Ubuntu 17.04 or above. This is a limitation of the libsodium 1.0.16 library as it requires a newer Ubuntu version. 
-
-It's not recommended to use anything lower than 1.0.16 as it has bug fixes to the Argon2 password hashing scheme. You could specify a path to your own `libsodium.so` but there's high chance that it won't work and will fail with `Error in '/usr/lib/jvm/java-8-oracle/bin/java': free(): invalid next size (fast): 0x00007f1754064880`.
 
 ### Add 
 If you're using Gradle, this is how to get started with Lazysodium in your Java projects:
@@ -50,7 +47,10 @@ All contributions are appreciated and very welcome. There are many forms that co
 
 **It could be that you've found a bug.** Report these immediately on the issue tracker. If it's a very dangerous bug, then confidentiality would be preferred. 
 
-**It could be that you want to contribute code.** Sure, just submit a pull request through GitHub with a short explanation of what you've done.
+**It could be that you want to contribute code.** Sure, just submit a pull request through GitHub with a short explanation of what you've done. 
+
+For more information please see the [Contributor's Guide](https://github.com/terl/lazysodium-java/wiki/Contributor%27s-Guide).
+
 
 ## Licence
 The licence is `MPLv2` as it is a nice middle-ground between copyleft and copyright. I know some developer's would rather not get bogged down in legalities (and we don't blame them). Therefore a brief read of [Mozilla's MPLv2 FAQ](https://www.mozilla.org/en-US/MPL/2.0/FAQ/#apply) will show you the luxuries afforded to you by the `MPLv2` Licence. Some luxuries include:
