@@ -215,7 +215,7 @@ public class LazySodium implements
 
     @Override
     public String cryptoPwHashStr(String password, long opsLimit, long memLimit) throws SodiumException {
-        byte[] hash = new byte[CryptoBox.CRYPTO_BOX_SEEDBYTES];
+        byte[] hash = new byte[PwHash.PWHASH_STR_BYTES];
         byte[] passwordBytes = bytes(password);
         boolean res = cryptoPwHashStr(hash, passwordBytes, passwordBytes.length, opsLimit, memLimit);
         if (!res) {
