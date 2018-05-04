@@ -1,4 +1,4 @@
-<img width="300" style="display: inline;" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/lazysodium.png" />
+<p align="center"><img width="260" style="float: center;" style="display: inline;" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/lazysodium.png" /></p>
 
 
 # Lazysodium for Java
@@ -41,16 +41,7 @@ For **documentation, roadmap, compiling, usage, etc** we invite you to head over
 
 
 ## Contributing
-All contributions are appreciated and very welcome. There are many forms that contributions could take.
-
-**It could be a simple suggestion.** For example, "*It would be great if Lazysodium implemented feature X.*" If you are suggesting a feature, please make sure it's within the scope of what Lazysodium actually does - which is to wrap Java functions around the native C functions provided by Libsodium.
-
-**It could be that you've found a bug.** Report these immediately on the issue tracker. If it's a very dangerous bug, then confidentiality would be preferred. 
-
-**It could be that you want to contribute code.** Sure, just submit a pull request through GitHub with a short explanation of what you've done. 
-
-For more information please see the [Contributor's Guide](https://github.com/terl/lazysodium-java/wiki/Contributor%27s-Guide).
-
+Contributions are welcome! For more information please see the [Contributor's Guide](https://github.com/terl/lazysodium-java/wiki/Contributor%27s-Guide).
 
 ## Licence
 The licence is `MPLv2` as it is a nice middle-ground between copyleft and copyright. I know some developer's would rather not get bogged down in legalities (and we don't blame them). Therefore a brief read of [Mozilla's MPLv2 FAQ](https://www.mozilla.org/en-US/MPL/2.0/FAQ/#apply) will show you the luxuries afforded to you by the `MPLv2` Licence. Some luxuries include:
