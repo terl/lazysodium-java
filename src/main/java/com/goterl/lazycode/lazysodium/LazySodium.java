@@ -21,6 +21,7 @@ public class LazySodium implements
         Padding.Native, Padding.Lazy,
         Helpers.Native, Helpers.Lazy,
         PwHash.Native, PwHash.Lazy,
+        SecretBox.Native, SecretBox.Lazy,
         KeyDerivation.Native, KeyDerivation.Lazy {
 
     private final Sodium nacl;
@@ -157,7 +158,7 @@ public class LazySodium implements
                 contextAsBytes,
                 masterKeyAsBytes
         );
-        return res(res, str(subKey));
+        return res(res, sodiumBin2Hex(subKey));
     }
 
     @Override
@@ -213,10 +214,10 @@ public class LazySodium implements
     }
 
     @Override
-    public byte[] cryptoPwHash(byte[] password, byte[] salt, long opsLimit, long memLimit, PwHash.Alg alg)
+    public byte[] cryptoPwHash(int lengthOfHash, byte[] password, byte[] salt, long opsLimit, long memLimit, PwHash.Alg alg)
             throws SodiumException {
         PwHash.Checker.checkAll(password.length, salt.length, opsLimit, memLimit);
-        byte[] hash = new byte[CryptoBox.SEEDBYTES];
+        byte[] hash = new byte[lengthOfHash];
         cryptoPwHash(hash, hash.length, password, password.length, salt, opsLimit, memLimit, alg);
         return hash;
     }
@@ -305,4 +306,28 @@ public class LazySodium implements
 
     }
 
+    @Override
+    public void cryptoSecretBoxKeygen(byte[] key) {
+        nacl.crypto_secretbox_keygen(key);
+    }
+
+    @Override
+    public boolean cryptoSecretBoxEasy(byte[] cipherText, byte[] message, long messageLen, byte[] nonce, byte[] key) {
+        return boolify(nacl.crypto_secretbox_easy(cipherText, message, messageLen, nonce, key));
+    }
+
+    @Override
+    public boolean cryptoSecretBoxOpenEasy(byte[] message, byte[] cipherText, byte[] cipherTextLen, byte[] nonce, byte[] key) {
+        return boolify(nacl.crypto_secretbox_open_easy(message, cipherText, cipherTextLen, nonce, key));
+    }
+
+    @Override
+    public boolean cryptoSecretBoxDetached(byte[] cipherText, byte[] mac, byte[] message, long messageLen, byte[] nonce, byte[] key) {
+        return boolify(nacl.crypto_secretbox_detached(cipherText, mac, message, messageLen, nonce, key));
+    }
+
+    @Override
+    public boolean cryptoSecretBoxOpenDetached(byte[] message, byte[] cipherText, byte[] mac, byte[] cipherTextLen, byte[] nonce, byte[] key) {
+        return boolify(nacl.crypto_secretbox_open_detached(message, cipherText, mac, cipherTextLen, nonce, key));
+    }
 }

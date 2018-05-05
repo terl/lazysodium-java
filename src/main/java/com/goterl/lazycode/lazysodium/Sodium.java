@@ -110,6 +110,8 @@ public class Sodium {
     native int crypto_pwhash_str_needs_rehash(byte[] hash, long opsLimit, long memLimit);
 
 
+
+
     //// -------------------------------------------|
     //// KEY DERIVATION FUNCTIONS
     //// -------------------------------------------|
@@ -120,6 +122,41 @@ public class Sodium {
                                           long subkeyId,
                                           byte[] context,
                                           byte[] masterKey);
+
+
+
+
+    //// -------------------------------------------|
+    //// SECRET BOX
+    //// -------------------------------------------|
+    native void crypto_secretbox_keygen(byte[] key);
+
+
+    native int crypto_secretbox_easy(byte[] cipherText,
+                                     byte[] message,
+                                     long messageLen,
+                                     byte[] nonce,
+                                     byte[] key);
+
+    native int crypto_secretbox_open_easy(byte[] message,
+                                          byte[] cipherText,
+                                          byte[] cipherTextLen,
+                                          byte[] nonce,
+                                          byte[] key);
+
+    native int crypto_secretbox_detached(byte[] cipherText,
+                                         byte[] mac,
+                                         byte[] message,
+                                         long messageLen,
+                                         byte[] nonce,
+                                         byte[] key);
+
+    native int crypto_secretbox_open_detached(byte[] message,
+                                              byte[] cipherText,
+                                              byte[] mac,
+                                              byte[] cipherTextLen,
+                                              byte[] nonce,
+                                              byte[] key);
 
 
 }

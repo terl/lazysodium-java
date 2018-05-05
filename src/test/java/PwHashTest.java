@@ -19,6 +19,21 @@ import static org.junit.Assert.*;
 
 public class PwHashTest extends BaseTest {
 
+    @Test
+    public void nativeHash() throws SodiumException {
+
+        byte[] output = pwHashLazy.cryptoPwHash(
+                200,
+                PASSWORD_BYTES,
+                lazySodium.randomBytesBuf(PwHash.SALTBYTES),
+                5L,
+                8192L * 2,
+                PwHash.Alg.PWHASH_ALG_ARGON2ID13
+        );
+
+        assertNotNull("Native hashing failed.", output);
+    }
+
 
     @Test
     public void strMin() {

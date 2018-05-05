@@ -50,7 +50,7 @@ public interface KeyDerivation {
          * it in string format.
          * The reason why this does not return a string via the normal 'masterKey.getBytes()'
          * is because the resulting string is mangled.
-         * @return A {@link Helpers.Lazy#sodiumBin2Hex(byte[])}-ified string.
+         * @return A {@link Helpers.Lazy#sodiumBin2Hex(byte[])}-ified master key.
          */
         String cryptoKdfKeygen();
 
@@ -69,7 +69,7 @@ public interface KeyDerivation {
          * @param subKeyId The ID of the subkey.
          * @param context The context of the subkey. Must be {@link KeyDerivation#CONTEXT_BYTES}.
          * @param masterKey The generated master key from {@link #cryptoKdfKeygen()} or {@link #cryptoKdfKeygen(Charset)}.
-         * @return A subkey.
+         * @return A subkey that's gone through {@link Helpers.Lazy#sodiumBin2Hex(byte[])}.
          * @throws SodiumException If any of the lengths were not correct.
          */
         String cryptoKdfDeriveFromKey(int lengthOfSubKey, long subKeyId, String context, byte[] masterKey) throws SodiumException;
