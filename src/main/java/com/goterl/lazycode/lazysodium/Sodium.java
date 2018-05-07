@@ -8,6 +8,7 @@
 
 package com.goterl.lazycode.lazysodium;
 
+import com.goterl.lazycode.lazysodium.structs.crypto_secretstream_xchacha20poly1305_state;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
@@ -157,6 +158,19 @@ public class Sodium {
                                               byte[] cipherTextLen,
                                               byte[] nonce,
                                               byte[] key);
+
+    //// -------------------------------------------|
+    //// SECRET SCREAM
+    //// -------------------------------------------|
+
+
+    native void crypto_secretstream_xchacha20poly1305_keygen(byte[] key);
+
+    native int crypto_secretstream_xchacha20poly1305_init_push(
+            crypto_secretstream_xchacha20poly1305_state state,
+            byte[] header,
+            byte[] key
+    );
 
 
 }

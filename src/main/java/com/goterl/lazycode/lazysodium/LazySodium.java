@@ -11,6 +11,7 @@ package com.goterl.lazycode.lazysodium;
 import com.google.common.io.BaseEncoding;
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.*;
+import com.goterl.lazycode.lazysodium.structs.crypto_secretstream_xchacha20poly1305_state;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -18,6 +19,7 @@ import java.nio.charset.StandardCharsets;
 public class LazySodium implements
         Base,
         Random,
+        SecretStream.Native, SecretStream.Lazy,
         Padding.Native, Padding.Lazy,
         Helpers.Native, Helpers.Lazy,
         PwHash.Native, PwHash.Lazy,
@@ -329,5 +331,15 @@ public class LazySodium implements
     @Override
     public boolean cryptoSecretBoxOpenDetached(byte[] message, byte[] cipherText, byte[] mac, byte[] cipherTextLen, byte[] nonce, byte[] key) {
         return boolify(nacl.crypto_secretbox_open_detached(message, cipherText, mac, cipherTextLen, nonce, key));
+    }
+
+    @Override
+    public void cryptoSecretStreamXChacha20Poly1305Keygen(byte[] key) {
+        nacl.crypto_secretstream_xchacha20poly1305_keygen(key);
+    }
+
+    @Override
+    public int cryptoSecretStreamXChacha20Poly1305InitPush(crypto_secretstream_xchacha20poly1305_state state, byte[] header, byte[] key) {
+        return nacl.crypto_secretstream_xchacha20poly1305_init_push(state, header, key);
     }
 }

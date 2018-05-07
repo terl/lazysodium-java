@@ -25,6 +25,7 @@ import static org.junit.Assert.*;
 
 public class BaseTest {
 
+    public static Sodium sodium;
     public final String PASSWORD = "catdog";
     public final byte[] PASSWORD_BYTES = PASSWORD.getBytes(StandardCharsets.UTF_8);
     public final int PASSWORD_BYTES_LEN = PASSWORD_BYTES.length;
@@ -42,7 +43,7 @@ public class BaseTest {
 
     @BeforeClass
     public static void beforeClass() {
-        Sodium sodium = new Sodium();
+        sodium = new Sodium();
         lazySodium = new LazySodium(sodium);
         random = (Random) lazySodium;
         pwHash = (PwHash.Native) lazySodium;
