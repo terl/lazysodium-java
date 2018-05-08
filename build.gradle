@@ -14,7 +14,7 @@ plugins {
 }
 
 group 'com.goterl.lazycode'
-version = '0.2.2'
+version = '0.3.0'
 
 mainClassName = "com.goterl.lazycode.lazysodium.LazySodium"
 
@@ -24,11 +24,11 @@ targetCompatibility = 1.8
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
 
+    implementation 'net.java.dev.jna:jna:4.5.1'
+
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     // api 'org.apache.commons:commons-math3:3.6.1'
 
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
-    implementation 'com.google.guava:guava:23.0'
 
     testImplementation 'junit:junit:4.12'
 }

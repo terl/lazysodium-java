@@ -20,7 +20,7 @@ public class LibraryTest {
     @Test
     public void sodiumLoadsFromResources() {
         try {
-            Sodium sodium = new Sodium();
+            Sodium sodium = Sodium.loadJava();
             LazySodium lazySodium = new LazySodium(sodium);
             assertTrue("Libsodium loads correctly", true);
         } catch (NullPointerException e) {

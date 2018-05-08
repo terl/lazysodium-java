@@ -8,7 +8,6 @@
 
 package com.goterl.lazycode.lazysodium;
 
-import com.google.common.io.BaseEncoding;
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.*;
 import com.goterl.lazycode.lazysodium.structs.crypto_secretstream_xchacha20poly1305_state;
@@ -52,14 +51,38 @@ public class LazySodium implements
 
     @Override
     public String sodiumBin2Hex(byte[] bin) {
-        return BaseEncoding.base16().encode(bin);
+        return bytesToHex(bin);
     }
 
     @Override
     public byte[] sodiumHex2Bin(String hex) {
-        return BaseEncoding.base16().decode(hex);
+        return hexToBytes(hex);
     }
 
+
+    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+
+    // The following is from https://stackoverflow.com/a/9855338/3526705
+    private static String bytesToHex(byte[] bytes) {
+        char[] hexChars = new char[bytes.length * 2];
+        for ( int j = 0; j < bytes.length; j++ ) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = hexArray[v >>> 4];
+            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
+        }
+        return new String(hexChars);
+    }
+
+    // The following is from https://stackoverflow.com/a/140861/3526705
+    private static byte[] hexToBytes(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                    + Character.digit(s.charAt(i+1), 16));
+        }
+        return data;
+    }
 
 
     //// -------------------------------------------|

@@ -13,6 +13,7 @@ import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.utils.BaseChecker;
 import com.goterl.lazycode.lazysodium.utils.Constants;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.goterl.lazycode.lazysodium.utils.Constants.SIZE_MAX;
@@ -233,8 +234,15 @@ public interface PwHash {
             return map.get(alg);
         }
 
-        private final static Map<Integer, Alg> map =
-                stream(Alg.values()).collect(toMap(alg -> alg.val, alg -> alg));
+        private final static Map<Integer, Alg> map = getMap();
+
+        private static Map<Integer, Alg> getMap() {
+            Map<Integer, Alg> map = new HashMap<>();
+            for (Alg alg : Alg.values()) {
+                map.put(alg.val, alg);
+            }
+            return map;
+        }
     }
 
 

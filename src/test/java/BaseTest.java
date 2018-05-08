@@ -43,7 +43,7 @@ public class BaseTest {
 
     @BeforeClass
     public static void beforeClass() {
-        sodium = new Sodium();
+        sodium = Sodium.loadJava();
         lazySodium = new LazySodium(sodium);
         random = (Random) lazySodium;
         pwHash = (PwHash.Native) lazySodium;

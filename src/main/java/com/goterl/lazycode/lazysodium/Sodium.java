@@ -19,14 +19,25 @@ import java.net.URL;
 public class Sodium {
 
 
-    public Sodium() {
+    private Sodium() {
         String path = getLibSodiumFromResources();
         register(path);
     }
 
-
-    public Sodium(String path) {
+    private Sodium(String path) {
         register(path);
+    }
+
+    public static Sodium loadJava() {
+        return new Sodium();
+    }
+
+    public static Sodium loadJava(String path) {
+        return new Sodium(path);
+    }
+
+    public static Sodium loadAndroid(String libsodiumPath) {
+        return new Sodium(libsodiumPath);
     }
 
     private void register(String path) {
@@ -38,7 +49,7 @@ public class Sodium {
         String path = null;
         try {
             path = getSodiumLib(loader, "windows", "libsodium.dll");
-            if (Platform.isLinux()) {
+            if (Platform.isLinux() || Platform.isAndroid()) {
                 path = getSodiumLib(loader, "linux", "libsodium.so");
             } else if (Platform.isMac()) {
                 path = getSodiumLib(loader, "mac", "libsodium.dylib");
@@ -54,6 +65,7 @@ public class Sodium {
         URL url = loader.getResource(folder);
         return new File(url.toURI()).toPath().resolve(name).toString();
     }
+
 
     //// -------------------------------------------|
     //// HELPERS
