@@ -180,11 +180,12 @@ public class Sodium {
                                               byte[] nonce,
                                               byte[] key);
 
+
+
+
     //// -------------------------------------------|
     //// SECRET SCREAM
     //// -------------------------------------------|
-
-
     native void crypto_secretstream_xchacha20poly1305_keygen(byte[] key);
 
     native int crypto_secretstream_xchacha20poly1305_init_push(
@@ -222,5 +223,14 @@ public class Sodium {
     );
 
 
+
+    //// -------------------------------------------|
+    //// CRYPTO AUTH
+    //// -------------------------------------------|
+    native int crypto_auth(byte[] tag, byte[] in, long inLen, byte[] key);
+
+    native int crypto_auth_verify(byte[] tag, byte[] in, long inLen, byte[] key);
+
+    native void crypto_auth_keygen(byte[] k);
 
 }

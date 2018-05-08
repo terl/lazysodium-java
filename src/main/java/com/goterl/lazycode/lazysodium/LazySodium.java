@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 public class LazySodium implements
         Base,
         Random,
+        Auth.Native, Auth.Lazy,
         SecretStream.Native, SecretStream.Lazy,
         Padding.Native, Padding.Lazy,
         Helpers.Native, Helpers.Lazy,
@@ -43,6 +44,8 @@ public class LazySodium implements
     private void init() {
         // Any common init code here
     }
+
+
 
 
     //// -------------------------------------------|
@@ -83,6 +86,8 @@ public class LazySodium implements
         }
         return data;
     }
+
+
 
 
     //// -------------------------------------------|
@@ -259,78 +264,11 @@ public class LazySodium implements
     }
 
 
+
+
     //// -------------------------------------------|
-    //// CONVENIENCE
+    //// SECRET BOX
     //// -------------------------------------------|
-
-    @Override
-    public <T> T res(int res, T object) {
-        return (res != 0) ? null : object;
-    }
-
-    @Override
-    public boolean boolify(int res) {
-        return (res == 0);
-    }
-
-    @Override
-    public String str(byte[] bs) {
-        return new String(bs, charset);
-    }
-
-    @Override
-    public byte[] bytes(String s) {
-        return s.getBytes(charset);
-    }
-
-    @Override
-    public boolean wrongLen(byte[] bs, int shouldBe) {
-        return bs.length != shouldBe;
-    }
-
-    @Override
-    public boolean wrongLen(int byteLength, int shouldBe) {
-        return byteLength != shouldBe;
-    }
-
-    @Override
-    public boolean wrongLen(int byteLength, long shouldBe) {
-        return byteLength != shouldBe;
-    }
-
-    @Override
-    public byte[] removeNulls(byte[] bs) {
-        // First determine how many bytes to
-        // cut off the end by checking total of null bytes
-        int totalBytesToCut = 0;
-        for (int i = bs.length - 1; i >= 0; i--) {
-            byte b = bs[i];
-            if (b == 0) {
-                totalBytesToCut++;
-            }
-        }
-
-        // ... then we now can copy across the array
-        // without the null bytes.
-        int newLengthOfBs = bs.length - totalBytesToCut;
-        byte[] trimmed = new byte[newLengthOfBs];
-        System.arraycopy(bs, 0, trimmed, 0, newLengthOfBs);
-
-        return trimmed;
-    }
-
-
-
-    // --
-    //// -------------------------------------------|
-    //// MAIN
-    //// -------------------------------------------|
-    // --
-    public static void main(String[] args) {
-        // Can implement some code here to test
-
-    }
-
     @Override
     public void cryptoSecretBoxKeygen(byte[] key) {
         nacl.crypto_secretbox_keygen(key);
@@ -356,6 +294,12 @@ public class LazySodium implements
         return boolify(nacl.crypto_secretbox_open_detached(message, cipherText, mac, cipherTextLen, nonce, key));
     }
 
+
+
+
+    //// -------------------------------------------|
+    //// SECRET SCREAM
+    //// -------------------------------------------|
     @Override
     public void cryptoSecretStreamXChacha20Poly1305Keygen(byte[] key) {
         nacl.crypto_secretstream_xchacha20poly1305_keygen(key);
@@ -451,5 +395,102 @@ public class LazySodium implements
                 0L
         );
     }
+
+
+    //// -------------------------------------------|
+    //// CRYPTO AUTH
+    //// -------------------------------------------|
+    @Override
+    public int cryptoAuth(byte[] tag, byte[] in, long inLen, byte[] key) {
+        return nacl.crypto_auth(tag, in, inLen, key);
+    }
+
+    @Override
+    public int cryptoAuthVerify(byte[] tag, byte[] in, long inLen, byte[] key) {
+        return nacl.crypto_auth_verify(tag, in, inLen, key);
+    }
+
+    @Override
+    public void cryptoAuthKeygen(byte[] k) {
+        nacl.crypto_auth_keygen(k);
+    }
+
+
+
+
+    //// -------------------------------------------|
+    //// CONVENIENCE
+    //// -------------------------------------------|
+
+    @Override
+    public <T> T res(int res, T object) {
+        return (res != 0) ? null : object;
+    }
+
+    @Override
+    public boolean boolify(int res) {
+        return (res == 0);
+    }
+
+    @Override
+    public String str(byte[] bs) {
+        return new String(bs, charset);
+    }
+
+    @Override
+    public byte[] bytes(String s) {
+        return s.getBytes(charset);
+    }
+
+    @Override
+    public boolean wrongLen(byte[] bs, int shouldBe) {
+        return bs.length != shouldBe;
+    }
+
+    @Override
+    public boolean wrongLen(int byteLength, int shouldBe) {
+        return byteLength != shouldBe;
+    }
+
+    @Override
+    public boolean wrongLen(int byteLength, long shouldBe) {
+        return byteLength != shouldBe;
+    }
+
+    @Override
+    public byte[] removeNulls(byte[] bs) {
+        // First determine how many bytes to
+        // cut off the end by checking total of null bytes
+        int totalBytesToCut = 0;
+        for (int i = bs.length - 1; i >= 0; i--) {
+            byte b = bs[i];
+            if (b == 0) {
+                totalBytesToCut++;
+            }
+        }
+
+        // ... then we now can copy across the array
+        // without the null bytes.
+        int newLengthOfBs = bs.length - totalBytesToCut;
+        byte[] trimmed = new byte[newLengthOfBs];
+        System.arraycopy(bs, 0, trimmed, 0, newLengthOfBs);
+
+        return trimmed;
+    }
+
+
+
+    // --
+    //// -------------------------------------------|
+    //// MAIN
+    //// -------------------------------------------|
+    // --
+    public static void main(String[] args) {
+        // Can implement some code here to test
+
+    }
+
+
+
 
 }

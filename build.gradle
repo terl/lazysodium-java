@@ -7,11 +7,10 @@
  * file, you can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+apply plugin: 'java-library'
+apply plugin: 'application'
+apply plugin: 'signing'
 
-plugins {
-    id 'java-library'
-    id 'application'
-}
 
 group 'com.goterl.lazycode'
 version = '0.3.1'
@@ -35,4 +34,11 @@ dependencies {
 
 repositories {
     jcenter()
+}
+
+signing {
+    // This will use the GPG Agent
+    // to sign the jar
+    useGpgCmd()
+    sign configurations.archives
 }

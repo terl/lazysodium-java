@@ -48,6 +48,7 @@ atlassian-ide-plugin.xml
 ################
 .gradle
 .m2
+gradle.properties
 
 # Build output directies #
 ################
