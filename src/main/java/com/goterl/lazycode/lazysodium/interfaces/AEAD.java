@@ -12,7 +12,9 @@ package com.goterl.lazycode.lazysodium.interfaces;
 public interface AEAD {
 
 
-    int XCHACHA20POLY1305_IETF_KEYBYTES = 32;
+    int XCHACHA20POLY1305_IETF_KEYBYTES = 32,
+        XCHACHA20POLY1305_IETF_ABYTES = 16,
+        XCHACHA20POLY1305_IETF_NPUBBYTES = 24;
 
 
 

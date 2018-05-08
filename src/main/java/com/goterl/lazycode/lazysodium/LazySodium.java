@@ -365,4 +365,91 @@ public class LazySodium implements
     public int cryptoSecretStreamXChacha20Poly1305InitPush(crypto_secretstream_xchacha20poly1305_state state, byte[] header, byte[] key) {
         return nacl.crypto_secretstream_xchacha20poly1305_init_push(state, header, key);
     }
+
+    @Override
+    public int cryptoSecretStreamXChacha20Poly1305Push(crypto_secretstream_xchacha20poly1305_state state, byte[] cipher, Long cipherAddr, byte[] message, long messageLen, byte tag) {
+        return nacl.crypto_secretstream_xchacha20poly1305_push(
+                state,
+                cipher,
+                cipherAddr,
+                message,
+                messageLen,
+                new byte[0],
+                0L,
+                tag
+        );
+    }
+
+    @Override
+    public int cryptoSecretStreamXChacha20Poly1305Push(crypto_secretstream_xchacha20poly1305_state state,
+                                                       byte[] cipher,
+                                                       byte[] message,
+                                                       long messageLen,
+                                                       byte tag) {
+        return nacl.crypto_secretstream_xchacha20poly1305_push(
+                state,
+                cipher,
+                null,
+                message,
+                messageLen,
+                new byte[0],
+                0L,
+                tag
+        );
+    }
+
+    @Override
+    public int cryptoSecretStreamXChacha20Poly1305Push(crypto_secretstream_xchacha20poly1305_state state,
+                                                       byte[] cipher,
+                                                       Long cipherAddr,
+                                                       byte[] message,
+                                                       long messageLen,
+                                                       byte[] additionalData,
+                                                       long additionalDataLen,
+                                                       byte tag) {
+        return nacl.crypto_secretstream_xchacha20poly1305_push(
+                state,
+                cipher,
+                cipherAddr,
+                message,
+                messageLen,
+                additionalData,
+                additionalDataLen,
+                tag
+        );
+    }
+
+    @Override
+    public int cryptoSecretStreamXChacha20Poly1305InitPull(crypto_secretstream_xchacha20poly1305_state state, byte[] header, byte[] key) {
+        return nacl.crypto_secretstream_xchacha20poly1305_init_pull(state, header, key);
+    }
+
+    @Override
+    public int cryptoSecretStreamXChacha20Poly1305Pull(crypto_secretstream_xchacha20poly1305_state state,
+                                                       byte[] message,
+                                                       Long messageAddress,
+                                                       byte tag,
+                                                       byte[] cipher,
+                                                       long cipherLen,
+                                                       byte[] additionalData,
+                                                       long additionalDataLen) {
+        return nacl.crypto_secretstream_xchacha20poly1305_pull(
+                state, message, messageAddress, tag, cipher, cipherLen, additionalData, additionalDataLen
+        );
+    }
+
+    @Override
+    public int cryptoSecretStreamXChacha20Poly1305Pull(crypto_secretstream_xchacha20poly1305_state state, byte[] message, byte tag, byte[] cipher, long cipherLen) {
+        return nacl.crypto_secretstream_xchacha20poly1305_pull(
+                state,
+                message,
+                null,
+                tag,
+                cipher,
+                cipherLen,
+                new byte[0],
+                0L
+        );
+    }
+
 }

@@ -8,6 +8,7 @@
 
 package com.goterl.lazycode.lazysodium.structs;
 
+import com.goterl.lazycode.lazysodium.interfaces.SecretStream;
 import com.sun.jna.Structure;
 
 import java.util.Arrays;
@@ -22,7 +23,7 @@ public class crypto_secretstream_xchacha20poly1305_state extends Structure {
         return Arrays.asList("k", "pad");
     }
 
-    public byte[] k;
-    public byte[] pad;
+    public byte[] k = new byte[SecretStream.XCHACHA20POLY1305_KEYBYTES];
+    public byte[] pad = new byte[8];
 
 }

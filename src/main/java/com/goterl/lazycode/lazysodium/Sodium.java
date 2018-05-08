@@ -28,6 +28,11 @@ public class Sodium {
         register(path);
     }
 
+    private Sodium(String path, boolean isAndroid) {
+        if (isAndroid) Native.register(Sodium.class, path);
+        else register(path);
+    }
+
     public static Sodium loadJava() {
         return new Sodium();
     }
@@ -36,8 +41,12 @@ public class Sodium {
         return new Sodium(path);
     }
 
+    public static Sodium loadAndroid() {
+        return new Sodium("sodium", true);
+    }
+
     public static Sodium loadAndroid(String libsodiumPath) {
-        return new Sodium(libsodiumPath);
+        return new Sodium(libsodiumPath, true);
     }
 
     private void register(String path) {
@@ -183,6 +192,35 @@ public class Sodium {
             byte[] header,
             byte[] key
     );
+
+    native int crypto_secretstream_xchacha20poly1305_push(
+            crypto_secretstream_xchacha20poly1305_state state,
+            byte[] cipher,
+            Long cipherAddr,
+            byte[] message,
+            long messageLen,
+            byte[] additionalData,
+            long additionalDataLen,
+            byte tag
+    );
+
+    native int crypto_secretstream_xchacha20poly1305_init_pull(
+            crypto_secretstream_xchacha20poly1305_state state,
+            byte[] header,
+            byte[] key
+    );
+
+    native int crypto_secretstream_xchacha20poly1305_pull(
+            crypto_secretstream_xchacha20poly1305_state state,
+            byte[] message,
+            Long messageAddress,
+            byte tagAddress,
+            byte[] cipher,
+            long cipherLen,
+            byte[] additionalData,
+            long additionalDataLen
+    );
+
 
 
 }
