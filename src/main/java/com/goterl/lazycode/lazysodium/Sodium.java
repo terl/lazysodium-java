@@ -233,4 +233,13 @@ public class Sodium {
 
     native void crypto_auth_keygen(byte[] k);
 
+
+
+
+    //// -------------------------------------------|
+    //// SHORT HASH
+    //// -------------------------------------------|
+    native int crypto_shorthash(byte[] out, byte[] in, long inLen, byte[] key);
+
+    native int crypto_shorthash_keygen(byte[] key);
 }
