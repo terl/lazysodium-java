@@ -7,19 +7,40 @@
  * file, you can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-apply plugin: 'java-library'
-apply plugin: 'application'
-apply plugin: 'signing'
+plugins {
+    id 'java-library'
+    id 'application'
+    id 'signing'
+    id 'maven'
+    id 'maven-publish'
+    id "com.jfrog.bintray" version "1.7.3"
+}
+
+ext {
+    artifactId = "lazysodium-java"
+    groupId = "com.goterl.lazycode"
+    version = '0.3.3'
+    description = "Lazysodium (Java) makes it effortless for Java " +
+            "developers to get started with Libsodium's cryptography."
+}
+
+repositories {
+    jcenter()
+}
 
 
-group 'com.goterl.lazycode'
-version = '0.3.2'
+group project.ext.groupId
+version = project.ext.version
 
 mainClassName = "com.goterl.lazycode.lazysodium.LazySodium"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+
+
+
+// Dependencies
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
 
@@ -32,13 +53,88 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 }
 
-repositories {
-    jcenter()
-}
 
+// Tasks
 signing {
     // This will use the GPG Agent
     // to sign the jar
     useGpgCmd()
     sign configurations.archives
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourcesJar, javadocJar
+}
+
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId project.ext.groupId
+            artifactId project.ext.artifactId
+            version project.ext.version
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', project.ext.description)
+                root.appendNode('name', project.ext.artifactId)
+                root.appendNode('url', 'https://github.com/terl/lazysodium-java')
+
+                def scm = root.appendNode('scm')
+                scm.appendNode("connection", "scm:git:git://github.com/terl/lazysodium-java.git")
+                scm.appendNode("developerConnection", "scm:git:ssh://github.com/terl/lazysodium-java")
+                scm.appendNode("url", "http://github.com/terl/lazysodium-java")
+
+                def license = root.appendNode('licenses').appendNode('license')
+                license.appendNode('name', 'Mozilla Public License, Version 2.0')
+                license.appendNode('url', 'http://www.mozilla.org/MPL/2.0/index.txt')
+                license.appendNode('distribution', 'repo')
+
+                def developer = root.appendNode('developers').appendNode('developer')
+                developer.appendNode('name', 'Terl Tech Ltd')
+                developer.appendNode('email', 'hello@terl.co')
+            }
+        }
+    }
+}
+
+
+bintray {
+    user = getProperty("bintray.user")
+    key = getProperty("bintray.apiKey")
+    publications = ['mavenJava']
+    publish = true
+    pkg {
+        repo = 'lazysodium-maven'
+        name = 'lazysodium-java'
+        userOrg = 'terl'
+        desc = project.ext.description
+        licenses = ['MPL-2.0']
+        issueTrackerUrl = "https://github.com/terl/lazysodium-java/issues"
+        vcsUrl = 'https://github.com/terl/lazysodium-java.git'
+
+        version {
+            name = project.ext.version
+            released = new java.util.Date()
+            vcsTag = project.ext.version
+            gpg {
+                sign = true //Determines whether to GPG sign the files. The default is false
+                passphrase = 'passphrase' //Optional. The passphrase for GPG signing'
+            }
+        }
+    }
 }
