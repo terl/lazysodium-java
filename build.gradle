@@ -19,7 +19,7 @@ plugins {
 ext {
     artifactId = "lazysodium-java"
     groupId = "com.goterl.lazycode"
-    version = '0.3.3'
+    version = '0.3.4'
     description = "Lazysodium (Java) makes it effortless for Java " +
             "developers to get started with Libsodium's cryptography."
 }
@@ -72,6 +72,18 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
+
+task signPom(type: Sign) {
+    sign project.file("$buildDir/publications/mavenJava/pom-default.xml")
+
+    // The signing plugin does not seem to notice
+    // it when the publications folder with the
+    // signature has been deleted. So we always
+    // create a new signature
+    outputs.upToDateWhen { false }
+}
+
+
 artifacts {
     archives sourcesJar, javadocJar
 }
@@ -87,6 +99,21 @@ publishing {
             version project.ext.version
             artifact sourcesJar
             artifact javadocJar
+
+
+            project.tasks.withType(Sign) {
+                signatures.all {
+                    def type = it.type
+                    if (it.file.name.endsWith('.tar.gz.asc')) {
+                        // Workaround in case a tar.gz file should published
+                        type = 'tar.gz.asc'
+                    } else if (it.type.equals('xml.asc')) {
+                        // Set correct extension for signature of pom file
+                        type = 'pom.asc'
+                    }
+                    artifact source: it.file, classifier: it.classifier ?: null, extension: type
+                }
+            }
 
             pom.withXml {
                 def root = asNode()
@@ -131,10 +158,16 @@ bintray {
             name = project.ext.version
             released = new java.util.Date()
             vcsTag = project.ext.version
-            gpg {
-                sign = true //Determines whether to GPG sign the files. The default is false
-                passphrase = 'passphrase' //Optional. The passphrase for GPG signing'
-            }
         }
+    }
+}
+
+
+model {
+    tasks.publishMavenJavaPublicationToMavenLocal {
+        dependsOn project.tasks.withType(Sign)
+    }
+    tasks.signPom {
+        dependsOn tasks.generatePomFileForMavenJavaPublication
     }
 }
