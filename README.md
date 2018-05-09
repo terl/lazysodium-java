@@ -16,6 +16,41 @@ We were exasperated and annoyed with current Libsodium implementations as some o
 
 Thus, Lazysodium was born with the blessings of *Lazycode*, a part of [Terl](https://terl.co) that specialises in giving developers easy-to-use software and tools that just work. Read more about us below.
 
+### The difference in code
+
+We just wanted to entice you with a few snippets of code, to show you the ease of Lazysodium.
+
+#### Using native functions
+
+```java
+byte[] subkey = subkey[32];
+int subkeyLen = subkey.length;
+long subkeyId = 1L;
+byte[] context = "Examples".getBytes(StandardCharsets.UTF_8);
+byte[] masterKey = "a_master_key".getBytes(StandardCharsets.UTF_8);
+int result = lazySodium.cryptoKdfDeriveFromKey(subkey, subkeyLen, subkeyId, context, masterKey);
+
+// Now check the result
+if (res == 0) {
+    // We have a positive result. Let's store it in a database.
+    String subkeyString = new String(subkey, StandardCharsets.UTF_8);
+}
+```
+
+#### Using Lazysodium's lazy functions
+You could use the above native functions **or** you could use the "Lazy" functions 😄
+ 
+```java
+
+long subKeyId = 1L;
+String context = "Examples";
+String masterKey = "a_master_key";
+String subkeyString = lazySodium.cryptoKdfDeriveFromKey(subKeyId, context, masterKey);
+```
+
+As you can see Lazysodium's lazy functions **save you a lot of pain**!
+
+
 
 
 ## Get started
@@ -85,11 +120,9 @@ The licence is `MPLv2` as it is a nice middle-ground between copyleft and copyri
  * You can modify this library internally within your organisation or company but if you distribute those changes, then you must contribute those changes back to this project or make those changes publicly available.
  * The above point fosters a **better community** and so the library is **constantly improved**.
  
- 
+<p></p>
 
----
+<a href="https://terl.co"><img width="80" style="float: left: display: inline;" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/terl_slant.png" /></a>
 
-<a href="https://terl.co"><img width="100" style="float: left: display: inline;" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/terl_slant.png" /></a>
-
-Created by the wizards at [Terl](https://terl.co).
+<sup>Created by the wizards at [Terl](https://terl.co).</sup>
 
