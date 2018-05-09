@@ -437,13 +437,13 @@ public class LazySodium implements
     //// GENERIC HASH
     //// -------------------------------------------|
     @Override
-    public int cryptoGenericHash(byte[] out, int outLen, byte[] in, long inLen, char[] key, int keyLen) {
+    public int cryptoGenericHash(byte[] out, int outLen, byte[] in, long inLen, byte[] key, int keyLen) {
         return nacl.crypto_generichash(out, outLen, in, inLen, key, keyLen);
     }
 
     @Override
     public void cryptoGenericHashKeygen(byte[] k) {
-        nacl.crypto_generic_hash_keygen(k);
+        nacl.crypto_generichash_keygen(k);
     }
 
 

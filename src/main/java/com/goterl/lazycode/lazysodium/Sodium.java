@@ -251,8 +251,8 @@ public class Sodium {
     native int crypto_generichash(
             byte[] out, int outLen,
             byte[] in, long inLen,
-            char[] key, int keyLen
+            byte[] key, int keyLen
     );
 
-    native void crypto_generic_hash_keygen(byte[] k);
+    native void crypto_generichash_keygen(byte[] k);
 }

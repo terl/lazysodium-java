@@ -28,7 +28,7 @@ public interface GenericHash {
         int cryptoGenericHash(
                 byte[] out, int outLen,
                 byte[] in, long inLen,
-                char[] key, int keyLen
+                byte[] key, int keyLen
         );
 
         void cryptoGenericHashKeygen(byte[] k);
