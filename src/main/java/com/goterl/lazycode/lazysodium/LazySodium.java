@@ -18,6 +18,8 @@ import java.nio.charset.StandardCharsets;
 public class LazySodium implements
         Base,
         Random,
+        GenericHash.Native, GenericHash.Lazy,
+        ShortHash.Native, ShortHash.Lazy,
         Auth.Native, Auth.Lazy,
         SecretStream.Native, SecretStream.Lazy,
         Padding.Native, Padding.Lazy,
@@ -417,6 +419,35 @@ public class LazySodium implements
 
 
 
+    //// -------------------------------------------|
+    //// SHORT HASH
+    //// -------------------------------------------|
+    @Override
+    public int cryptoShortHash(byte[] out, byte[] in, long inLen, byte[] key) {
+        return nacl.crypto_shorthash(out, in, inLen, key);
+    }
+
+    @Override
+    public void cryptoShortHashKeygen(byte[] k) {
+        nacl.crypto_shorthash_keygen(k);
+    }
+
+
+    //// -------------------------------------------|
+    //// GENERIC HASH
+    //// -------------------------------------------|
+    @Override
+    public int cryptoGenericHash(byte[] out, int outLen, byte[] in, long inLen, char[] key, int keyLen) {
+        return nacl.crypto_generichash(out, outLen, in, inLen, key, keyLen);
+    }
+
+    @Override
+    public void cryptoGenericHashKeygen(byte[] k) {
+        nacl.crypto_generic_hash_keygen(k);
+    }
+
+
+
 
     //// -------------------------------------------|
     //// CONVENIENCE
@@ -489,8 +520,6 @@ public class LazySodium implements
         // Can implement some code here to test
 
     }
-
-
 
 
 }
