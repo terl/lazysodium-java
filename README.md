@@ -3,17 +3,18 @@
 
 # Lazysodium for Java
 
-Lazysodium is a **Java 8+** crypto wrapper around a **near complete** implementation of the [Libsodium](https://github.com/jedisct1/libsodium) library, providing developer's with a **smooth and effortless** experience. 
+Lazysodium is a **Java 8+** crypto wrapper around a **near complete** implementation of the [Libsodium](https://github.com/jedisct1/libsodium) library, providing developers with a **smooth and effortless** experience. 
 
 
 [![Build Status](https://semaphoreci.com/api/v1/terl/lazysodium-java/branches/master/badge.svg)](https://semaphoreci.com/terl/lazysodium-java)
+[![Download](https://api.bintray.com/packages/terl/lazysodium-maven/lazysodium-java/images/download.svg) ](https://bintray.com/terl/lazysodium-maven/lazysodium-java/_latestVersion)
 
 ## Why Lazysodium
 We created Lazysodium because we really wanted a solid cryptography library that would just work without fuss.
 
 We were exasperated and annoyed with current Libsodium implementations as some of them were just poorly maintained, poorly managed and, plain and simply, poorly architected.
 
-Thus, Lazysodium was born with the blessings of *Lazycode*, a part of [Terl](https://terl.co) that specialises in giving developer's easy-to-use software and tools that just work. Read more about us below.
+Thus, Lazysodium was born with the blessings of *Lazycode*, a part of [Terl](https://terl.co) that specialises in giving developers easy-to-use software and tools that just work. Read more about us below.
 
 
 
@@ -30,10 +31,43 @@ Lazysodium for Java requires:
 
 
 ### Add 
-If you're using Gradle, this is how to get started with Lazysodium in your Java projects:
+This is how to get started with Lazysodium in your Java projects. Substitute `VERSION_NUMBER` with the number provided in the following button:
 
-```sh
-implementation "com.goterl.lazycode:lazysodium-java:+"
+[![Download](https://api.bintray.com/packages/terl/lazysodium-maven/lazysodium-java/images/download.svg) ](https://bintray.com/terl/lazysodium-maven/lazysodium-java/_latestVersion)
+
+##### Gradle
+
+```groovy
+dependencies {
+    // ...
+    implementation "com.goterl.lazycode:lazysodium-java:VERSION_NUMBER"
+}
+```
+
+##### Maven
+
+```xml
+<dependency>
+  <groupId>com.goterl.lazycode</groupId>
+  <artifactId>lazysodium-java</artifactId>
+  <version>VERSION_NUMBER</version>
+  <type>pom</type>
+</dependency>
+```
+
+##### Ivy
+
+```xml
+<dependency org='com.goterl.lazycode' name='lazysodium-java' rev=VERSION_NUMBER'>
+  <artifact name='lazysodium-java' ext='pom' ></artifact>
+</dependency>
+```
+
+
+##### SBT
+
+```sbt
+libraryDependencies += "com.goterl.lazycode" % "lazysodium-java" % "VERSION_NUMBER"
 ```
 
 ### Learn
