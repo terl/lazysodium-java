@@ -141,8 +141,8 @@ publishing {
 
 
 bintray {
-    user = getProperty("bintray.user")
-    key = getProperty("bintray.apiKey")
+    user = findProperty("bintray.user")
+    key = findProperty("bintray.apiKey")
     publications = ['mavenJava']
     publish = true
     pkg {
