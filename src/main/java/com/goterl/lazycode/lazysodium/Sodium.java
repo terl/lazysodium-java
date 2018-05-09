@@ -255,4 +255,29 @@ public class Sodium {
     );
 
     native void crypto_generichash_keygen(byte[] k);
+
+
+    //// -------------------------------------------|
+    //// KEY EXCHANGE
+    //// -------------------------------------------|
+    native int crypto_kx_keypair(byte[] publicKey, byte[] secretKey);
+
+    native int crypto_kx_seed_keypair(byte[] publicKey, byte[] secretKey, byte[] seed);
+
+    native int crypto_kx_client_session_keys(
+            byte[] rx,
+            byte[] tx,
+            byte[] clientPk,
+            byte[] clientSk,
+            byte[] serverPk
+    );
+
+    native int crypto_kx_server_session_keys(
+            byte[] rx,
+            byte[] tx,
+            byte[] serverPk,
+            byte[] serverSk,
+            byte[] clientPk
+    );
+
 }
