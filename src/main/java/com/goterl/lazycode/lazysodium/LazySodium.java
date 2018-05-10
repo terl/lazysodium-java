@@ -26,6 +26,7 @@ public class LazySodium implements
         Helpers.Native, Helpers.Lazy,
         PwHash.Native, PwHash.Lazy,
         SecretBox.Native, SecretBox.Lazy,
+        KeyExchange.Native, KeyExchange.Lazy,
         KeyDerivation.Native, KeyDerivation.Lazy {
 
     private final Sodium nacl;
@@ -62,6 +63,16 @@ public class LazySodium implements
     @Override
     public byte[] sodiumHex2Bin(String hex) {
         return hexToBytes(hex);
+    }
+
+    @Override
+    public String toHex(byte[] bin) {
+        return sodiumBin2Hex(bin);
+    }
+
+    @Override
+    public byte[] toBin(String hex) {
+        return sodiumHex2Bin(hex);
     }
 
 
@@ -198,6 +209,64 @@ public class LazySodium implements
         return nacl.crypto_kdf_derive_from_key(subKey, subKeyLen, subKeyId, context, masterKey);
     }
 
+
+
+    //// -------------------------------------------|
+    //// KEY EXCHANGE
+    //// -------------------------------------------|
+
+    @Override
+    public int cryptoKxKeypair(byte[] publicKey, byte[] secretKey) {
+        return nacl.crypto_kx_keypair(publicKey, secretKey);
+    }
+
+    @Override
+    public int cryptoKxSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed) {
+        return nacl.crypto_kx_seed_keypair(publicKey, secretKey, seed);
+    }
+
+    @Override
+    public int cryptoKxClientSessionKeys(byte[] rx, byte[] tx, byte[] clientPk, byte[] clientSk, byte[] serverPk) {
+        return nacl.crypto_kx_client_session_keys(rx, tx, clientPk, clientSk, serverPk);
+    }
+
+    @Override
+    public int cryptoKxServerSessionKeys(byte[] rx, byte[] tx, byte[] serverPk, byte[] serverSk, byte[] clientPk) {
+        return nacl.crypto_kx_server_session_keys(rx, tx, serverPk, serverSk, clientPk);
+    }
+
+
+    // -- Lazy functions
+
+    @Override
+    public KeyExchange.KeyPair cryptoKxKeypair() {
+        byte[] secretKey = randomBytesBuf(KeyExchange.SECRETKEYBYTES);
+        byte[] publicKey = randomBytesBuf(KeyExchange.PUBLICKEYBYTES);
+
+        nacl.crypto_kx_keypair(publicKey, secretKey);
+
+        return new KeyExchange.KeyPair(sodiumBin2Hex(publicKey), sodiumBin2Hex(secretKey));
+    }
+
+    @Override
+    public KeyExchange.KeyPair cryptoKxKeypair(byte[] seed) {
+        byte[] secretKey = randomBytesBuf(KeyExchange.SECRETKEYBYTES);
+        byte[] publicKey = randomBytesBuf(KeyExchange.PUBLICKEYBYTES);
+
+        nacl.crypto_kx_seed_keypair(publicKey, secretKey, seed);
+
+        return new KeyExchange.KeyPair(sodiumBin2Hex(publicKey), sodiumBin2Hex(secretKey));
+    }
+
+    @Override
+    public KeyExchange.SessionPair cryptoKxClientSessionKeys(byte[] clientPk, byte[] clientSk, byte[] serverPk) {
+        return null;
+    }
+
+    @Override
+    public KeyExchange.SessionPair cryptoKxServerSessionKeys(byte[] serverPk, byte[] serverSk, byte[] clientPk) {
+        return null;
+    }
 
 
 
@@ -467,7 +536,7 @@ public class LazySodium implements
         byte[] inBytes = hexToBytes(in);
         byte[] keyBytes = hexToBytes(key);
         byte[] out = randomBytesBuf(ShortHash.SIPHASHX24_KEYBYTES);
-        if (nacl.crypto_shorthash(out, inBytes, inBytes.length, keyBytes) != 0) {
+        if (nacl.crypto_shorthash_siphashx24(out, inBytes, inBytes.length, keyBytes) != 0) {
             throw new SodiumException("Failed short-input hashing.");
         }
         return sodiumBin2Hex(out);
@@ -576,6 +645,5 @@ public class LazySodium implements
     public static void main(String[] args) {
         // Can implement some code here to test
     }
-
 
 }

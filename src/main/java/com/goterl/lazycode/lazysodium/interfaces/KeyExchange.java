@@ -18,6 +18,42 @@ public interface KeyExchange {
     String PRIMITIVE = "x25519blake2b";
 
 
+    class KeyPair {
+        private String secretKey;
+        private String publicKey;
+
+        public KeyPair(String publicKey, String secretKey) {
+            this.secretKey = secretKey;
+            this.publicKey = publicKey;
+        }
+
+        public String getSecretKey() {
+            return secretKey;
+        }
+
+        public String getPublicKey() {
+            return publicKey;
+        }
+    }
+
+    class SessionPair {
+        private String rx;
+        private String tx;
+
+        public SessionPair(String rx, String tx) {
+            this.rx = rx;
+            this.tx = tx;
+        }
+
+        public String getRx() {
+            return rx;
+        }
+
+        public String getTx() {
+            return tx;
+        }
+    }
+
     interface Native {
         int cryptoKxKeypair(byte[] publicKey, byte[] secretKey);
         int cryptoKxSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed);
@@ -38,7 +74,18 @@ public interface KeyExchange {
     }
 
     interface Lazy {
-
+        KeyPair cryptoKxKeypair();
+        KeyPair cryptoKxKeypair(byte[] seed);
+        SessionPair cryptoKxClientSessionKeys(
+                byte[] clientPk,
+                byte[] clientSk,
+                byte[] serverPk
+        );
+        SessionPair cryptoKxServerSessionKeys(
+                byte[] serverPk,
+                byte[] serverSk,
+                byte[] clientPk
+        );
     }
 
 
