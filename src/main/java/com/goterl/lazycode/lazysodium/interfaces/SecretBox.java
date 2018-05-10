@@ -40,7 +40,17 @@ public interface SecretBox {
     }
 
     interface Native {
+
+        /**
+         * creates a random key. It is equivalent to calling
+         * {@link Random#randomBytesBuf(int)} but improves code
+         * clarity and can prevent misuse by ensuring
+         * that the provided key length is
+         * always correct.
+         * @param key
+         */
         void cryptoSecretBoxKeygen(byte[] key);
+
         boolean cryptoSecretBoxEasy(byte[] cipherText,
                                  byte[] message,
                                  long messageLen,

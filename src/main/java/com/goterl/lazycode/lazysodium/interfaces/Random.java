@@ -11,8 +11,35 @@ package com.goterl.lazycode.lazysodium.interfaces;
 
 
 public interface Random {
+
+    /**
+     * Return a random byte 0 and 0xffffffff included.
+     * @return A random byte.
+     */
     byte randomBytesRandom();
-    byte randomBytesUniform(byte upperBound);
+
+    /**
+     * Returns an unpredictable value between 0 and upperBound (excluded).
+     * Unlike randombytes_random() % upper_bound, it guarantees a uniform distribution
+     * of the possible output values even when upper_bound is not a power of 2. Note
+     * that an upper_bound less than 2 leaves only a single element to be chosen, namely 0.
+     * @param upperBound
+     * @return A uniformally random bytes.
+     */
+    byte randomBytesUniform(int upperBound);
+
+    /**
+     * Get a random number of bytes.
+     * @param size The length of the byte array to return.
+     * @return Random byte array.
+     */
     byte[] randomBytesBuf(int size);
+
+    /**
+     * Get deterministically random bytes given a seed.
+     * @param size Size of byte array to return.
+     * @param seed Seed to provide.
+     * @return Deterministically random byte array.
+     */
     byte[] randomBytesDeterministic(int size, byte[] seed);
 }

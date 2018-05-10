@@ -9,71 +9,116 @@
 package com.goterl.lazycode.lazysodium;
 
 import com.goterl.lazycode.lazysodium.structs.crypto_secretstream_xchacha20poly1305_state;
+import com.goterl.lazycode.lazysodium.utils.NativeUtils;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
 import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.io.IOException;
 
 public class Sodium {
 
 
     private Sodium() {
-        String path = getLibSodiumFromResources();
-        register(path);
+        registerFromResources();
     }
 
+    /**
+     * All paths must be relative to the resources directory.
+     * For example, if loading libsodium.so in the {@code mac} folder
+     * which is in the {@code resources} folder ({@code resources/mac/libsodium.so}),
+     * then you must provide {@code /mac/libsodium.so}. Please note that the libsodium.so
+     * file HAS to be built for the platform this program will run on.
+     *
+     * @param path Absolute path to libsodium.so
+     */
     private Sodium(String path) {
-        register(path);
+        registerFromPath(path);
     }
 
+    /**
+     * If on the Android platform, then this is the intended
+     * route to load a libsodium.so. Please note loading for Android is not
+     * the same as loading for Java.
+     * The path must be to a directory with all the Android ABIs, which each
+     * contain the libsodium.so. For example, given {@code /path/to/ABI1/}, {@code /path/to/THE_ABI2/}
+     * and {@code /path/to/THE_ABI3/}, the param {@code path} should be {@code /path/to/}.
+     * ABI1, ABI2 and ABI3 all contain libsodium.so built for that specific ABI.
+     *
+     * @param path Absolute path to the parent directory of all the ABI directories.
+     * @param isAndroid Set to true if the program will execute in an Android environment.
+     */
     private Sodium(String path, boolean isAndroid) {
+        // If it's the android platform then we load
+        // the libsodium.so files from the "src/main/libs" folder.
+        // This folder should have folders with ABI names
+        // such as x86 or x86_64 etc.
         if (isAndroid) Native.register(Sodium.class, path);
-        else register(path);
+
+        // If the path is provided to us, then we
+        else registerFromPath(path);
     }
 
     public static Sodium loadJava() {
         return new Sodium();
     }
 
-    public static Sodium loadJava(String path) {
-        return new Sodium(path);
+    /**
+     * Please see {@link Sodium#Sodium(String)}.
+     * @param libSodiumNativeLibPath Absolute path to a libsodium.so file.
+     * @return Sodium instance.
+     */
+    public static Sodium loadJava(String libSodiumNativeLibPath) {
+        return new Sodium(libSodiumNativeLibPath);
     }
 
     public static Sodium loadAndroid() {
         return new Sodium("sodium", true);
     }
 
-    public static Sodium loadAndroid(String libsodiumPath) {
-        return new Sodium(libsodiumPath, true);
+    /**
+     * Please see {@link Sodium#Sodium(String, boolean)}.
+     * @param libSodiumNativeLibPath Absolute path to parent directory of all the ABIs.
+     * @return Sodium instance.
+     */
+    public static Sodium loadAndroid(String libSodiumNativeLibPath) {
+        return new Sodium(libSodiumNativeLibPath, true);
     }
 
-    private void register(String path) {
-        Native.register(path);
+    private void registerFromResources() {
+        String path = getLibSodiumFromResources();
+        try {
+            NativeUtils.loadLibraryFromJar(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * All paths must be absolute.
+     */
+    private void registerFromPath(String path) {
+        Native.register(Sodium.class, path);
     }
 
     private String getLibSodiumFromResources() {
-        ClassLoader loader = this.getClass().getClassLoader();
-        String path = null;
-        try {
-            path = getSodiumLib(loader, "windows", "libsodium.dll");
-            if (Platform.isLinux() || Platform.isAndroid()) {
-                path = getSodiumLib(loader, "linux", "libsodium.so");
-            } else if (Platform.isMac()) {
-                path = getSodiumLib(loader, "mac", "libsodium.dylib");
-            }
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
+        String path = getPath("windows", "libsodium.dll");
+        if (Platform.isLinux() || Platform.isAndroid()) {
+            path = getPath("linux", "libsodium.so");
+        } else if (Platform.isMac()) {
+            path = getPath("mac", "libsodium.dylib");
         }
-
         return path;
     }
 
-    private String getSodiumLib(ClassLoader loader, String folder, String name) throws URISyntaxException {
-        URL url = loader.getResource(folder);
-        return new File(url.toURI()).toPath().resolve(name).toString();
+    private String getPath(String folder, String name) {
+        String resourcePath = folder + File.separator + name;
+        if (!resourcePath.startsWith(File.separator)) {
+            resourcePath = File.separator + resourcePath;
+        }
+        return resourcePath;
     }
+
 
 
     //// -------------------------------------------|
@@ -101,7 +146,7 @@ public class Sodium {
     //// -------------------------------------------|
     native byte randombytes_random();
 
-    native byte randombytes_uniform(byte upperBound);
+    native byte randombytes_uniform(int upperBound);
 
     native void randombytes_buf(byte[] buffer, int size);
 

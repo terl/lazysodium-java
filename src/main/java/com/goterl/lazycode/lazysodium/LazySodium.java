@@ -109,7 +109,7 @@ public class LazySodium implements
     }
 
     @Override
-    public byte randomBytesUniform(byte upperBound) {
+    public byte randomBytesUniform(int upperBound) {
         return nacl.randombytes_uniform(upperBound);
     }
 
@@ -256,6 +256,17 @@ public class LazySodium implements
 
     @Override
     public String cryptoPwHashStr(String password, long opsLimit, long memLimit) throws SodiumException {
+        byte[] hash = new byte[PwHash.STR_BYTES];
+        byte[] passwordBytes = bytes(password);
+        boolean res = cryptoPwHashStr(hash, passwordBytes, passwordBytes.length, opsLimit, memLimit);
+        if (!res) {
+            throw new SodiumException("Password hashing failed.");
+        }
+        return str(hash);
+    }
+
+    @Override
+    public String cryptoPwHashStrRemoveNulls(String password, long opsLimit, long memLimit) throws SodiumException {
         byte[] hash = new byte[PwHash.STR_BYTES];
         byte[] passwordBytes = bytes(password);
         boolean res = cryptoPwHashStr(hash, passwordBytes, passwordBytes.length, opsLimit, memLimit);

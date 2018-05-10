@@ -209,6 +209,23 @@ public interface PwHash {
                                long opsLimit,
                                long memLimit) throws SodiumException;
 
+        /**
+         * Hashes a string and removes all the null bytes. Uses the
+         * hashing algorithm {@link PwHash#ALG_DEFAULT}.
+         * @param password The password string to hash.
+         * @param opsLimit The number of cycles to perform whilst hashing.
+         *                 Between {@link PwHash#OPSLIMIT_MIN}
+         *                 and {@link PwHash#OPSLIMIT_MAX}.
+         * @param memLimit The amount of memory to use.
+         *                 Between {@link PwHash#MEMLIMIT_MIN}
+         *                 and {@link PwHash#MEMLIMIT_MAX}.
+         * @return
+         * @throws SodiumException
+         */
+        String cryptoPwHashStrRemoveNulls(String password,
+                                           long opsLimit,
+                                           long memLimit) throws SodiumException;
+
     }
 
 
