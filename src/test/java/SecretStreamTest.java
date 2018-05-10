@@ -76,10 +76,6 @@ public class SecretStreamTest extends BaseTest {
                 SecretStream.XCHACHA20POLY1305_TAG_FINAL
         );
 
-        System.out.println(lazySodium.sodiumBin2Hex(c1));
-        System.out.println(lazySodium.sodiumBin2Hex(c2));
-        System.out.println(lazySodium.sodiumBin2Hex(c3));
-
         // Start the decryption
         byte[] m1Decrypted = new byte[m1Len];
         byte[] m2Decrypted = new byte[m2Len];
@@ -121,16 +117,11 @@ public class SecretStreamTest extends BaseTest {
         );
 
 
-        System.out.println(lazySodium.str(m1Decrypted));
-        System.out.println(lazySodium.str(m2Decrypted));
-        System.out.println(lazySodium.str(m3Decrypted));
-
-
         if (tag == SecretStream.XCHACHA20POLY1305_TAG_FINAL) {
-            TestCase.assertSame(
-                    "Ensure that the stream has finished",
-                    tag,
-                    SecretStream.XCHACHA20POLY1305_TAG_FINAL
+            TestCase.assertTrue(
+                    lazySodium.str(m1Decrypted).equals(message1) &&
+                    lazySodium.str(m2Decrypted).equals(message2) &&
+                    lazySodium.str(m3Decrypted).equals(message3)
             );
         }
 

@@ -273,7 +273,9 @@ public class LazySodium implements
         if (!res) {
             throw new SodiumException("Password hashing failed.");
         }
-        return str(hash);
+
+        byte[] hashNoNulls = removeNulls(hash);
+        return str(hashNoNulls);
     }
 
 
@@ -430,6 +432,7 @@ public class LazySodium implements
 
 
 
+
     //// -------------------------------------------|
     //// SHORT HASH
     //// -------------------------------------------|
@@ -442,6 +445,49 @@ public class LazySodium implements
     public void cryptoShortHashKeygen(byte[] k) {
         nacl.crypto_shorthash_keygen(k);
     }
+
+    @Override
+    public void cryptoShortHashX24Keygen(byte[] k) {
+        nacl.crypto_shorthash_keygen(k);
+    }
+
+    @Override
+    public String cryptoShortHash(String in, String key) throws SodiumException {
+        byte[] inBytes = hexToBytes(in);
+        byte[] keyBytes = hexToBytes(key);
+        byte[] out = randomBytesBuf(ShortHash.BYTES);
+        if (nacl.crypto_shorthash(out, inBytes, inBytes.length, keyBytes) != 0) {
+            throw new SodiumException("Failed short-input hashing.");
+        }
+        return sodiumBin2Hex(out);
+    }
+
+    @Override
+    public String cryptoShortHashX24(String in, String key) throws SodiumException {
+        byte[] inBytes = hexToBytes(in);
+        byte[] keyBytes = hexToBytes(key);
+        byte[] out = randomBytesBuf(ShortHash.SIPHASHX24_KEYBYTES);
+        if (nacl.crypto_shorthash(out, inBytes, inBytes.length, keyBytes) != 0) {
+            throw new SodiumException("Failed short-input hashing.");
+        }
+        return sodiumBin2Hex(out);
+    }
+
+    @Override
+    public String cryptoShortHashKeygen() {
+        byte[] key = randomBytesBuf(ShortHash.SIPHASH24_KEYBYTES);
+        nacl.crypto_shorthash_keygen(key);
+        return sodiumBin2Hex(key);
+    }
+
+    @Override
+    public String cryptoShortHashX24Keygen() {
+        byte[] key = randomBytesBuf(ShortHash.SIPHASHX24_KEYBYTES);
+        nacl.crypto_shorthash_keygen(key);
+        return sodiumBin2Hex(key);
+    }
+
+
 
 
     //// -------------------------------------------|
@@ -529,7 +575,6 @@ public class LazySodium implements
     // --
     public static void main(String[] args) {
         // Can implement some code here to test
-
     }
 
 
