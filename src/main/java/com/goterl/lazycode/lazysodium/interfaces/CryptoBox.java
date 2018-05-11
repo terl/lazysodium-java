@@ -62,6 +62,78 @@ public interface CryptoBox {
 
     interface Native {
 
+        boolean cryptoBoxKeypair(byte[] publicKey, byte[] secretKey);
+
+        boolean cryptoBoxSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed);
+
+        boolean cryptoScalarMultBase(byte[] publicKey, byte[] secretKey);
+
+        boolean cryptoBoxEasy(
+                byte[] cipherText,
+                byte[] message,
+                long messageLen,
+                byte[] nonce,
+                byte[] publicKey,
+                byte[] secretKey
+        );
+
+        boolean cryptoBoxOpenEasy(
+                byte[] message,
+                byte[] cipherText,
+                long cipherTextLen,
+                byte[] nonce,
+                byte[] publicKey,
+                byte[] secretKey
+        );
+
+        boolean cryptoBoxDetached(byte[] cipherText,
+                                       byte[] mac,
+                                       byte[] message,
+                                       long messageLen,
+                                       byte[] nonce,
+                                       byte[] publicKey,
+                                       byte[] secretKey);
+
+        boolean cryptoBoxOpenDetached(byte[] message,
+                                            byte[] cipherText,
+                                            byte[] mac,
+                                            byte[] cipherTextLen,
+                                            byte[] nonce,
+                                            byte[] publicKey,
+                                            byte[] secretKey);
+
+        boolean cryptoBoxBeforeNm(byte[] k, byte[] publicKey, byte[] secretKey);
+
+
+        boolean cryptoBoxEasyAfterNm(
+                byte[] cipherText,
+                byte[] message,
+                long messageLen,
+                byte[] nonce,
+                byte[] key
+        );
+
+        boolean cryptoBoxOpenEasyAfterNm(
+                byte[] message, byte[] cipher,
+                long cLen, byte[] nonce,
+                byte[] key
+        );
+
+        boolean cryptoBoxDetachedAfterNm(
+                byte[] cipherText,
+                byte[] mac,
+                byte[] message,
+                long messageLen,
+                byte[] nonce,
+                byte[] key
+        );
+
+        boolean cryptoBoxOpenDetachedAfterNm(byte[] message,
+                                            byte[] cipherText,
+                                            byte[] mac,
+                                            byte[] cipherTextLen,
+                                            byte[] nonce,
+                                            byte[] key);
 
 
     }

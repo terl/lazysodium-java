@@ -26,6 +26,7 @@ public class LazySodium implements
         Padding.Native, Padding.Lazy,
         Helpers.Native, Helpers.Lazy,
         PwHash.Native, PwHash.Lazy,
+        CryptoBox.Native, CryptoBox.Lazy,
         SecretBox.Native, SecretBox.Lazy,
         KeyExchange.Native, KeyExchange.Lazy,
         KeyDerivation.Native, KeyDerivation.Lazy {
@@ -455,10 +456,77 @@ public class LazySodium implements
 
 
 
+    //// -------------------------------------------|
+    //// CRYPTO BOX
+    //// -------------------------------------------|
+
+    @Override
+    public boolean cryptoBoxKeypair(byte[] publicKey, byte[] secretKey) {
+        return boolify(nacl.crypto_box_keypair(publicKey, secretKey));
+    }
+
+    @Override
+    public boolean cryptoBoxSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed) {
+        return boolify(nacl.crypto_box_seed_keypair(publicKey, secretKey, seed));
+    }
+
+    @Override
+    public boolean cryptoScalarMultBase(byte[] publicKey, byte[] secretKey) {
+        return boolify(nacl.crypto_scalarmult_base(publicKey, secretKey));
+    }
+
+    @Override
+    public boolean cryptoBoxEasy(byte[] cipherText, byte[] message, long messageLen, byte[] nonce, byte[] publicKey, byte[] secretKey) {
+        return boolify(nacl.crypto_box_easy(cipherText, message, messageLen, nonce, publicKey, secretKey));
+    }
+
+    @Override
+    public boolean cryptoBoxOpenEasy(byte[] message, byte[] cipherText, long cipherTextLen, byte[] nonce, byte[] publicKey, byte[] secretKey) {
+        return boolify(nacl.crypto_box_open_easy(message, cipherText, cipherTextLen, nonce, publicKey, secretKey));
+    }
+
+    @Override
+    public boolean cryptoBoxDetached(byte[] cipherText, byte[] mac, byte[] message, long messageLen, byte[] nonce, byte[] publicKey, byte[] secretKey) {
+        return boolify(nacl.crypto_box_detached(cipherText, mac, message, messageLen, nonce, publicKey, secretKey));
+    }
+
+    @Override
+    public boolean cryptoBoxOpenDetached(byte[] message, byte[] cipherText, byte[] mac, byte[] cipherTextLen, byte[] nonce, byte[] publicKey, byte[] secretKey) {
+        return boolify(nacl.crypto_box_open_detached(message, cipherText, mac, cipherTextLen, nonce, publicKey, secretKey));
+    }
+
+    @Override
+    public boolean cryptoBoxBeforeNm(byte[] k, byte[] publicKey, byte[] secretKey) {
+        return boolify(nacl.crypto_box_beforenm(k, publicKey, secretKey));
+    }
+
+    @Override
+    public boolean cryptoBoxEasyAfterNm(byte[] cipherText, byte[] message, long messageLen, byte[] nonce, byte[] key) {
+        return boolify(nacl.crypto_box_easy_afternm(cipherText, message, messageLen, nonce, key));
+    }
+
+    @Override
+    public boolean cryptoBoxOpenEasyAfterNm(byte[] message, byte[] cipher, long cLen, byte[] nonce, byte[] key) {
+        return boolify(nacl.crypto_box_open_easy_afternm(message, cipher, cLen, nonce, key));
+    }
+
+    @Override
+    public boolean cryptoBoxDetachedAfterNm(byte[] cipherText, byte[] mac, byte[] message, long messageLen, byte[] nonce, byte[] key) {
+        return boolify(nacl.crypto_box_detached_afternm(cipherText, mac, message, messageLen, nonce, key));
+    }
+
+    @Override
+    public boolean cryptoBoxOpenDetachedAfterNm(byte[] message, byte[] cipherText, byte[] mac, byte[] cipherTextLen, byte[] nonce, byte[] key) {
+        return boolify(nacl.crypto_box_open_detached_afternm(message, cipherText, mac, cipherTextLen, nonce, key));
+    }
+
+
+
 
     //// -------------------------------------------|
     //// SECRET SCREAM
     //// -------------------------------------------|
+
     @Override
     public void cryptoSecretStreamXChacha20Poly1305Keygen(byte[] key) {
         nacl.crypto_secretstream_xchacha20poly1305_keygen(key);
@@ -745,5 +813,7 @@ public class LazySodium implements
     public static void main(String[] args) {
         // Can implement some code here to test
     }
+
+
 
 }
