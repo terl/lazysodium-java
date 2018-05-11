@@ -8,7 +8,8 @@
 
 package com.goterl.lazycode.lazysodium;
 
-import com.goterl.lazycode.lazysodium.structs.crypto_secretstream_xchacha20poly1305_state;
+import com.goterl.lazycode.lazysodium.interfaces.GenericHash;
+import com.goterl.lazycode.lazysodium.interfaces.SecretStream;
 import com.goterl.lazycode.lazysodium.utils.NativeUtils;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
@@ -188,6 +189,31 @@ public class Sodium {
                                           byte[] masterKey);
 
 
+    //// -------------------------------------------|
+    //// KEY EXCHANGE
+    //// -------------------------------------------|
+    native int crypto_kx_keypair(byte[] publicKey, byte[] secretKey);
+
+    native int crypto_kx_seed_keypair(byte[] publicKey, byte[] secretKey, byte[] seed);
+
+    native int crypto_kx_client_session_keys(
+            byte[] rx,
+            byte[] tx,
+            byte[] clientPk,
+            byte[] clientSk,
+            byte[] serverPk
+    );
+
+    native int crypto_kx_server_session_keys(
+            byte[] rx,
+            byte[] tx,
+            byte[] serverPk,
+            byte[] serverSk,
+            byte[] clientPk
+    );
+
+
+
 
 
     //// -------------------------------------------|
@@ -231,13 +257,13 @@ public class Sodium {
     native void crypto_secretstream_xchacha20poly1305_keygen(byte[] key);
 
     native int crypto_secretstream_xchacha20poly1305_init_push(
-            crypto_secretstream_xchacha20poly1305_state state,
+            SecretStream.State state,
             byte[] header,
             byte[] key
     );
 
     native int crypto_secretstream_xchacha20poly1305_push(
-            crypto_secretstream_xchacha20poly1305_state state,
+            SecretStream.State state,
             byte[] cipher,
             Long cipherAddr,
             byte[] message,
@@ -248,13 +274,13 @@ public class Sodium {
     );
 
     native int crypto_secretstream_xchacha20poly1305_init_pull(
-            crypto_secretstream_xchacha20poly1305_state state,
+            SecretStream.State state,
             byte[] header,
             byte[] key
     );
 
     native int crypto_secretstream_xchacha20poly1305_pull(
-            crypto_secretstream_xchacha20poly1305_state state,
+            SecretStream.State state,
             byte[] message,
             Long messageAddress,
             byte tagAddress,
@@ -292,37 +318,25 @@ public class Sodium {
     //// -------------------------------------------|
     //// GENERIC HASH
     //// -------------------------------------------|
+
+    native void crypto_generichash_keygen(byte[] k);
+
     native int crypto_generichash(
             byte[] out, int outLen,
             byte[] in, long inLen,
             byte[] key, int keyLen
     );
 
-    native void crypto_generichash_keygen(byte[] k);
+    native int crypto_generichash_init(GenericHash.State state,
+                                       byte[] key,
+                                       int keyLength,
+                                       int outLen);
 
+    native int crypto_generichash_update(GenericHash.State state,
+                                         byte[] in,
+                                         long inLen);
 
-    //// -------------------------------------------|
-    //// KEY EXCHANGE
-    //// -------------------------------------------|
-    native int crypto_kx_keypair(byte[] publicKey, byte[] secretKey);
-
-    native int crypto_kx_seed_keypair(byte[] publicKey, byte[] secretKey, byte[] seed);
-
-    native int crypto_kx_client_session_keys(
-            byte[] rx,
-            byte[] tx,
-            byte[] clientPk,
-            byte[] clientSk,
-            byte[] serverPk
-    );
-
-    native int crypto_kx_server_session_keys(
-            byte[] rx,
-            byte[] tx,
-            byte[] serverPk,
-            byte[] serverSk,
-            byte[] clientPk
-    );
+    native int crypto_generichash_final(GenericHash.State state, byte[] out, int outLen);
 
 
 

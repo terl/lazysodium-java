@@ -9,6 +9,11 @@
 package com.goterl.lazycode.lazysodium.interfaces;
 
 
+import com.sun.jna.Structure;
+
+import java.util.Arrays;
+import java.util.List;
+
 public interface AEAD {
 
 
@@ -33,7 +38,6 @@ public interface AEAD {
     int XCHACHA20POLY1305_IETF_KEYBYTES = 32,
         XCHACHA20POLY1305_IETF_ABYTES = 16,
         XCHACHA20POLY1305_IETF_NPUBBYTES = 24;
-
 
 
 

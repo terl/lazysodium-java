@@ -9,7 +9,10 @@
 package com.goterl.lazycode.lazysodium.interfaces;
 
 
-import com.goterl.lazycode.lazysodium.structs.crypto_secretstream_xchacha20poly1305_state;
+import com.sun.jna.Structure;
+
+import java.util.Arrays;
+import java.util.List;
 
 public interface SecretStream {
 
@@ -22,18 +25,19 @@ public interface SecretStream {
     byte XCHACHA20POLY1305_TAG_FINAL = XCHACHA20POLY1305_TAG_PUSH | XCHACHA20POLY1305_TAG_REKEY;
 
 
+
     interface Native {
 
         void cryptoSecretStreamXChacha20Poly1305Keygen(byte[] key);
 
         int cryptoSecretStreamXChacha20Poly1305InitPush(
-                crypto_secretstream_xchacha20poly1305_state state,
+                State state,
                 byte[] header,
                 byte[] key
         );
 
         int cryptoSecretStreamXChacha20Poly1305Push(
-                crypto_secretstream_xchacha20poly1305_state state,
+                State state,
                 byte[] cipher,
                 Long cipherAddr,
                 byte[] message,
@@ -44,7 +48,7 @@ public interface SecretStream {
         );
 
         int cryptoSecretStreamXChacha20Poly1305Push(
-                crypto_secretstream_xchacha20poly1305_state state,
+                State state,
                 byte[] cipher,
                 Long cipherAddr,
                 byte[] message,
@@ -53,7 +57,7 @@ public interface SecretStream {
         );
 
         int cryptoSecretStreamXChacha20Poly1305Push(
-                crypto_secretstream_xchacha20poly1305_state state,
+                State state,
                 byte[] cipher,
                 byte[] message,
                 long messageLen,
@@ -62,14 +66,14 @@ public interface SecretStream {
 
 
         int cryptoSecretStreamXChacha20Poly1305InitPull(
-                crypto_secretstream_xchacha20poly1305_state state,
+                State state,
                 byte[] header,
                 byte[] key
         );
 
 
         int cryptoSecretStreamXChacha20Poly1305Pull(
-                crypto_secretstream_xchacha20poly1305_state state,
+                State state,
                 byte[] message,
                 Long messageAddress,
                 byte tag,
@@ -80,7 +84,7 @@ public interface SecretStream {
         );
 
         int cryptoSecretStreamXChacha20Poly1305Pull(
-                crypto_secretstream_xchacha20poly1305_state state,
+                State state,
                 byte[] message,
                 byte tag,
                 byte[] cipher,
@@ -95,4 +99,17 @@ public interface SecretStream {
     }
 
 
+    class State extends Structure {
+
+        public static class ByReference extends State implements Structure.ByReference { }
+
+        @Override
+        protected List<String> getFieldOrder() {
+            return Arrays.asList("k", "pad");
+        }
+
+        public byte[] k = new byte[XCHACHA20POLY1305_KEYBYTES];
+        public byte[] pad = new byte[8];
+
+    }
 }

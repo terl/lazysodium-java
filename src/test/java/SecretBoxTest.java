@@ -32,10 +32,6 @@ public class SecretBoxTest extends BaseTest {
         String cipher = secretBoxLazy.cryptoSecretBoxEasy(message, nonce, key);
         String decrypted = secretBoxLazy.cryptoSecretBoxOpenEasy(cipher, nonce, key, null);
 
-        System.out.println(key);
-        System.out.println(cipher);
-        System.out.println(decrypted);
-
         TestCase.assertEquals(decrypted, message);
     }
 

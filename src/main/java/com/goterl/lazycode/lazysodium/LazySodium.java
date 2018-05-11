@@ -10,7 +10,6 @@ package com.goterl.lazycode.lazysodium;
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.*;
-import com.goterl.lazycode.lazysodium.structs.crypto_secretstream_xchacha20poly1305_state;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -464,12 +463,12 @@ public class LazySodium implements
     }
 
     @Override
-    public int cryptoSecretStreamXChacha20Poly1305InitPush(crypto_secretstream_xchacha20poly1305_state state, byte[] header, byte[] key) {
+    public int cryptoSecretStreamXChacha20Poly1305InitPush(SecretStream.State state, byte[] header, byte[] key) {
         return nacl.crypto_secretstream_xchacha20poly1305_init_push(state, header, key);
     }
 
     @Override
-    public int cryptoSecretStreamXChacha20Poly1305Push(crypto_secretstream_xchacha20poly1305_state state, byte[] cipher, Long cipherAddr, byte[] message, long messageLen, byte tag) {
+    public int cryptoSecretStreamXChacha20Poly1305Push(SecretStream.State state, byte[] cipher, Long cipherAddr, byte[] message, long messageLen, byte tag) {
         return nacl.crypto_secretstream_xchacha20poly1305_push(
                 state,
                 cipher,
@@ -483,7 +482,7 @@ public class LazySodium implements
     }
 
     @Override
-    public int cryptoSecretStreamXChacha20Poly1305Push(crypto_secretstream_xchacha20poly1305_state state,
+    public int cryptoSecretStreamXChacha20Poly1305Push(SecretStream.State state,
                                                        byte[] cipher,
                                                        byte[] message,
                                                        long messageLen,
@@ -501,7 +500,7 @@ public class LazySodium implements
     }
 
     @Override
-    public int cryptoSecretStreamXChacha20Poly1305Push(crypto_secretstream_xchacha20poly1305_state state,
+    public int cryptoSecretStreamXChacha20Poly1305Push(SecretStream.State state,
                                                        byte[] cipher,
                                                        Long cipherAddr,
                                                        byte[] message,
@@ -522,12 +521,12 @@ public class LazySodium implements
     }
 
     @Override
-    public int cryptoSecretStreamXChacha20Poly1305InitPull(crypto_secretstream_xchacha20poly1305_state state, byte[] header, byte[] key) {
+    public int cryptoSecretStreamXChacha20Poly1305InitPull(SecretStream.State state, byte[] header, byte[] key) {
         return nacl.crypto_secretstream_xchacha20poly1305_init_pull(state, header, key);
     }
 
     @Override
-    public int cryptoSecretStreamXChacha20Poly1305Pull(crypto_secretstream_xchacha20poly1305_state state,
+    public int cryptoSecretStreamXChacha20Poly1305Pull(SecretStream.State state,
                                                        byte[] message,
                                                        Long messageAddress,
                                                        byte tag,
@@ -541,7 +540,7 @@ public class LazySodium implements
     }
 
     @Override
-    public int cryptoSecretStreamXChacha20Poly1305Pull(crypto_secretstream_xchacha20poly1305_state state, byte[] message, byte tag, byte[] cipher, long cipherLen) {
+    public int cryptoSecretStreamXChacha20Poly1305Pull(SecretStream.State state, byte[] message, byte tag, byte[] cipher, long cipherLen) {
         return nacl.crypto_secretstream_xchacha20poly1305_pull(
                 state,
                 message,
@@ -636,15 +635,32 @@ public class LazySodium implements
     //// -------------------------------------------|
     //// GENERIC HASH
     //// -------------------------------------------|
+
     @Override
     public int cryptoGenericHash(byte[] out, int outLen, byte[] in, long inLen, byte[] key, int keyLen) {
         return nacl.crypto_generichash(out, outLen, in, inLen, key, keyLen);
     }
 
     @Override
+    public int cryptoGenericHashInit(GenericHash.State state, byte[] key, int keyLength, int outLen) {
+        return nacl.crypto_generichash_init(state, key, keyLength, outLen);
+    }
+
+    @Override
+    public int cryptoGenericHashUpdate(GenericHash.State state, byte[] in, long inLen) {
+        return nacl.crypto_generichash_update(state, in, inLen);
+    }
+
+    @Override
+    public int cryptoGenericHashFinal(GenericHash.State state, byte[] out, int outLen) {
+        return nacl.crypto_generichash_final(state, out, outLen);
+    }
+
+    @Override
     public void cryptoGenericHashKeygen(byte[] k) {
         nacl.crypto_generichash_keygen(k);
     }
+
 
 
 
