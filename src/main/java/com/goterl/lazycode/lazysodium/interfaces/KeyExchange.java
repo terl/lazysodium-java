@@ -9,9 +9,9 @@
 package com.goterl.lazycode.lazysodium.interfaces;
 
 
-import com.goterl.lazycode.lazysodium.LazySodium;
-import com.goterl.lazycode.lazysodium.Sodium;
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
+import com.goterl.lazycode.lazysodium.utils.KeyPair;
+import com.goterl.lazycode.lazysodium.utils.SessionPair;
 
 public interface KeyExchange {
 
@@ -21,68 +21,6 @@ public interface KeyExchange {
     int SEEDBYTES = 32;
     String PRIMITIVE = "x25519blake2b";
 
-
-    class KeyPair {
-        private byte[] secretKey;
-        private byte[] publicKey;
-
-        public KeyPair(byte[] publicKey, byte[] secretKey) {
-            this.secretKey = secretKey;
-            this.publicKey = publicKey;
-        }
-
-        public KeyPair(String publicKey, String secretKey) {
-            this.secretKey = LazySodium.toBin(secretKey);
-            this.publicKey = LazySodium.toBin(publicKey);
-        }
-
-        public byte[] getSecretKey() {
-            return secretKey;
-        }
-
-        public byte[] getPublicKey() {
-            return publicKey;
-        }
-
-        public String getSecretKeyString() {
-            return LazySodium.toHex(secretKey);
-        }
-
-        public String getPublicKeyString() {
-            return LazySodium.toHex(publicKey);
-        }
-    }
-
-    class SessionPair {
-        private byte[] rx;
-        private byte[] tx;
-
-        public SessionPair(byte[] rx, byte[] tx) {
-            this.rx = rx;
-            this.tx = tx;
-        }
-
-        public SessionPair(String rx, String tx) {
-            this.rx = LazySodium.toBin(rx);
-            this.tx =  LazySodium.toBin(tx);
-        }
-
-        public byte[] getRx() {
-            return rx;
-        }
-
-        public byte[] getTx() {
-            return tx;
-        }
-
-        public String getRxString() {
-            return LazySodium.toHex(rx);
-        }
-
-        public String getTxString() {
-            return LazySodium.toHex(tx);
-        }
-    }
 
     interface Native {
         boolean cryptoKxKeypair(byte[] publicKey, byte[] secretKey);

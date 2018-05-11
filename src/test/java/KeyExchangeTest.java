@@ -12,6 +12,8 @@
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.KeyExchange;
+import com.goterl.lazycode.lazysodium.utils.KeyPair;
+import com.goterl.lazycode.lazysodium.utils.SessionPair;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -22,15 +24,15 @@ public class KeyExchangeTest extends BaseTest {
 
     @Test
     public void generateKeyPair() {
-        KeyExchange.KeyPair keys = lazySodium.cryptoKxKeypair();
+        KeyPair keys = lazySodium.cryptoKxKeypair();
         assertNotNull(keys);
     }
 
     @Test
     public void generateDeterministicPublicKeyPair() {
         byte[] seed = new byte[KeyExchange.SEEDBYTES];
-        KeyExchange.KeyPair keys = lazySodium.cryptoKxKeypair(seed);
-        KeyExchange.KeyPair keys2 = lazySodium.cryptoKxKeypair(seed);
+        KeyPair keys = lazySodium.cryptoKxKeypair(seed);
+        KeyPair keys2 = lazySodium.cryptoKxKeypair(seed);
 
         TestCase.assertEquals(keys.getPublicKeyString(), keys2.getPublicKeyString());
     }
@@ -38,8 +40,8 @@ public class KeyExchangeTest extends BaseTest {
     @Test
     public void generateDeterministicSecretKeyPair() {
         byte[] seed = new byte[KeyExchange.SEEDBYTES];
-        KeyExchange.KeyPair keys = lazySodium.cryptoKxKeypair(seed);
-        KeyExchange.KeyPair keys2 = lazySodium.cryptoKxKeypair(seed);
+        KeyPair keys = lazySodium.cryptoKxKeypair(seed);
+        KeyPair keys2 = lazySodium.cryptoKxKeypair(seed);
 
         TestCase.assertEquals(keys.getSecretKeyString(), keys2.getSecretKeyString());
     }
@@ -48,13 +50,13 @@ public class KeyExchangeTest extends BaseTest {
     @Test
     public void generateSessionPair() throws SodiumException {
         // Generate the client's keypair
-        KeyExchange.KeyPair clientKeys = lazySodium.cryptoKxKeypair();
+        KeyPair clientKeys = lazySodium.cryptoKxKeypair();
 
         // Generate the server keypair
-        KeyExchange.KeyPair serverKeys = lazySodium.cryptoKxKeypair();
+        KeyPair serverKeys = lazySodium.cryptoKxKeypair();
 
-        KeyExchange.SessionPair clientSession = lazySodium.cryptoKxClientSessionKeys(clientKeys, serverKeys);
-        KeyExchange.SessionPair serverSession = lazySodium.cryptoKxServerSessionKeys(serverKeys, clientKeys);
+        SessionPair clientSession = lazySodium.cryptoKxClientSessionKeys(clientKeys, serverKeys);
+        SessionPair serverSession = lazySodium.cryptoKxServerSessionKeys(serverKeys, clientKeys);
 
         // You can now use the secret and public keys of the client and the server
         // to encrypt and decrypt messages to one another.

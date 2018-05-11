@@ -250,6 +250,83 @@ public class Sodium {
 
 
 
+    //// -------------------------------------------|
+    //// CRYPTO BOX
+    //// -------------------------------------------|
+
+    native int crypto_box_keypair(byte[] publicKey, byte[] secretKey);
+
+    native int crypto_box_seed_keypair(byte[] publicKey, byte[] secretKey, byte[] seed);
+
+    native int crypto_scalarmult_base(byte[] publicKey, byte[] secretKey);
+
+    native int crypto_box_easy(
+        byte[] cipherText,
+        byte[] message,
+        long messageLen,
+        byte[] nonce,
+        byte[] publicKey,
+        byte[] secretKey
+    );
+
+    native int crypto_box_open_easy(
+            byte[] message,
+            byte[] cipherText,
+            long cipherTextLen,
+            byte[] nonce,
+            byte[] publicKey,
+            byte[] secretKey
+    );
+
+    native int crypto_box_detached(byte[] cipherText,
+                                   byte[] mac,
+                                   byte[] message,
+                                   long messageLen,
+                                   byte[] nonce,
+                                   byte[] publicKey,
+                                   byte[] secretKey);
+
+    native int crypto_box_open_detached(byte[] message,
+                                        byte[] cipherText,
+                                        byte[] mac,
+                                        byte[] cipherTextLen,
+                                        byte[] nonce,
+                                        byte[] publicKey,
+                                        byte[] secretKey);
+
+    native int crypto_box_beforenm(byte[] k, byte[] publicKey, byte[] secretKey);
+
+
+    native int crypto_box_easy_afternm(
+        byte[] cipherText,
+        byte[] message,
+        long messageLen,
+        byte[] nonce,
+        byte[] key
+    );
+
+    native int crypto_box_open_easy_afternm(
+            byte[] message, byte[] cipher,
+            long cLen, byte[] nonce,
+            byte[] key
+    );
+
+    native int crypto_box_detached_afternm(
+            byte[] cipherText,
+            byte[] mac,
+            byte[] message,
+            long messageLen,
+            byte[] nonce,
+            byte[] key
+    );
+
+    native int crypto_box_open_detached_afternm(byte[] message,
+                                        byte[] cipherText,
+                                        byte[] mac,
+                                        byte[] cipherTextLen,
+                                        byte[] nonce,
+                                        byte[] key);
+
 
     //// -------------------------------------------|
     //// SECRET SCREAM
