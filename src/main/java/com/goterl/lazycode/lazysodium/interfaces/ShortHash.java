@@ -40,9 +40,9 @@ public interface ShortHash {
          * @param inLen The length of the short-input.
          * @param key The key generated via {@link #cryptoShortHashKeygen(byte[])} or
          *            {@link #cryptoShortHashX24Keygen(byte[])}.
-         * @return 0 if success, -1 if fail.
+         * @return true if success, false if fail.
          */
-        int cryptoShortHash(byte[] out, byte[] in, long inLen, byte[] key);
+        boolean cryptoShortHash(byte[] out, byte[] in, long inLen, byte[] key);
 
 
         /**

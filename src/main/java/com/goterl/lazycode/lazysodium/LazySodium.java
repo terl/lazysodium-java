@@ -506,8 +506,8 @@ public class LazySodium implements
     //// SHORT HASH
     //// -------------------------------------------|
     @Override
-    public int cryptoShortHash(byte[] out, byte[] in, long inLen, byte[] key) {
-        return nacl.crypto_shorthash(out, in, inLen, key);
+    public boolean cryptoShortHash(byte[] out, byte[] in, long inLen, byte[] key) {
+        return boolify(nacl.crypto_shorthash(out, in, inLen, key));
     }
 
     @Override
