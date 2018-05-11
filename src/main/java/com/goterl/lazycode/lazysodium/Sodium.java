@@ -324,9 +324,13 @@ public class Sodium {
             byte[] clientPk
     );
 
+
+
+
     //// -------------------------------------------|
     //// AEAD
     //// -------------------------------------------|
+
     native int crypto_aead_chacha20poly1305_keygen(byte[] key);
 
     native int crypto_aead_chacha20poly1305_encrypt(
@@ -367,6 +371,59 @@ public class Sodium {
     );
 
     native int crypto_aead_chacha20poly1305_decrypt_detached(
+            byte[] m,
+            byte[] nsec,
+            byte[] c,
+            long cLen,
+            byte[] mac,
+            byte[] ad,
+            long adLen,
+            byte[] npub,
+            byte[] k
+    );
+
+    // ietf
+
+    native void crypto_aead_chacha20poly1305_ietf_keygen(byte[] key);
+
+    native int crypto_aead_chacha20poly1305_ietf_encrypt(
+            byte[] c,
+            long cLen,
+            byte[] m,
+            long mLen,
+            byte[] ad,
+            long adLen,
+            byte[] nSec,
+            byte[] nPub,
+            byte[] k
+    );
+
+    native int crypto_aead_chacha20poly1305_ietf_decrypt(
+            byte[] m,
+            long mLen,
+            byte[] nSec,
+            byte[] c,
+            long cLen,
+            byte[] ad,
+            long adLen,
+            byte[] nPub,
+            byte[] k
+    );
+
+    native int crypto_aead_chacha20poly1305_ietf_encrypt_detached(
+            byte[] c,
+            byte[] mac,
+            Long macLenAddress,
+            byte[] m,
+            long mLen,
+            byte[] ad,
+            long adLen,
+            byte[] nSec,
+            byte[] nPub,
+            byte[] k
+    );
+
+    native int crypto_aead_chacha20poly1305_ietf_decrypt_detached(
             byte[] m,
             byte[] nsec,
             byte[] c,

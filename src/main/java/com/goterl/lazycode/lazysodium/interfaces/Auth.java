@@ -19,8 +19,8 @@ public interface Auth {
         BYTES = HMACSHA512256_BYTES,
         KEYBYTES = HMACSHA512256_KEYBYTES;
 
-    class Checker extends BaseChecker {
 
+    class Checker extends BaseChecker {
 
     }
 
