@@ -32,19 +32,6 @@ public interface Helpers {
          */
         byte[] sodiumHex2Bin(String hex);
 
-        /**
-         * Equivalent to {@link #sodiumBin2Hex(byte[])}.
-         * @param bin Byte array.
-         * @return Hexadecimal string.
-         */
-        String toHex(byte[] bin);
-
-        /**
-         * Binary to hexadecimal
-         * @param hex Hexadecimal string to convert to binary.
-         * @return Binary bytes.
-         */
-        byte[] toBin(String hex);
 
     }
 

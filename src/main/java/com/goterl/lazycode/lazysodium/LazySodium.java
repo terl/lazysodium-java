@@ -65,14 +65,23 @@ public class LazySodium implements
         return hexToBytes(hex);
     }
 
-    @Override
-    public String toHex(byte[] bin) {
-        return sodiumBin2Hex(bin);
+    /**
+     * Equivalent to {@link #sodiumBin2Hex(byte[])}.
+     * @param bin Byte array.
+     * @return Hexadecimal string.
+     */
+    public static String toHex(byte[] bin) {
+        return bytesToHex(bin);
     }
 
-    @Override
-    public byte[] toBin(String hex) {
-        return sodiumHex2Bin(hex);
+
+    /**
+     * Binary to hexadecimal.
+     * @param hex Hexadecimal string to convert to binary.
+     * @return Binary bytes.
+     */
+    public static byte[] toBin(String hex) {
+        return hexToBytes(hex);
     }
 
 
@@ -216,23 +225,23 @@ public class LazySodium implements
     //// -------------------------------------------|
 
     @Override
-    public int cryptoKxKeypair(byte[] publicKey, byte[] secretKey) {
-        return nacl.crypto_kx_keypair(publicKey, secretKey);
+    public boolean cryptoKxKeypair(byte[] publicKey, byte[] secretKey) {
+        return boolify(nacl.crypto_kx_keypair(publicKey, secretKey));
     }
 
     @Override
-    public int cryptoKxSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed) {
-        return nacl.crypto_kx_seed_keypair(publicKey, secretKey, seed);
+    public boolean cryptoKxSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed) {
+        return boolify(nacl.crypto_kx_seed_keypair(publicKey, secretKey, seed));
     }
 
     @Override
-    public int cryptoKxClientSessionKeys(byte[] rx, byte[] tx, byte[] clientPk, byte[] clientSk, byte[] serverPk) {
-        return nacl.crypto_kx_client_session_keys(rx, tx, clientPk, clientSk, serverPk);
+    public boolean cryptoKxClientSessionKeys(byte[] rx, byte[] tx, byte[] clientPk, byte[] clientSk, byte[] serverPk) {
+        return boolify(nacl.crypto_kx_client_session_keys(rx, tx, clientPk, clientSk, serverPk));
     }
 
     @Override
-    public int cryptoKxServerSessionKeys(byte[] rx, byte[] tx, byte[] serverPk, byte[] serverSk, byte[] clientPk) {
-        return nacl.crypto_kx_server_session_keys(rx, tx, serverPk, serverSk, clientPk);
+    public boolean cryptoKxServerSessionKeys(byte[] rx, byte[] tx, byte[] serverPk, byte[] serverSk, byte[] clientPk) {
+        return boolify(nacl.crypto_kx_server_session_keys(rx, tx, serverPk, serverSk, clientPk));
     }
 
 
@@ -245,7 +254,7 @@ public class LazySodium implements
 
         nacl.crypto_kx_keypair(publicKey, secretKey);
 
-        return new KeyExchange.KeyPair(sodiumBin2Hex(publicKey), sodiumBin2Hex(secretKey));
+        return new KeyExchange.KeyPair(toHex(publicKey), toHex(secretKey));
     }
 
     @Override
@@ -255,19 +264,42 @@ public class LazySodium implements
 
         nacl.crypto_kx_seed_keypair(publicKey, secretKey, seed);
 
-        return new KeyExchange.KeyPair(sodiumBin2Hex(publicKey), sodiumBin2Hex(secretKey));
+        return new KeyExchange.KeyPair(toHex(publicKey), toHex(secretKey));
     }
 
     @Override
-    public KeyExchange.SessionPair cryptoKxClientSessionKeys(byte[] clientPk, byte[] clientSk, byte[] serverPk) {
-        return null;
+    public KeyExchange.SessionPair cryptoKxClientSessionKeys(byte[] clientPk, byte[] clientSk, byte[] serverPk) throws SodiumException {
+        byte[] rx = new byte[KeyExchange.SESSIONKEYBYTES];
+        byte[] tx = new byte[KeyExchange.SESSIONKEYBYTES];
+
+        if (!cryptoKxClientSessionKeys(rx, tx, clientPk, clientSk, serverPk)) {
+            throw new SodiumException("Failure in creating client session keys.");
+        }
+
+        return new KeyExchange.SessionPair(rx, tx);
     }
 
     @Override
-    public KeyExchange.SessionPair cryptoKxServerSessionKeys(byte[] serverPk, byte[] serverSk, byte[] clientPk) {
-        return null;
+    public KeyExchange.SessionPair cryptoKxClientSessionKeys(KeyExchange.KeyPair clientKeyPair, KeyExchange.KeyPair serverKeyPair) throws SodiumException {
+        return cryptoKxClientSessionKeys(clientKeyPair.getPublicKey(), clientKeyPair.getSecretKey(), serverKeyPair.getPublicKey());
     }
 
+    @Override
+    public KeyExchange.SessionPair cryptoKxServerSessionKeys(byte[] serverPk, byte[] serverSk, byte[] clientPk) throws SodiumException {
+        byte[] rx = new byte[KeyExchange.SESSIONKEYBYTES];
+        byte[] tx = new byte[KeyExchange.SESSIONKEYBYTES];
+
+        if (!cryptoKxServerSessionKeys(rx, tx, serverPk,  serverSk, clientPk)) {
+            throw new SodiumException("Failure in creating server session keys.");
+        }
+
+        return new KeyExchange.SessionPair(rx, tx);
+    }
+
+    @Override
+    public KeyExchange.SessionPair cryptoKxServerSessionKeys(KeyExchange.KeyPair serverKeyPair, KeyExchange.KeyPair clientKeyPair) throws SodiumException {
+        return cryptoKxServerSessionKeys(serverKeyPair.getPublicKey(), serverKeyPair.getSecretKey(), clientKeyPair.getPublicKey());
+    }
 
 
     //// -------------------------------------------|

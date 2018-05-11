@@ -9,6 +9,10 @@
 package com.goterl.lazycode.lazysodium.interfaces;
 
 
+import com.goterl.lazycode.lazysodium.LazySodium;
+import com.goterl.lazycode.lazysodium.Sodium;
+import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
+
 public interface KeyExchange {
 
     int PUBLICKEYBYTES = 32;
@@ -19,52 +23,78 @@ public interface KeyExchange {
 
 
     class KeyPair {
-        private String secretKey;
-        private String publicKey;
+        private byte[] secretKey;
+        private byte[] publicKey;
 
-        public KeyPair(String publicKey, String secretKey) {
+        public KeyPair(byte[] publicKey, byte[] secretKey) {
             this.secretKey = secretKey;
             this.publicKey = publicKey;
         }
 
-        public String getSecretKey() {
+        public KeyPair(String publicKey, String secretKey) {
+            this.secretKey = LazySodium.toBin(secretKey);
+            this.publicKey = LazySodium.toBin(publicKey);
+        }
+
+        public byte[] getSecretKey() {
             return secretKey;
         }
 
-        public String getPublicKey() {
+        public byte[] getPublicKey() {
             return publicKey;
+        }
+
+        public String getSecretKeyString() {
+            return LazySodium.toHex(secretKey);
+        }
+
+        public String getPublicKeyString() {
+            return LazySodium.toHex(publicKey);
         }
     }
 
     class SessionPair {
-        private String rx;
-        private String tx;
+        private byte[] rx;
+        private byte[] tx;
 
-        public SessionPair(String rx, String tx) {
+        public SessionPair(byte[] rx, byte[] tx) {
             this.rx = rx;
             this.tx = tx;
         }
 
-        public String getRx() {
+        public SessionPair(String rx, String tx) {
+            this.rx = LazySodium.toBin(rx);
+            this.tx =  LazySodium.toBin(tx);
+        }
+
+        public byte[] getRx() {
             return rx;
         }
 
-        public String getTx() {
+        public byte[] getTx() {
             return tx;
+        }
+
+        public String getRxString() {
+            return LazySodium.toHex(rx);
+        }
+
+        public String getTxString() {
+            return LazySodium.toHex(tx);
         }
     }
 
     interface Native {
-        int cryptoKxKeypair(byte[] publicKey, byte[] secretKey);
-        int cryptoKxSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed);
-        int cryptoKxClientSessionKeys(
+        boolean cryptoKxKeypair(byte[] publicKey, byte[] secretKey);
+        boolean cryptoKxSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed);
+        boolean cryptoKxClientSessionKeys(
                 byte[] rx,
                 byte[] tx,
                 byte[] clientPk,
                 byte[] clientSk,
                 byte[] serverPk
         );
-        int cryptoKxServerSessionKeys(
+        boolean cryptoKxServerSessionKeys(
                 byte[] rx,
                 byte[] tx,
                 byte[] serverPk,
@@ -76,16 +106,28 @@ public interface KeyExchange {
     interface Lazy {
         KeyPair cryptoKxKeypair();
         KeyPair cryptoKxKeypair(byte[] seed);
+
         SessionPair cryptoKxClientSessionKeys(
                 byte[] clientPk,
                 byte[] clientSk,
                 byte[] serverPk
-        );
+        ) throws SodiumException;
+
+        SessionPair cryptoKxClientSessionKeys(
+                KeyPair clientKeyPair,
+                KeyPair serverKeyPair
+        ) throws SodiumException;
+
         SessionPair cryptoKxServerSessionKeys(
                 byte[] serverPk,
                 byte[] serverSk,
                 byte[] clientPk
-        );
+        ) throws SodiumException;
+
+        SessionPair cryptoKxServerSessionKeys(
+                KeyPair serverKeyPair,
+                KeyPair clientKeyPair
+        ) throws SodiumException;
     }
 
 
