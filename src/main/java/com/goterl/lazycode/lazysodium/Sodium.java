@@ -24,13 +24,10 @@ public class Sodium {
     }
 
     /**
-     * All paths must be relative to the resources directory.
-     * For example, if loading libsodium.so in the {@code mac} folder
-     * which is in the {@code resources} folder ({@code resources/mac/libsodium.so}),
-     * then you must provide {@code /mac/libsodium.so}. Please note that the libsodium.so
+     * Please note that the libsodium.so
      * file HAS to be built for the platform this program will run on.
      *
-     * @param path Absolute path to libsodium.so
+     * @param path Absolute path to libsodium.so.
      */
     private Sodium(String path) {
         registerFromPath(path);
