@@ -9,11 +9,8 @@
 package com.goterl.lazycode.lazysodium.interfaces;
 
 
-import com.goterl.lazycode.lazysodium.Sodium;
-import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.utils.BaseChecker;
-
-import java.nio.charset.Charset;
+import com.goterl.lazycode.lazysodium.utils.KeyPair;
 
 public interface CryptoBox {
 
@@ -22,13 +19,15 @@ public interface CryptoBox {
         CURVE25519XSALSA20POLY1305_SECRETKEYBYTES = 32,
         CURVE25519XSALSA20POLY1305_MACBYTES = 16,
         CURVE25519XSALSA20POLY1305_SEEDBYTES = 32,
-        CURVE25519XSALSA20POLY1305_BEFORENMBYTES = 32;
+        CURVE25519XSALSA20POLY1305_BEFORENMBYTES = 32,
+        CURVE25519XSALSA20POLY1305_NONCEBYTES = 24;
 
-    int PUBLICKEYBYTES = 32,
-        SECRETKEYBYTES = 32,
-        MACBYTES = 16,
-        SEEDBYTES = 32,
-        BEFORENMBYTES = 32;
+    int PUBLICKEYBYTES = CURVE25519XSALSA20POLY1305_PUBLICKEYBYTES,
+        SECRETKEYBYTES = CURVE25519XSALSA20POLY1305_SECRETKEYBYTES,
+        MACBYTES = CURVE25519XSALSA20POLY1305_MACBYTES,
+        SEEDBYTES = CURVE25519XSALSA20POLY1305_SEEDBYTES,
+        BEFORENMBYTES = CURVE25519XSALSA20POLY1305_BEFORENMBYTES,
+        NONCEBYTES = CURVE25519XSALSA20POLY1305_NONCEBYTES;
 
 
 
@@ -140,6 +139,44 @@ public interface CryptoBox {
 
     interface Lazy {
 
+        /**
+         * Generate a secret and public key.
+         * @return Secret and public key.
+         */
+        KeyPair cryptoBoxKeypair();
+
+        /**
+         * Generate a public and secret key deterministically.
+         * @param seed The seed to generate the key.
+         * @return Public and secret key.
+         */
+        KeyPair cryptoBoxSeedKeypair(byte[] seed);
+
+        /**
+         * Generate a public key from a private key.
+         * @param keyPair Provide the secret key. Public key will be ignored.
+         * @return The public key and the provided secret key.
+         */
+        KeyPair cryptoScalarMultBase(KeyPair keyPair);
+
+        /**
+         * Encrypts a message.
+         * @param message The message.
+         * @param nonce The nonce of size {@link #NONCEBYTES}.
+         * @param keyPair A keypair.
+         * @return The encrypted {@link Helpers.Lazy#sodiumBin2Hex(byte[])}'ified cipher text.
+         */
+        String cryptoBoxEasy(String message, byte[] nonce, KeyPair keyPair);
+
+        /**
+         * Decrypts a previously encrypted message.
+         * @param cipherText Encrypted via {@link #cryptoBoxEasy(String, byte[], KeyPair)}
+         *                   and then {@link Helpers.Lazy#sodiumBin2Hex(byte[])}'ified.
+         * @param nonce The nonce of size {@link #NONCEBYTES}.
+         * @param keyPair A keypair.
+         * @return The message.
+         */
+        String cryptoBoxOpenEasy(String cipherText, byte[] nonce, KeyPair keyPair);
 
 
     }
