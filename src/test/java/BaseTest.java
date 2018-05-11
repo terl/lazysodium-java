@@ -15,6 +15,7 @@ import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.KeyDerivation;
 import com.goterl.lazycode.lazysodium.interfaces.PwHash;
 import com.goterl.lazycode.lazysodium.interfaces.Random;
+import com.goterl.lazycode.lazysodium.interfaces.SecretBox;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -35,6 +36,7 @@ public class BaseTest {
     public static Random random;
     public static PwHash.Native pwHash;
     public static PwHash.Lazy pwHashLazy;
+    public static SecretBox.Lazy secretBoxLazy;
 
     public static KeyDerivation.Native keyDerivation;
     public static KeyDerivation.Lazy keyDerivationLazy;
@@ -50,6 +52,7 @@ public class BaseTest {
         pwHashLazy = (PwHash.Lazy) lazySodium;
         keyDerivation = (KeyDerivation.Native) lazySodium;
         keyDerivationLazy = (KeyDerivation.Lazy) lazySodium;
+        secretBoxLazy = (SecretBox.Lazy) lazySodium;
     }
 
 

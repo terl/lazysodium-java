@@ -207,7 +207,7 @@ public class Sodium {
 
     native int crypto_secretbox_open_easy(byte[] message,
                                           byte[] cipherText,
-                                          byte[] cipherTextLen,
+                                          long cipherTextLen,
                                           byte[] nonce,
                                           byte[] key);
 

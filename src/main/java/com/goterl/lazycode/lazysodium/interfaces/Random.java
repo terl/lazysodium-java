@@ -42,4 +42,13 @@ public interface Random {
      * @return Deterministically random byte array.
      */
     byte[] randomBytesDeterministic(int size, byte[] seed);
+
+
+    /**
+     * Get a random number of bytes to use in a nonce.
+     * @param size The size of the byte array to return.
+     * @return Random nonce array.
+     * @see #randomBytesBuf(int)
+     */
+    byte[] nonce(int size);
 }

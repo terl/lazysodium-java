@@ -9,6 +9,8 @@
 package com.goterl.lazycode.lazysodium.interfaces;
 
 
+import java.nio.charset.Charset;
+
 public interface Base {
 
     // --- Result handling
@@ -21,6 +23,7 @@ public interface Base {
     // --- Conversion handling
 
     String str(byte[] bs);
+    String str(byte[] bs, Charset charset);
     byte[] bytes(String s);
 
 

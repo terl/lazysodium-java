@@ -129,6 +129,11 @@ public class LazySodium implements
     }
 
     @Override
+    public byte[] nonce(int size) {
+        return randomBytesBuf(size);
+    }
+
+    @Override
     public byte randomBytesUniform(int upperBound) {
         return nacl.randombytes_uniform(upperBound);
     }
@@ -396,7 +401,7 @@ public class LazySodium implements
     }
 
     @Override
-    public boolean cryptoSecretBoxOpenEasy(byte[] message, byte[] cipherText, byte[] cipherTextLen, byte[] nonce, byte[] key) {
+    public boolean cryptoSecretBoxOpenEasy(byte[] message, byte[] cipherText, long cipherTextLen, byte[] nonce, byte[] key) {
         return boolify(nacl.crypto_secretbox_open_easy(message, cipherText, cipherTextLen, nonce, key));
     }
 
@@ -408,6 +413,43 @@ public class LazySodium implements
     @Override
     public boolean cryptoSecretBoxOpenDetached(byte[] message, byte[] cipherText, byte[] mac, byte[] cipherTextLen, byte[] nonce, byte[] key) {
         return boolify(nacl.crypto_secretbox_open_detached(message, cipherText, mac, cipherTextLen, nonce, key));
+    }
+
+
+    /// --- Lazy
+
+    @Override
+    public String cryptoSecretBoxKeygen() {
+        byte[] key = new byte[SecretBox.KEYBYTES];
+        cryptoSecretBoxKeygen(key);
+        return toHex(key);
+    }
+
+    @Override
+    public String cryptoSecretBoxEasy(String message, byte[] nonce, String key) throws SodiumException {
+        byte[] keyBytes = toBin(key);
+        byte[] messageBytes = bytes(message);
+        byte[] cipherTextBytes = new byte[SecretBox.MACBYTES + messageBytes.length];
+
+        if (!cryptoSecretBoxEasy(cipherTextBytes, messageBytes, messageBytes.length, nonce, keyBytes)) {
+            throw new SodiumException("Could not encrypt message.");
+        }
+
+        return toHex(cipherTextBytes);
+    }
+
+    @Override
+    public String cryptoSecretBoxOpenEasy(String cipher, byte[] nonce, String key, Charset charset) throws SodiumException {
+        byte[] keyBytes = toBin(key);
+        byte[] cipherBytes = toBin(cipher);
+        byte[] messageBytes = new byte[cipherBytes.length - SecretBox.MACBYTES];
+
+
+        if (!cryptoSecretBoxOpenEasy(messageBytes, cipherBytes, cipherBytes.length, nonce, keyBytes)) {
+            throw new SodiumException("Could not decrypt message.");
+        }
+
+        return str(messageBytes, charset);
     }
 
 
@@ -623,6 +665,14 @@ public class LazySodium implements
 
     @Override
     public String str(byte[] bs) {
+        return new String(bs, charset);
+    }
+
+    @Override
+    public String str(byte[] bs, Charset charset) {
+        if (charset == null) {
+            return new String(bs, this.charset);
+        }
         return new String(bs, charset);
     }
 

@@ -19,16 +19,18 @@ public interface Helpers {
 
         /**
          * Binary to hexadecimal. This method does not null terminate strings.
-         * @param bin The binary bytes you want to convert to strings.
-         * @return Hexadecimal string.
+         * @param bin The binary bytes you want to convert to a string.
+         * @return A hexadecimal string solely made up of the characters 0123456789ABCDEF.
          */
         String sodiumBin2Hex(byte[] bin);
 
         /**
          * Hexadecimal to binary. Does not null terminate the binary
          * array.
-         * @param hex Hexadecimal string to convert to binary.
-         * @return Binary bytes.
+         * @param hex Hexadecimal string (a string that's
+         *            made up of the characters 0123456789ABCDEF)
+         *            to convert to a binary array.
+         * @return Binary byte array.
          */
         byte[] sodiumHex2Bin(String hex);
 
