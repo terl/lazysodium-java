@@ -35,6 +35,7 @@ public class BaseTest {
     public static PwHash.Lazy pwHashLazy;
     public static SecretBox.Lazy secretBoxLazy;
     public static CryptoBox.Lazy cryptoBoxLazy;
+    public static CryptoSign.Lazy cryptoSignLazy;
 
     public static KeyDerivation.Native keyDerivation;
     public static KeyDerivation.Lazy keyDerivationLazy;
@@ -52,6 +53,7 @@ public class BaseTest {
         keyDerivationLazy = (KeyDerivation.Lazy) lazySodium;
         secretBoxLazy = (SecretBox.Lazy) lazySodium;
         cryptoBoxLazy = (CryptoBox.Lazy) lazySodium;
+        cryptoSignLazy = (CryptoSign.Lazy) lazySodium;
     }
 
 

@@ -26,6 +26,7 @@ public class LazySodium implements
         Padding.Native, Padding.Lazy,
         Helpers.Native, Helpers.Lazy,
         PwHash.Native, PwHash.Lazy,
+        CryptoSign.Native, CryptoSign.Lazy,
         CryptoBox.Native, CryptoBox.Lazy,
         SecretBox.Native, SecretBox.Lazy,
         KeyExchange.Native, KeyExchange.Lazy,
@@ -591,6 +592,93 @@ public class LazySodium implements
         }
 
         return str(message);
+    }
+
+
+
+
+    //// -------------------------------------------|
+    //// CRYPTO SIGN
+    //// -------------------------------------------|
+
+    @Override
+    public boolean cryptoSignKeypair(byte[] publicKey, byte[] secretKey) {
+        return boolify(nacl.crypto_sign_keypair(publicKey, secretKey));
+    }
+
+
+    @Override
+    public boolean cryptoSignSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed) {
+        return boolify(nacl.crypto_sign_seed_keypair(publicKey, secretKey, seed));
+    }
+
+    @Override
+    public boolean cryptoSign(byte[] signedMessage, Long signedMessageLen, byte[] message, long messageLen, byte[] secretKey) {
+        return boolify(nacl.crypto_sign(signedMessage, signedMessageLen, message, messageLen, secretKey));
+    }
+
+    @Override
+    public boolean cryptoSignOpen(byte[] message, Long messageLen, byte[] signedMessage, long signedMessageLen, byte[] publicKey) {
+        return boolify(nacl.crypto_sign_open(message, messageLen, signedMessage, signedMessageLen, publicKey));
+    }
+
+
+    // -- lazy
+
+    @Override
+    public KeyPair cryptoSignKeypair() throws SodiumException {
+        byte[] publicKey = randomBytesBuf(CryptoSign.PUBLICKEYBYTES);
+        byte[] secretKey = randomBytesBuf(CryptoSign.SECRETKEYBYTES);
+        if (!cryptoSignKeypair(publicKey, secretKey)) {
+            throw new SodiumException("Could not generate a signing keypair.");
+        }
+        return new KeyPair(publicKey, secretKey);
+    }
+
+    @Override
+    public KeyPair cryptoSignSeedKeypair(byte[] seed) throws SodiumException {
+        byte[] publicKey = randomBytesBuf(CryptoSign.PUBLICKEYBYTES);
+        byte[] secretKey = randomBytesBuf(CryptoSign.SECRETKEYBYTES);
+        if (!cryptoSignSeedKeypair(publicKey, secretKey, seed)) {
+            throw new SodiumException("Could not generate a signing keypair with a seed.");
+        }
+        return new KeyPair(publicKey, secretKey);
+    }
+
+    @Override
+    public String cryptoSign(String message, String secretKey) throws SodiumException {
+        byte[] messageBytes = bytes(message);
+        byte[] secretKeyBytes = sodiumHex2Bin(secretKey);
+        byte[] signedMessage = randomBytesBuf(CryptoSign.BYTES + messageBytes.length);
+        boolean res = cryptoSign(signedMessage, null, messageBytes, messageBytes.length, secretKeyBytes);
+
+        if (!res) {
+            throw new SodiumException("Could not sign your message.");
+        }
+
+        return sodiumBin2Hex(signedMessage);
+    }
+
+    @Override
+    public String cryptoSignOpen(String signedMessage, String publicKey) {
+        byte[] signedMessageBytes = toBin(signedMessage);
+        byte[] publicKeyBytes = sodiumHex2Bin(publicKey);
+
+        byte[] messageBytes = randomBytesBuf(signedMessageBytes.length - CryptoSign.BYTES);
+
+        boolean res = cryptoSignOpen(
+                messageBytes,
+                null,
+                signedMessageBytes,
+                signedMessageBytes.length,
+                publicKeyBytes
+        );
+
+        if (!res) {
+            return null;
+        }
+
+        return str(messageBytes);
     }
 
 

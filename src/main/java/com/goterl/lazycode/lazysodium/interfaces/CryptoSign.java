@@ -38,11 +38,11 @@ public interface CryptoSign {
 
     interface Native {
 
-       int cryptoSignKeypair(byte[] publicKey, byte[] secretKey);
+        boolean cryptoSignKeypair(byte[] publicKey, byte[] secretKey);
 
-       int cryptoSignSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed);
+        boolean cryptoSignSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed);
 
-       int cryptoSign(
+        boolean cryptoSign(
                 byte[] signedMessage,
                 Long signedMessageLen,
                 byte[] message,
@@ -50,7 +50,7 @@ public interface CryptoSign {
                 byte[] secretKey
         );
 
-       int cryptoSignOpen(
+        boolean cryptoSignOpen(
                 byte[] message,
                 Long messageLen,
                 byte[] signedMessage,
@@ -63,7 +63,35 @@ public interface CryptoSign {
 
     interface Lazy {
 
+        /**
+         * Generate a signing keypair.
+         * @return Public and private keypair.
+         */
+        KeyPair cryptoSignKeypair() throws SodiumException;
 
+        /**
+         * Generate a signing keypair deterministically.
+         * @param seed The seed to generate keys.
+         * @return Public and private keypair.
+         */
+        KeyPair cryptoSignSeedKeypair(byte[] seed) throws SodiumException;
+
+        /**
+         * Sign a message.
+         * @param message The message to sign.
+         * @param secretKey The secret key.
+         * @return A {@link Helpers.Lazy#sodiumBin2Hex(byte[])}-ified signed message.
+         */
+        String cryptoSign(String message, String secretKey) throws SodiumException;
+
+        /**
+         * Checks that a message is validly signed by a public key.
+         * @param signedMessage The signed message.
+         * @param publicKey The public key that signed the message.
+         * @return Returns the message without a signature. If null, then
+         * the message is not validly signed by the publicKey.
+         */
+        String cryptoSignOpen(String signedMessage, String publicKey);
 
 
     }
