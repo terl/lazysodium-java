@@ -9,6 +9,7 @@
 package com.goterl.lazycode.lazysodium.interfaces;
 
 
+import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.utils.BaseChecker;
 import com.goterl.lazycode.lazysodium.utils.KeyPair;
 
@@ -143,21 +144,29 @@ public interface CryptoBox {
          * Generate a secret and public key.
          * @return Secret and public key.
          */
-        KeyPair cryptoBoxKeypair();
+        KeyPair cryptoBoxKeypair() throws SodiumException;
 
         /**
          * Generate a public and secret key deterministically.
          * @param seed The seed to generate the key.
          * @return Public and secret key.
          */
-        KeyPair cryptoBoxSeedKeypair(byte[] seed);
+        KeyPair cryptoBoxSeedKeypair(byte[] seed) throws SodiumException;
 
         /**
          * Generate a public key from a private key.
-         * @param keyPair Provide the secret key. Public key will be ignored.
+         * @param secretKey Provide the secret key.
          * @return The public key and the provided secret key.
          */
-        KeyPair cryptoScalarMultBase(KeyPair keyPair);
+        KeyPair cryptoScalarMultBase(byte[] secretKey) throws SodiumException;
+
+        /**
+         * Generate a public key from a private key.
+         * @param secretKey Provide the secret key that's been
+         *                  through {@link Helpers.Lazy#sodiumBin2Hex(byte[])}.
+         * @return The public key and the provided secret key.
+         */
+        KeyPair cryptoScalarMultBase(String secretKey) throws SodiumException;
 
         /**
          * Encrypts a message.
@@ -166,7 +175,7 @@ public interface CryptoBox {
          * @param keyPair A keypair.
          * @return The encrypted {@link Helpers.Lazy#sodiumBin2Hex(byte[])}'ified cipher text.
          */
-        String cryptoBoxEasy(String message, byte[] nonce, KeyPair keyPair);
+        String cryptoBoxEasy(String message, byte[] nonce, KeyPair keyPair) throws SodiumException;
 
         /**
          * Decrypts a previously encrypted message.
@@ -176,7 +185,8 @@ public interface CryptoBox {
          * @param keyPair A keypair.
          * @return The message.
          */
-        String cryptoBoxOpenEasy(String cipherText, byte[] nonce, KeyPair keyPair);
+        String cryptoBoxOpenEasy(String cipherText, byte[] nonce, KeyPair keyPair) throws SodiumException;
+
 
 
     }

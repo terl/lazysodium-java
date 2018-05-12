@@ -520,6 +520,78 @@ public class LazySodium implements
         return boolify(nacl.crypto_box_open_detached_afternm(message, cipherText, mac, cipherTextLen, nonce, key));
     }
 
+    // -- lazy
+
+    @Override
+    public KeyPair cryptoBoxKeypair() throws SodiumException {
+        byte[] publicKey = randomBytesBuf(CryptoBox.PUBLICKEYBYTES);
+        byte[] secretKey = randomBytesBuf(CryptoBox.SECRETKEYBYTES);
+        if (!cryptoBoxKeypair(publicKey, secretKey)) {
+            throw new SodiumException("Unable to create a public and private key.");
+        }
+        return new KeyPair(publicKey, secretKey);
+    }
+
+    @Override
+    public KeyPair cryptoBoxSeedKeypair(byte[] seed) throws SodiumException {
+        byte[] publicKey = randomBytesBuf(CryptoBox.PUBLICKEYBYTES);
+        byte[] secretKey = randomBytesBuf(CryptoBox.SECRETKEYBYTES);
+        if (!CryptoBox.Checker.checkSeed(seed.length)) {
+            throw new SodiumException("Seed is incorrect size.");
+        }
+        if (!cryptoBoxSeedKeypair(publicKey, secretKey, seed)) {
+            throw new SodiumException("Unable to create a public and private key.");
+        }
+        return new KeyPair(publicKey, secretKey);
+    }
+
+    @Override
+    public KeyPair cryptoScalarMultBase(byte[] secretKey) throws SodiumException {
+        if (!CryptoBox.Checker.checkSecretKey(secretKey.length)) {
+            throw new SodiumException("Secret key is incorrect size.");
+        }
+        byte[] publicKey = randomBytesBuf(CryptoBox.PUBLICKEYBYTES);
+        nacl.crypto_scalarmult_base(publicKey, secretKey);
+        return new KeyPair(publicKey, secretKey);
+    }
+
+    @Override
+    public KeyPair cryptoScalarMultBase(String secretKey) throws SodiumException {
+        byte[] secretKeyBytes = toBin(secretKey);
+        return cryptoScalarMultBase(secretKeyBytes);
+    }
+
+    @Override
+    public String cryptoBoxEasy(String message, byte[] nonce, KeyPair keyPair) throws SodiumException {
+        byte[] messageBytes = bytes(message);
+        byte[] cipherBytes = randomBytesBuf(CryptoBox.MACBYTES + messageBytes.length);
+        boolean res = cryptoBoxEasy(
+                cipherBytes,
+                messageBytes,
+                messageBytes.length,
+                nonce,
+                keyPair.getPublicKey(),
+                keyPair.getSecretKey()
+        );
+        if (!res) {
+            throw new SodiumException("Could not encrypt your message.");
+        }
+        return toHex(cipherBytes);
+    }
+
+    @Override
+    public String cryptoBoxOpenEasy(String cipherText, byte[] nonce, KeyPair keyPair) throws SodiumException {
+        byte[] cipher = toBin(cipherText);
+        byte[] message = randomBytesBuf(cipher.length - CryptoBox.MACBYTES);
+        boolean res =
+                cryptoBoxOpenEasy(message, cipher, cipher.length, nonce, keyPair.getPublicKey(), keyPair.getSecretKey());
+
+        if (!res) {
+            throw new SodiumException("Could not decrypt your message.");
+        }
+
+        return str(message);
+    }
 
 
 
