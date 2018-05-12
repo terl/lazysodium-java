@@ -28,7 +28,8 @@ public interface Box {
         MACBYTES = CURVE25519XSALSA20POLY1305_MACBYTES,
         SEEDBYTES = CURVE25519XSALSA20POLY1305_SEEDBYTES,
         BEFORENMBYTES = CURVE25519XSALSA20POLY1305_BEFORENMBYTES,
-        NONCEBYTES = CURVE25519XSALSA20POLY1305_NONCEBYTES;
+        NONCEBYTES = CURVE25519XSALSA20POLY1305_NONCEBYTES,
+        SEALBYTES = PUBLICKEYBYTES + MACBYTES;
 
 
 
@@ -135,6 +136,15 @@ public interface Box {
                                             byte[] nonce,
                                             byte[] key);
 
+
+
+        boolean cryptoBoxSeal(byte[] cipher, byte[] message, long messageLen, byte[] publicKey);
+
+        boolean cryptoBoxSealOpen(byte[] m,
+                                    byte[] cipher,
+                                    long cipherLen,
+                                    byte[] publicKey,
+                                    byte[] secretKey);
 
     }
 

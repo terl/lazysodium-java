@@ -328,7 +328,13 @@ public class Sodium {
                                         byte[] key);
 
 
+    native int crypto_box_seal(byte[] cipher, byte[] message, long messageLen, byte[] publicKey);
 
+    native int crypto_box_seal_open(byte[] m,
+                                    byte[] cipher,
+                                    long cipherLen,
+                                    byte[] publicKey,
+                                    byte[] secretKey);
 
     //// -------------------------------------------|
     //// CRYPTO SIGN
