@@ -11,15 +11,10 @@
  */
 import com.goterl.lazycode.lazysodium.LazySodium;
 import com.goterl.lazycode.lazysodium.Sodium;
-import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.*;
-import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
-
-import static org.junit.Assert.*;
 
 public class BaseTest {
 
@@ -34,8 +29,8 @@ public class BaseTest {
     public static PwHash.Native pwHash;
     public static PwHash.Lazy pwHashLazy;
     public static SecretBox.Lazy secretBoxLazy;
-    public static CryptoBox.Lazy cryptoBoxLazy;
-    public static CryptoSign.Lazy cryptoSignLazy;
+    public static Box.Lazy cryptoBoxLazy;
+    public static Sign.Lazy cryptoSignLazy;
 
     public static KeyDerivation.Native keyDerivation;
     public static KeyDerivation.Lazy keyDerivationLazy;
@@ -52,8 +47,8 @@ public class BaseTest {
         keyDerivation = (KeyDerivation.Native) lazySodium;
         keyDerivationLazy = (KeyDerivation.Lazy) lazySodium;
         secretBoxLazy = (SecretBox.Lazy) lazySodium;
-        cryptoBoxLazy = (CryptoBox.Lazy) lazySodium;
-        cryptoSignLazy = (CryptoSign.Lazy) lazySodium;
+        cryptoBoxLazy = (Box.Lazy) lazySodium;
+        cryptoSignLazy = (Sign.Lazy) lazySodium;
     }
 
 

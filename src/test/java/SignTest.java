@@ -11,8 +11,7 @@
  */
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
-import com.goterl.lazycode.lazysodium.interfaces.CryptoBox;
-import com.goterl.lazycode.lazysodium.interfaces.CryptoSign;
+import com.goterl.lazycode.lazysodium.interfaces.Sign;
 import com.goterl.lazycode.lazysodium.utils.KeyPair;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -22,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Tests public and private key encryption.
  */
-public class CryptoSignTest extends BaseTest {
+public class SignTest extends BaseTest {
 
 
     @Test
@@ -33,7 +32,7 @@ public class CryptoSignTest extends BaseTest {
 
     @Test
     public void generateDeterministicPublicKeyPair() throws SodiumException {
-        byte[] seed = new byte[CryptoSign.SEEDBYTES];
+        byte[] seed = new byte[Sign.SEEDBYTES];
         KeyPair keys = cryptoSignLazy.cryptoSignSeedKeypair(seed);
         KeyPair keys2 = cryptoSignLazy.cryptoSignSeedKeypair(seed);
 
@@ -42,7 +41,7 @@ public class CryptoSignTest extends BaseTest {
 
     @Test
     public void generateDeterministicSecretKeyPair() throws SodiumException {
-        byte[] seed = new byte[CryptoSign.SEEDBYTES];
+        byte[] seed = new byte[Sign.SEEDBYTES];
         KeyPair keys = cryptoSignLazy.cryptoSignSeedKeypair(seed);
         KeyPair keys2 = cryptoSignLazy.cryptoSignSeedKeypair(seed);
 
@@ -54,13 +53,11 @@ public class CryptoSignTest extends BaseTest {
     public void signMessage() throws SodiumException {
         String message = "This should get signed";
 
-        // Generate the client's keypair
-        KeyPair clientKeys = cryptoSignLazy.cryptoSignKeypair();
-
-        String signed = cryptoSignLazy.cryptoSign(message, clientKeys.getSecretKeyString());
+        KeyPair keyPair = cryptoSignLazy.cryptoSignKeypair();
+        String signed = cryptoSignLazy.cryptoSign(message, keyPair.getSecretKeyString());
 
         // Now we can verify the signed message.
-        String resultingMessage = cryptoSignLazy.cryptoSignOpen(signed, clientKeys.getPublicKeyString());
+        String resultingMessage = cryptoSignLazy.cryptoSignOpen(signed, keyPair.getPublicKeyString());
 
         TestCase.assertNotNull(resultingMessage);
     }

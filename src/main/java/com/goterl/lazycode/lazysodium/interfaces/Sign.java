@@ -14,7 +14,7 @@ import com.goterl.lazycode.lazysodium.utils.BaseChecker;
 import com.goterl.lazycode.lazysodium.utils.Constants;
 import com.goterl.lazycode.lazysodium.utils.KeyPair;
 
-public interface CryptoSign {
+public interface Sign {
 
 
     int ED25519_PUBLICKEYBYTES = 32,

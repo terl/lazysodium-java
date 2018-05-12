@@ -13,7 +13,7 @@ import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.utils.BaseChecker;
 import com.goterl.lazycode.lazysodium.utils.KeyPair;
 
-public interface CryptoBox {
+public interface Box {
 
 
     int CURVE25519XSALSA20POLY1305_PUBLICKEYBYTES = 32,

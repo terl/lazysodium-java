@@ -26,8 +26,8 @@ public class LazySodium implements
         Padding.Native, Padding.Lazy,
         Helpers.Native, Helpers.Lazy,
         PwHash.Native, PwHash.Lazy,
-        CryptoSign.Native, CryptoSign.Lazy,
-        CryptoBox.Native, CryptoBox.Lazy,
+        Sign.Native, Sign.Lazy,
+        Box.Native, Box.Lazy,
         SecretBox.Native, SecretBox.Lazy,
         KeyExchange.Native, KeyExchange.Lazy,
         KeyDerivation.Native, KeyDerivation.Lazy {
@@ -525,8 +525,8 @@ public class LazySodium implements
 
     @Override
     public KeyPair cryptoBoxKeypair() throws SodiumException {
-        byte[] publicKey = randomBytesBuf(CryptoBox.PUBLICKEYBYTES);
-        byte[] secretKey = randomBytesBuf(CryptoBox.SECRETKEYBYTES);
+        byte[] publicKey = randomBytesBuf(Box.PUBLICKEYBYTES);
+        byte[] secretKey = randomBytesBuf(Box.SECRETKEYBYTES);
         if (!cryptoBoxKeypair(publicKey, secretKey)) {
             throw new SodiumException("Unable to create a public and private key.");
         }
@@ -535,9 +535,9 @@ public class LazySodium implements
 
     @Override
     public KeyPair cryptoBoxSeedKeypair(byte[] seed) throws SodiumException {
-        byte[] publicKey = randomBytesBuf(CryptoBox.PUBLICKEYBYTES);
-        byte[] secretKey = randomBytesBuf(CryptoBox.SECRETKEYBYTES);
-        if (!CryptoBox.Checker.checkSeed(seed.length)) {
+        byte[] publicKey = randomBytesBuf(Box.PUBLICKEYBYTES);
+        byte[] secretKey = randomBytesBuf(Box.SECRETKEYBYTES);
+        if (!Box.Checker.checkSeed(seed.length)) {
             throw new SodiumException("Seed is incorrect size.");
         }
         if (!cryptoBoxSeedKeypair(publicKey, secretKey, seed)) {
@@ -548,10 +548,10 @@ public class LazySodium implements
 
     @Override
     public KeyPair cryptoScalarMultBase(byte[] secretKey) throws SodiumException {
-        if (!CryptoBox.Checker.checkSecretKey(secretKey.length)) {
+        if (!Box.Checker.checkSecretKey(secretKey.length)) {
             throw new SodiumException("Secret key is incorrect size.");
         }
-        byte[] publicKey = randomBytesBuf(CryptoBox.PUBLICKEYBYTES);
+        byte[] publicKey = randomBytesBuf(Box.PUBLICKEYBYTES);
         cryptoScalarMultBase(publicKey, secretKey);
         return new KeyPair(publicKey, secretKey);
     }
@@ -565,7 +565,7 @@ public class LazySodium implements
     @Override
     public String cryptoBoxEasy(String message, byte[] nonce, KeyPair keyPair) throws SodiumException {
         byte[] messageBytes = bytes(message);
-        byte[] cipherBytes = randomBytesBuf(CryptoBox.MACBYTES + messageBytes.length);
+        byte[] cipherBytes = randomBytesBuf(Box.MACBYTES + messageBytes.length);
         boolean res = cryptoBoxEasy(
                 cipherBytes,
                 messageBytes,
@@ -583,7 +583,7 @@ public class LazySodium implements
     @Override
     public String cryptoBoxOpenEasy(String cipherText, byte[] nonce, KeyPair keyPair) throws SodiumException {
         byte[] cipher = toBin(cipherText);
-        byte[] message = randomBytesBuf(cipher.length - CryptoBox.MACBYTES);
+        byte[] message = randomBytesBuf(cipher.length - Box.MACBYTES);
         boolean res =
                 cryptoBoxOpenEasy(message, cipher, cipher.length, nonce, keyPair.getPublicKey(), keyPair.getSecretKey());
 
@@ -627,8 +627,8 @@ public class LazySodium implements
 
     @Override
     public KeyPair cryptoSignKeypair() throws SodiumException {
-        byte[] publicKey = randomBytesBuf(CryptoSign.PUBLICKEYBYTES);
-        byte[] secretKey = randomBytesBuf(CryptoSign.SECRETKEYBYTES);
+        byte[] publicKey = randomBytesBuf(Sign.PUBLICKEYBYTES);
+        byte[] secretKey = randomBytesBuf(Sign.SECRETKEYBYTES);
         if (!cryptoSignKeypair(publicKey, secretKey)) {
             throw new SodiumException("Could not generate a signing keypair.");
         }
@@ -637,8 +637,8 @@ public class LazySodium implements
 
     @Override
     public KeyPair cryptoSignSeedKeypair(byte[] seed) throws SodiumException {
-        byte[] publicKey = randomBytesBuf(CryptoSign.PUBLICKEYBYTES);
-        byte[] secretKey = randomBytesBuf(CryptoSign.SECRETKEYBYTES);
+        byte[] publicKey = randomBytesBuf(Sign.PUBLICKEYBYTES);
+        byte[] secretKey = randomBytesBuf(Sign.SECRETKEYBYTES);
         if (!cryptoSignSeedKeypair(publicKey, secretKey, seed)) {
             throw new SodiumException("Could not generate a signing keypair with a seed.");
         }
@@ -649,7 +649,7 @@ public class LazySodium implements
     public String cryptoSign(String message, String secretKey) throws SodiumException {
         byte[] messageBytes = bytes(message);
         byte[] secretKeyBytes = sodiumHex2Bin(secretKey);
-        byte[] signedMessage = randomBytesBuf(CryptoSign.BYTES + messageBytes.length);
+        byte[] signedMessage = randomBytesBuf(Sign.BYTES + messageBytes.length);
         boolean res = cryptoSign(signedMessage, null, messageBytes, messageBytes.length, secretKeyBytes);
 
         if (!res) {
@@ -664,7 +664,7 @@ public class LazySodium implements
         byte[] signedMessageBytes = toBin(signedMessage);
         byte[] publicKeyBytes = sodiumHex2Bin(publicKey);
 
-        byte[] messageBytes = randomBytesBuf(signedMessageBytes.length - CryptoSign.BYTES);
+        byte[] messageBytes = randomBytesBuf(signedMessageBytes.length - Sign.BYTES);
 
         boolean res = cryptoSignOpen(
                 messageBytes,

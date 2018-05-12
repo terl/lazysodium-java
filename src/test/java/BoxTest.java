@@ -11,11 +11,8 @@
  */
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
-import com.goterl.lazycode.lazysodium.interfaces.CryptoBox;
-import com.goterl.lazycode.lazysodium.interfaces.KeyExchange;
-import com.goterl.lazycode.lazysodium.interfaces.SecretBox;
+import com.goterl.lazycode.lazysodium.interfaces.Box;
 import com.goterl.lazycode.lazysodium.utils.KeyPair;
-import com.goterl.lazycode.lazysodium.utils.SessionPair;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -24,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Tests public and private key encryption.
  */
-public class CryptoBoxTest extends BaseTest {
+public class BoxTest extends BaseTest {
 
 
     @Test
@@ -35,7 +32,7 @@ public class CryptoBoxTest extends BaseTest {
 
     @Test
     public void generateDeterministicPublicKeyPair() throws SodiumException {
-        byte[] seed = new byte[CryptoBox.SEEDBYTES];
+        byte[] seed = new byte[Box.SEEDBYTES];
         KeyPair keys = cryptoBoxLazy.cryptoBoxSeedKeypair(seed);
         KeyPair keys2 = cryptoBoxLazy.cryptoBoxSeedKeypair(seed);
 
@@ -44,7 +41,7 @@ public class CryptoBoxTest extends BaseTest {
 
     @Test
     public void generateDeterministicSecretKeyPair() throws SodiumException {
-        byte[] seed = new byte[CryptoBox.SEEDBYTES];
+        byte[] seed = new byte[Box.SEEDBYTES];
         KeyPair keys = cryptoBoxLazy.cryptoBoxSeedKeypair(seed);
         KeyPair keys2 = cryptoBoxLazy.cryptoBoxSeedKeypair(seed);
 
@@ -65,7 +62,7 @@ public class CryptoBoxTest extends BaseTest {
 
         // We're going to encrypt a message on the client and
         // send it to the server.
-        byte[] nonce = lazySodium.nonce(CryptoBox.NONCEBYTES);
+        byte[] nonce = lazySodium.nonce(Box.NONCEBYTES);
         KeyPair encryptionKeyPair = new KeyPair(serverKeys.getPublicKey(), clientKeys.getSecretKey());
         String encrypted = cryptoBoxLazy.cryptoBoxEasy(message, nonce, encryptionKeyPair);
 
