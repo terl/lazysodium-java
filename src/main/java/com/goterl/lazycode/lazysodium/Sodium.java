@@ -328,6 +328,36 @@ public class Sodium {
                                         byte[] key);
 
 
+
+
+    //// -------------------------------------------|
+    //// CRYPTO SIGN
+    //// -------------------------------------------|
+
+    native int crypto_sign_keypair(byte[] publicKey, byte[] secretKey);
+
+    native int crypto_sign_seed_keypair(byte[] publicKey, byte[] secretKey, byte[] seed);
+
+    native int crypto_sign(
+            byte[] signedMessage,
+            Long signedMessageLen,
+            byte[] message,
+            long messageLen,
+            byte[] secretKey
+    );
+
+    native int crypto_sign_open(
+            byte[] message,
+            Long messageLen,
+            byte[] signedMessage,
+            long signedMessageLen,
+            byte[] publicKey
+    );
+
+
+
+
+
     //// -------------------------------------------|
     //// SECRET SCREAM
     //// -------------------------------------------|

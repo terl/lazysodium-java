@@ -551,7 +551,7 @@ public class LazySodium implements
             throw new SodiumException("Secret key is incorrect size.");
         }
         byte[] publicKey = randomBytesBuf(CryptoBox.PUBLICKEYBYTES);
-        nacl.crypto_scalarmult_base(publicKey, secretKey);
+        cryptoScalarMultBase(publicKey, secretKey);
         return new KeyPair(publicKey, secretKey);
     }
 
