@@ -521,6 +521,16 @@ public class LazySodium implements
         return boolify(nacl.crypto_box_open_detached_afternm(message, cipherText, mac, cipherTextLen, nonce, key));
     }
 
+    @Override
+    public boolean cryptoBoxSeal(byte[] cipher, byte[] message, long messageLen, byte[] publicKey) {
+        return boolify(nacl.crypto_box_seal(cipher, message, messageLen, publicKey));
+    }
+
+    @Override
+    public boolean cryptoBoxSealOpen(byte[] m, byte[] cipher, long cipherLen, byte[] publicKey, byte[] secretKey) {
+        return boolify(nacl.crypto_box_seal_open(m, cipher, cipherLen, publicKey, secretKey));
+    }
+
     // -- lazy
 
     @Override
