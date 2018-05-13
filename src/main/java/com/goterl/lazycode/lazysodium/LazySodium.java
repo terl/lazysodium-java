@@ -927,8 +927,9 @@ public class LazySodium implements
     public String cryptoGenericHash(String in, String key) throws SodiumException {
 
         byte[] message = bytes(in);
-        byte[] hash = randomBytesBuf(GenericHash.BYTES);
         byte[] keyBytes = toBin(key);
+
+        byte[] hash = randomBytesBuf(GenericHash.BYTES);
 
         boolean res = cryptoGenericHash(hash, hash.length, message, message.length, keyBytes, keyBytes.length);
 
@@ -946,17 +947,23 @@ public class LazySodium implements
     }
 
     @Override
-    public String cryptoGenericHashUpdate(GenericHash.State state, String in) {
+    public String cryptoGenericHashUpdate(GenericHash.State state, String in) throws SodiumException {
         byte[] inBytes = bytes(in);
-        cryptoGenericHashUpdate(state, inBytes, inBytes.length);
+        boolean res = cryptoGenericHashUpdate(state, inBytes, inBytes.length);
+        if (!res) {
+            throw new SodiumException("Could not hash part of the message.");
+        }
         return toHex(inBytes);
     }
 
     @Override
-    public String cryptoGenericHashFinal(GenericHash.State state, int outLen) {
-        byte[] out = randomBytesBuf(outLen);
-        cryptoGenericHashFinal(state, out, outLen);
-        return toHex(out);
+    public String cryptoGenericHashFinal(GenericHash.State state, int outLen) throws SodiumException {
+        byte[] hash = randomBytesBuf(outLen);
+        boolean res = cryptoGenericHashFinal(state, hash, hash.length);
+        if (!res) {
+            throw new SodiumException("Could not hash the final part of the message.");
+        }
+        return toHex(hash);
     }
 
 

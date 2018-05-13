@@ -158,7 +158,7 @@ public interface GenericHash {
          * @param in A part of a string to hash.
          * @return The hashed part.
          */
-        String cryptoGenericHashUpdate(GenericHash.State state, String in);
+        String cryptoGenericHashUpdate(GenericHash.State state, String in) throws SodiumException;
 
         /**
          * Finalise the hashing operation.
@@ -166,25 +166,27 @@ public interface GenericHash {
          * @param outLen The size of the final hash.
          * @return The final hash.
          */
-        String cryptoGenericHashFinal(GenericHash.State state, int outLen);
+        String cryptoGenericHashFinal(GenericHash.State state, int outLen) throws SodiumException;
 
     }
 
 
     class State extends Structure {
 
-        public static class ByReference extends GenericHash.State implements Structure.ByReference { }
+        public static class ByReference extends GenericHash.State implements Structure.ByReference {
+
+        }
 
         @Override
         protected List<String> getFieldOrder() {
-            return Arrays.asList("h", "t", "f", "buf", "bufLen", "last_node");
+            return Arrays.asList("h", "t", "f", "buf", "buflen", "last_node");
         }
 
-        public byte[] h = new byte[8];
-        public byte[] t = new byte[2];
-        public byte[] f = new byte[2];
+        public long[] h = new long[8];
+        public long[] t = new long[2];
+        public long[] f = new long[2];
         public byte[] buf = new byte[2 * 128];
-        public int bufLen;
+        public int buflen = 2 * 128;
         public int last_node;
 
     }

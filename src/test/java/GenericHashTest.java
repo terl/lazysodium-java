@@ -37,16 +37,15 @@ public class GenericHashTest extends BaseTest {
         String message = "The sun";
         String message2 = "is shining";
 
-        final GenericHash.State state =
-                new GenericHash.State.ByReference();
+        final GenericHash.State state = new GenericHash.State.ByReference();
 
         String key = lazySodium.cryptoGenericHashKeygen();
-
-        int sizeOfHash = GenericHash.BYTES;
+        int sizeOfHash = GenericHash.BYTES_MAX;
 
         lazySodium.cryptoGenericHashInit(state, key, sizeOfHash);
-        lazySodium.cryptoGenericHashUpdate(state, message);
-        lazySodium.cryptoGenericHashUpdate(state, message2);
+        String hashedMessage1 = lazySodium.cryptoGenericHashUpdate(state, message);
+        String hashedMessage2 = lazySodium.cryptoGenericHashUpdate(state, message2);
+
         String hash = lazySodium.cryptoGenericHashFinal(state, sizeOfHash);
 
         TestCase.assertNotNull(hash);
