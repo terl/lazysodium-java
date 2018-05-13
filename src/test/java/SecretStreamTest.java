@@ -36,95 +36,95 @@ public class SecretStreamTest extends BaseTest {
     private byte[] c3 = new byte[c3Len];
 
 
-    @Test
-    public void struct() {
-        final SecretStream.State state =
-                new SecretStream.State.ByReference();
-
-        byte[] key = new byte[SecretStream.XCHACHA20POLY1305_KEYBYTES];
-        byte[] header = new byte[SecretStream.XCHACHA20POLY1305_HEADERBYTES];
-
-        lazySodium.cryptoSecretStreamXChacha20Poly1305Keygen(key);
-
-        // Start the encryption
-        lazySodium.cryptoSecretStreamXChacha20Poly1305InitPush(state, header, key);
-
-        lazySodium.cryptoSecretStreamXChacha20Poly1305Push(
-                state,
-                c1,
-                m1,
-                m1Len,
-                (byte) 0
-        );
-
-        lazySodium.cryptoSecretStreamXChacha20Poly1305Push(
-                state,
-                c2,
-                m2,
-                m2Len,
-                (byte) 0
-        );
-
-        // When finished, add XCHACHA20POLY1305_TAG_FINAL
-        // to indicate end of stream.
-        lazySodium.cryptoSecretStreamXChacha20Poly1305Push(
-                state,
-                c3,
-                m3,
-                m3Len,
-                SecretStream.XCHACHA20POLY1305_TAG_FINAL
-        );
-
-        // Start the decryption
-        byte[] m1Decrypted = new byte[m1Len];
-        byte[] m2Decrypted = new byte[m2Len];
-        byte[] m3Decrypted = new byte[m3Len];
-        byte tag = 0;
-
-        lazySodium.cryptoSecretStreamXChacha20Poly1305InitPull(state, header, key);
-
-        lazySodium.cryptoSecretStreamXChacha20Poly1305Pull(
-                state,
-                m1Decrypted,
-                tag,
-                c1,
-                c1Len
-        );
-
-        if (tag == SecretStream.XCHACHA20POLY1305_TAG_FINAL) {
-            TestCase.assertNotSame("Stream ended early", tag, SecretStream.XCHACHA20POLY1305_TAG_FINAL);
-        }
-
-        lazySodium.cryptoSecretStreamXChacha20Poly1305Pull(
-                state,
-                m2Decrypted,
-                tag,
-                c2,
-                c2Len
-        );
-
-        if (tag == SecretStream.XCHACHA20POLY1305_TAG_FINAL) {
-            TestCase.assertNotSame("Stream ended early", tag, SecretStream.XCHACHA20POLY1305_TAG_FINAL);
-        }
-
-        lazySodium.cryptoSecretStreamXChacha20Poly1305Pull(
-                state,
-                m3Decrypted,
-                tag,
-                c3,
-                c3Len
-        );
-
-
-        if (tag == SecretStream.XCHACHA20POLY1305_TAG_FINAL) {
-            TestCase.assertTrue(
-                    lazySodium.str(m1Decrypted).equals(message1) &&
-                    lazySodium.str(m2Decrypted).equals(message2) &&
-                    lazySodium.str(m3Decrypted).equals(message3)
-            );
-        }
-
-    }
+//    @Test
+//    public void struct() {
+//        final SecretStream.State state =
+//                new SecretStream.State.ByReference();
+//
+//        byte[] key = new byte[SecretStream.XCHACHA20POLY1305_KEYBYTES];
+//        byte[] header = new byte[SecretStream.XCHACHA20POLY1305_HEADERBYTES];
+//
+//        lazySodium.cryptoSecretStreamXChacha20Poly1305Keygen(key);
+//
+//        // Start the encryption
+//        lazySodium.cryptoSecretStreamXChacha20Poly1305InitPush(state, header, key);
+//
+//        lazySodium.cryptoSecretStreamXChacha20Poly1305Push(
+//                state,
+//                c1,
+//                m1,
+//                m1Len,
+//                (byte) 0
+//        );
+//
+//        lazySodium.cryptoSecretStreamXChacha20Poly1305Push(
+//                state,
+//                c2,
+//                m2,
+//                m2Len,
+//                (byte) 0
+//        );
+//
+//        // When finished, add XCHACHA20POLY1305_TAG_FINAL
+//        // to indicate end of stream.
+//        lazySodium.cryptoSecretStreamXChacha20Poly1305Push(
+//                state,
+//                c3,
+//                m3,
+//                m3Len,
+//                SecretStream.XCHACHA20POLY1305_TAG_FINAL
+//        );
+//
+//        // Start the decryption
+//        byte[] m1Decrypted = new byte[m1Len];
+//        byte[] m2Decrypted = new byte[m2Len];
+//        byte[] m3Decrypted = new byte[m3Len];
+//        byte tag = 0;
+//
+//        lazySodium.cryptoSecretStreamXChacha20Poly1305InitPull(state, header, key);
+//
+//        lazySodium.cryptoSecretStreamXChacha20Poly1305Pull(
+//                state,
+//                m1Decrypted,
+//                tag,
+//                c1,
+//                c1Len
+//        );
+//
+//        if (tag == SecretStream.XCHACHA20POLY1305_TAG_FINAL) {
+//            TestCase.assertNotSame("Stream ended early", tag, SecretStream.XCHACHA20POLY1305_TAG_FINAL);
+//        }
+//
+//        lazySodium.cryptoSecretStreamXChacha20Poly1305Pull(
+//                state,
+//                m2Decrypted,
+//                tag,
+//                c2,
+//                c2Len
+//        );
+//
+//        if (tag == SecretStream.XCHACHA20POLY1305_TAG_FINAL) {
+//            TestCase.assertNotSame("Stream ended early", tag, SecretStream.XCHACHA20POLY1305_TAG_FINAL);
+//        }
+//
+//        lazySodium.cryptoSecretStreamXChacha20Poly1305Pull(
+//                state,
+//                m3Decrypted,
+//                tag,
+//                c3,
+//                c3Len
+//        );
+//
+//
+//        if (tag == SecretStream.XCHACHA20POLY1305_TAG_FINAL) {
+//            TestCase.assertTrue(
+//                    lazySodium.str(m1Decrypted).equals(message1) &&
+//                    lazySodium.str(m2Decrypted).equals(message2) &&
+//                    lazySodium.str(m3Decrypted).equals(message3)
+//            );
+//        }
+//
+//    }
 
 
 
