@@ -37,22 +37,14 @@ public class PwHashTest extends BaseTest {
 
 
     @Test
-    public void strMin() {
-        byte[] outputHash = new byte[PwHash.STR_BYTES];
+    public void strMin() throws SodiumException {
 
-        boolean success = pwHash.cryptoPwHashStr(
-                outputHash,
-                PASSWORD_BYTES,
-                PASSWORD_BYTES_LEN,
+        String hash = pwHashLazy.cryptoPwHashStr(
+                PASSWORD,
                 3,
                 PwHash.ARGON2ID_MEMLIMIT_MIN
         );
 
-        if (!success) {
-            fail("cryptoPwHashStrMin did not succeed.");
-        }
-
-        String hash = LazySodium.toHex(lazySodium.removeNulls(outputHash));
         boolean isCorrect = pwHashLazy.cryptoPwHashStrVerify(hash, PASSWORD);
 
         assertTrue("Minimum hashing failed.", isCorrect);

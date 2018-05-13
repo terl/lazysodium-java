@@ -105,11 +105,11 @@ public interface SecretStream {
 
         @Override
         protected List<String> getFieldOrder() {
-            return Arrays.asList("k", "pad");
+            return Arrays.asList("k", "_pad");
         }
 
-        public byte[] k = new byte[XCHACHA20POLY1305_KEYBYTES];
-        public byte[] pad = new byte[8];
+        public char[] k = new char[XCHACHA20POLY1305_KEYBYTES];
+        public char[] _pad = new char[8];
 
     }
 }

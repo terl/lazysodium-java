@@ -371,7 +371,7 @@ public class LazySodium implements
         if (!res) {
             throw new SodiumException("Password hashing failed.");
         }
-        return str(hash);
+        return toHex(hash);
     }
 
     @Override
@@ -384,7 +384,7 @@ public class LazySodium implements
         }
 
         byte[] hashNoNulls = removeNulls(hash);
-        return str(hashNoNulls);
+        return toHex(hashNoNulls);
     }
 
     @Override
@@ -395,13 +395,13 @@ public class LazySodium implements
         // If the end of the hash does not have an null byte,
         // let's add it.
         byte endOfHash = hashBytes[hashBytes.length - 1];
-        byte nil = (byte) 0;
 
-        if (endOfHash != nil) {
-            byte[] hashWithNullByte = new byte[hashBytes.length];
-            System.arraycopy(hashBytes, 0, hashWithNullByte, 0, hashWithNullByte.length);
+        if (endOfHash != 0) {
+            byte[] hashWithNullByte = new byte[hashBytes.length + 1];
+            System.arraycopy(hashBytes, 0, hashWithNullByte, 0, hashBytes.length);
             hashBytes = hashWithNullByte;
         }
+
 
         return cryptoPwHashStrVerify(hashBytes, passwordBytes, passwordBytes.length);
     }
