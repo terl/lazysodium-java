@@ -18,22 +18,23 @@ import java.util.List;
 
 public interface GenericHash {
 
-    int SIPHASH24_BYTES = 8,
-        SIPHASH24_KEYBYTES = 16,
+    int
+        BLAKE2B_BYTES = 32,
         BLAKE2B_BYTES_MAX = 64,
         BLAKE2B_BYTES_MIN = 16,
+        BLAKE2B_KEYBYTES = 32,
         BLAKE2B_KEYBYTES_MIN = 16,
         BLAKE2B_KEYBYTES_MAX = 64,
+        BLAKE2B_SALTBYTES = 16,
 
-        BYTES = SIPHASH24_BYTES,
-        KEYBYTES = SIPHASH24_KEYBYTES,
+        BYTES = BLAKE2B_BYTES,
+        KEYBYTES = BLAKE2B_KEYBYTES,
 
         BYTES_MAX = BLAKE2B_BYTES_MAX,
         BYTES_MIN = BLAKE2B_BYTES_MIN,
 
         KEYBYTES_MIN = BLAKE2B_KEYBYTES_MIN,
         KEYBYTES_MAX = BLAKE2B_KEYBYTES_MAX;
-
 
     class Checker extends BaseChecker {
 
@@ -176,11 +177,14 @@ public interface GenericHash {
 
         @Override
         protected List<String> getFieldOrder() {
-            return Arrays.asList("h", "t", "last_node");
+            return Arrays.asList("h", "t", "f", "buf", "bufLen", "last_node");
         }
 
         public byte[] h = new byte[8];
         public byte[] t = new byte[2];
+        public byte[] f = new byte[2];
+        public byte[] buf = new byte[2 * 128];
+        public int bufLen;
         public int last_node;
 
     }

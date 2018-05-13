@@ -43,7 +43,7 @@ public class PwHashTest extends BaseTest {
                 outputHash,
                 PASSWORD_BYTES,
                 PASSWORD_BYTES_LEN,
-                PwHash.ARGON2ID_OPSLIMIT_MIN,
+                3,
                 PwHash.ARGON2ID_MEMLIMIT_MIN
         );
 

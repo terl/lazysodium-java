@@ -905,7 +905,7 @@ public class LazySodium implements
 
     @Override
     public String cryptoGenericHashKeygen() {
-        byte[] key = randomBytesBuf(GenericHash.KEYBYTES_MAX);
+        byte[] key = randomBytesBuf(GenericHash.KEYBYTES);
         cryptoGenericHashKeygen(key);
         return toHex(key);
     }
@@ -913,7 +913,7 @@ public class LazySodium implements
     @Override
     public String cryptoGenericHash(String in) throws SodiumException {
         byte[] message = bytes(in);
-        byte[] hash = randomBytesBuf(GenericHash.BYTES_MAX);
+        byte[] hash = randomBytesBuf(GenericHash.BYTES);
         boolean res = cryptoGenericHash(hash, hash.length, message, message.length, null, 0);
 
         if (!res) {
@@ -927,7 +927,7 @@ public class LazySodium implements
     public String cryptoGenericHash(String in, String key) throws SodiumException {
 
         byte[] message = bytes(in);
-        byte[] hash = randomBytesBuf(GenericHash.BYTES_MAX);
+        byte[] hash = randomBytesBuf(GenericHash.BYTES);
         byte[] keyBytes = toBin(key);
 
         boolean res = cryptoGenericHash(hash, hash.length, message, message.length, keyBytes, keyBytes.length);

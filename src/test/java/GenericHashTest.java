@@ -13,7 +13,6 @@
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.GenericHash;
-import com.goterl.lazycode.lazysodium.interfaces.SecretStream;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -43,14 +42,12 @@ public class GenericHashTest extends BaseTest {
 
         String key = lazySodium.cryptoGenericHashKeygen();
 
-        int sizeOfHash = GenericHash.BYTES_MAX - 12;
+        int sizeOfHash = GenericHash.BYTES;
 
         lazySodium.cryptoGenericHashInit(state, key, sizeOfHash);
         lazySodium.cryptoGenericHashUpdate(state, message);
         lazySodium.cryptoGenericHashUpdate(state, message2);
         String hash = lazySodium.cryptoGenericHashFinal(state, sizeOfHash);
-
-        System.out.println(hash);
 
         TestCase.assertNotNull(hash);
     }
