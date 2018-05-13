@@ -38,10 +38,34 @@ public interface Sign {
 
     interface Native {
 
+        /**
+         * Get a signing keypair.
+         * @param publicKey Public key.
+         * @param secretKey Secret key.
+         * @return True if successful.
+         */
         boolean cryptoSignKeypair(byte[] publicKey, byte[] secretKey);
 
+        /**
+         * Deterministically generate a public and secret key.
+         * @param publicKey Public key.
+         * @param secretKey Secret key.
+         * @param seed The seed used to generate the keys.
+         * @return True if successfully generated keys.
+         */
         boolean cryptoSignSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed);
 
+        /**
+         * Sign a message.
+         * @param signedMessage Signed message will be placed here.
+         *                      It is {@link #BYTES} + {@code messageLen}
+         *                      long.
+         * @param signedMessageLen The signed message length.
+         * @param message The message.
+         * @param messageLen The message length.
+         * @param secretKey The secret key.
+         * @return True if successfully signed.
+         */
         boolean cryptoSign(
                 byte[] signedMessage,
                 Long signedMessageLen,
@@ -50,6 +74,15 @@ public interface Sign {
                 byte[] secretKey
         );
 
+        /**
+         * Verify a signed message.
+         * @param message The message will be placed in here.
+         * @param messageLen The message length.
+         * @param signedMessage The signed message.
+         * @param signedMessageLen The signed message length.
+         * @param publicKey Public key.
+         * @return True if the signature is from the public key.
+         */
         boolean cryptoSignOpen(
                 byte[] message,
                 Long messageLen,
