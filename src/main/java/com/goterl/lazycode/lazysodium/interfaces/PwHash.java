@@ -17,15 +17,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.goterl.lazycode.lazysodium.utils.Constants.SIZE_MAX;
-import static java.util.Arrays.stream;
-import static java.util.stream.Collectors.toMap;
 
 public interface PwHash {
 
 
-    int ALG_ARGON2I13 = 1,
-        ALG_ARGON2ID13 = 2,
-        ALG_DEFAULT = ALG_ARGON2ID13,
+    int
         ARGON2ID_SALTBYTES = 16,
         ARGON2ID_BYTES_MIN = 16,
         SALTBYTES = ARGON2ID_SALTBYTES,
@@ -122,7 +118,7 @@ public interface PwHash {
          *                 Between {@link PwHash#OPSLIMIT_MIN} and {@link PwHash#OPSLIMIT_MAX}.
          * @param memLimit The amount of memory to use.
          *                 Between {@link PwHash#MEMLIMIT_MIN} and {@link PwHash#MEMLIMIT_MAX}.
-         * @param alg The algorithm to use. Please use {@link PwHash#ALG_ARGON2ID13} for now.
+         * @param alg The algorithm to use. Please use {@link PwHash.Alg#PWHASH_ALG_ARGON2ID13} for now.
          * @return True if the hash succeeded.
          */
         boolean cryptoPwHash(byte[] outputHash,
@@ -179,7 +175,7 @@ public interface PwHash {
          *                 Between {@link PwHash#OPSLIMIT_MIN} and {@link PwHash#OPSLIMIT_MAX}.
          * @param memLimit The amount of memory to use.
          *                 Between {@link PwHash#MEMLIMIT_MIN} and {@link PwHash#MEMLIMIT_MAX}.
-         * @param alg The algorithm to use. Defaults to {@link PwHash#ALG_ARGON2ID13}.
+         * @param alg The algorithm to use. Defaults to {@link PwHash.Alg#PWHASH_ALG_ARGON2ID13}.
          * @return A hash of the password in bytes.
          * @throws SodiumException If the password is too short or the opsLimit is not correct.
          */
@@ -194,7 +190,7 @@ public interface PwHash {
         /**
          * The most minimal way of hashing a given password.
          * We auto-generate the salt and use the default
-         * hashing algorithm {@link PwHash#ALG_DEFAULT}.
+         * hashing algorithm {@link PwHash.Alg}.
          * @param password The password string to hash.
          * @param opsLimit The number of cycles to perform whilst hashing.
          *                 Between {@link PwHash#OPSLIMIT_MIN}
@@ -211,7 +207,7 @@ public interface PwHash {
 
         /**
          * Hashes a string and removes all the null bytes. Uses the
-         * hashing algorithm {@link PwHash#ALG_DEFAULT}.
+         * hashing algorithm {@link PwHash.Alg}.
          * @param password The password string to hash.
          * @param opsLimit The number of cycles to perform whilst hashing.
          *                 Between {@link PwHash#OPSLIMIT_MIN}
