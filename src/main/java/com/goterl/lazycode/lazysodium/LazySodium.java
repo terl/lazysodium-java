@@ -815,18 +815,48 @@ public class LazySodium implements
     //// CRYPTO AUTH
     //// -------------------------------------------|
     @Override
-    public int cryptoAuth(byte[] tag, byte[] in, long inLen, byte[] key) {
-        return nacl.crypto_auth(tag, in, inLen, key);
+    public boolean cryptoAuth(byte[] tag, byte[] in, long inLen, byte[] key) {
+        return boolify(nacl.crypto_auth(tag, in, inLen, key));
     }
 
     @Override
-    public int cryptoAuthVerify(byte[] tag, byte[] in, long inLen, byte[] key) {
-        return nacl.crypto_auth_verify(tag, in, inLen, key);
+    public boolean cryptoAuthVerify(byte[] tag, byte[] in, long inLen, byte[] key) {
+        return boolify(nacl.crypto_auth_verify(tag, in, inLen, key));
     }
 
     @Override
     public void cryptoAuthKeygen(byte[] k) {
         nacl.crypto_auth_keygen(k);
+    }
+
+
+    @Override
+    public String cryptoAuthKeygen() {
+        byte[] key = randomBytesBuf(Auth.KEYBYTES);
+        cryptoAuthKeygen(key);
+        return toHex(key);
+    }
+
+    @Override
+    public String cryptoAuth(String message, String key) throws SodiumException {
+        byte[] tag = randomBytesBuf(Auth.BYTES);
+        byte[] messageBytes = bytes(message);
+        byte[] keyBytes = toBin(key);
+        boolean res = cryptoAuth(tag, messageBytes, messageBytes.length, keyBytes);
+
+        if (!res) {
+            throw new SodiumException("Could not apply auth tag to your message.");
+        }
+
+        return toHex(tag);
+    }
+
+    @Override
+    public boolean cryptoAuthVerify(String tag, String message, String key) {
+        byte[] tagToBytes = toBin(tag);
+        byte[] messageBytes = bytes(message);
+        byte[] keyBytes = toBin(key);
+        return cryptoAuthVerify(tagToBytes, messageBytes, messageBytes.length, keyBytes);
     }
 
 
