@@ -150,7 +150,9 @@ public interface PwHash {
                               long memLimit);
 
         /**
-         * Verifies a hashed password.
+         * Verifies a hashed password. Remember: you must add
+         * a null byte to the end of the hash so that this works properly!
+         *
          * @param hash The hash of the password.
          * @param password The password to check if it equals the hash's password.
          * @param passwordLen The checking password's length.
@@ -215,12 +217,24 @@ public interface PwHash {
          * @param memLimit The amount of memory to use.
          *                 Between {@link PwHash#MEMLIMIT_MIN}
          *                 and {@link PwHash#MEMLIMIT_MAX}.
-         * @return
+         * @return The hash without null bytes at the end. WARNING: when
+         * verifying please remember to ADD a null byte to the end!
          * @throws SodiumException
          */
         String cryptoPwHashStrRemoveNulls(String password,
                                            long opsLimit,
                                            long memLimit) throws SodiumException;
+
+
+        /**
+         * Verifies a password. Good news: this function automatically adds a null
+         * byte to the end which is required for the native underlying function
+         * to work.
+         * @param hash The hash. Must be hexadecimal {@link Helpers.Lazy#sodiumBin2Hex(byte[])}.
+         * @param password The password.
+         * @return True if the password 'unlocks' the hash.
+         */
+        boolean cryptoPwHashStrVerify(String hash, String password);
 
     }
 

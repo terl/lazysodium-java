@@ -387,7 +387,24 @@ public class LazySodium implements
         return str(hashNoNulls);
     }
 
+    @Override
+    public boolean cryptoPwHashStrVerify(String hash, String password) {
+        byte[] hashBytes = toBin(hash);
+        byte[] passwordBytes = bytes(password);
 
+        // If the end of the hash does not have an null byte,
+        // let's add it.
+        byte endOfHash = hashBytes[hashBytes.length - 1];
+        byte nil = (byte) 0;
+
+        if (endOfHash != nil) {
+            byte[] hashWithNullByte = new byte[hashBytes.length];
+            System.arraycopy(hashBytes, 0, hashWithNullByte, 0, hashWithNullByte.length);
+            hashBytes = hashWithNullByte;
+        }
+
+        return cryptoPwHashStrVerify(hashBytes, passwordBytes, passwordBytes.length);
+    }
 
 
     //// -------------------------------------------|
