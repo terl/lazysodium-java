@@ -715,18 +715,18 @@ public class LazySodium implements
     //// -------------------------------------------|
 
     @Override
-    public void cryptoSecretStreamXChacha20Poly1305Keygen(byte[] key) {
+    public void cryptoSecretStreamKeygen(byte[] key) {
         nacl.crypto_secretstream_xchacha20poly1305_keygen(key);
     }
 
     @Override
-    public int cryptoSecretStreamXChacha20Poly1305InitPush(SecretStream.State state, byte[] header, byte[] key) {
-        return nacl.crypto_secretstream_xchacha20poly1305_init_push(state, header, key);
+    public boolean cryptoSecretStreamInitPush(SecretStream.State state, byte[] header, byte[] key) {
+        return boolify(nacl.crypto_secretstream_xchacha20poly1305_init_push(state, header, key));
     }
 
     @Override
-    public int cryptoSecretStreamXChacha20Poly1305Push(SecretStream.State state, byte[] cipher, Long cipherAddr, byte[] message, long messageLen, byte tag) {
-        return nacl.crypto_secretstream_xchacha20poly1305_push(
+    public boolean cryptoSecretStreamPush(SecretStream.State state, byte[] cipher, Long cipherAddr, byte[] message, long messageLen, byte tag) {
+        return boolify(nacl.crypto_secretstream_xchacha20poly1305_push(
                 state,
                 cipher,
                 cipherAddr,
@@ -735,16 +735,16 @@ public class LazySodium implements
                 new byte[0],
                 0L,
                 tag
-        );
+        ));
     }
 
     @Override
-    public int cryptoSecretStreamXChacha20Poly1305Push(SecretStream.State state,
-                                                       byte[] cipher,
-                                                       byte[] message,
-                                                       long messageLen,
-                                                       byte tag) {
-        return nacl.crypto_secretstream_xchacha20poly1305_push(
+    public boolean cryptoSecretStreamPush(SecretStream.State state,
+                                          byte[] cipher,
+                                          byte[] message,
+                                          long messageLen,
+                                          byte tag) {
+        return boolify(nacl.crypto_secretstream_xchacha20poly1305_push(
                 state,
                 cipher,
                 null,
@@ -753,19 +753,19 @@ public class LazySodium implements
                 new byte[0],
                 0L,
                 tag
-        );
+        ));
     }
 
     @Override
-    public int cryptoSecretStreamXChacha20Poly1305Push(SecretStream.State state,
-                                                       byte[] cipher,
-                                                       Long cipherAddr,
-                                                       byte[] message,
-                                                       long messageLen,
-                                                       byte[] additionalData,
-                                                       long additionalDataLen,
-                                                       byte tag) {
-        return nacl.crypto_secretstream_xchacha20poly1305_push(
+    public boolean cryptoSecretStreamPush(SecretStream.State state,
+                                          byte[] cipher,
+                                          Long cipherAddr,
+                                          byte[] message,
+                                          long messageLen,
+                                          byte[] additionalData,
+                                          long additionalDataLen,
+                                          byte tag) {
+        return boolify(nacl.crypto_secretstream_xchacha20poly1305_push(
                 state,
                 cipher,
                 cipherAddr,
@@ -774,46 +774,132 @@ public class LazySodium implements
                 additionalData,
                 additionalDataLen,
                 tag
-        );
+        ));
     }
 
     @Override
-    public int cryptoSecretStreamXChacha20Poly1305InitPull(SecretStream.State state, byte[] header, byte[] key) {
-        return nacl.crypto_secretstream_xchacha20poly1305_init_pull(state, header, key);
+    public boolean cryptoSecretStreamInitPull(SecretStream.State state, byte[] header, byte[] key) {
+        return boolify(nacl.crypto_secretstream_xchacha20poly1305_init_pull(state, header, key));
     }
 
     @Override
-    public int cryptoSecretStreamXChacha20Poly1305Pull(SecretStream.State state,
-                                                       byte[] message,
-                                                       Long messageAddress,
-                                                       byte tag,
-                                                       byte[] cipher,
-                                                       long cipherLen,
-                                                       byte[] additionalData,
-                                                       long additionalDataLen) {
-        return nacl.crypto_secretstream_xchacha20poly1305_pull(
+    public boolean cryptoSecretStreamPull(SecretStream.State state,
+                                          byte[] message,
+                                          Long messageAddress,
+                                          byte[] tag,
+                                          byte[] cipher,
+                                          long cipherLen,
+                                          byte[] additionalData,
+                                          long additionalDataLen) {
+        return boolify(nacl.crypto_secretstream_xchacha20poly1305_pull(
                 state, message, messageAddress, tag, cipher, cipherLen, additionalData, additionalDataLen
-        );
+        ));
     }
 
     @Override
-    public int cryptoSecretStreamXChacha20Poly1305Pull(SecretStream.State state, byte[] message, byte tag, byte[] cipher, long cipherLen) {
-        return nacl.crypto_secretstream_xchacha20poly1305_pull(
+    public boolean cryptoSecretStreamPull(SecretStream.State state, byte[] message, byte[] tag, byte[] cipher, long cipherLen) {
+        return boolify(nacl.crypto_secretstream_xchacha20poly1305_pull(
                 state,
                 message,
-                null,
+                0L,
                 tag,
                 cipher,
                 cipherLen,
                 new byte[0],
                 0L
-        );
+        ));
     }
+
+    @Override
+    public String cryptoSecretStreamKeygen() {
+        byte[] key = randomBytesBuf(SecretStream.KEYBYTES);
+        nacl.crypto_secretstream_xchacha20poly1305_keygen(key);
+        return toHex(key);
+    }
+
+    @Override
+    public SecretStream.State cryptoSecretStreamInitPush(byte[] header, String key) throws SodiumException {
+        SecretStream.State state = new SecretStream.State.ByReference();
+        if (!SecretStream.Checker.headerCheck(header.length)) {
+            throw new SodiumException("Header of secret stream incorrect length.");
+        }
+        nacl.crypto_secretstream_xchacha20poly1305_init_push(state, header, toBin(key));
+        return state;
+    }
+
+    @Override
+    public String cryptoSecretStreamPush(SecretStream.State state, String message, byte tag) throws SodiumException {
+        byte[] messageBytes = bytes(message);
+        byte[] cipher = new byte[SecretStream.ABYTES + messageBytes.length];
+        int res = nacl.crypto_secretstream_xchacha20poly1305_push(
+                state,
+                cipher,
+                null,
+                messageBytes,
+                messageBytes.length,
+                new byte[0],
+                0L,
+                tag
+        );
+
+        if (res != 0) {
+            throw new SodiumException("Error when encrypting a message using secret stream.");
+        }
+
+        return toHex(cipher);
+    }
+
+    @Override
+    public SecretStream.State cryptoSecretStreamInitPull(byte[] header, String key) throws SodiumException {
+        SecretStream.State state = new SecretStream.State.ByReference();
+        if (!SecretStream.Checker.headerCheck(header.length)) {
+            throw new SodiumException("Header of secret stream incorrect length.");
+        }
+
+        int res = nacl.crypto_secretstream_xchacha20poly1305_init_pull(state, header, toBin(key));
+
+        if (res != 0) {
+            throw new SodiumException("Could not initialise a decryption state.");
+        }
+
+        return state;
+    }
+
+    @Override
+    public String cryptoSecretStreamPull(SecretStream.State state, String cipher, byte[] tag) throws SodiumException {
+        byte[] cipherBytes = toBin(cipher);
+        byte[] message = new byte[cipherBytes.length - SecretStream.ABYTES];
+
+        int res = nacl.crypto_secretstream_xchacha20poly1305_pull(
+                state,
+                message,
+                null,
+                tag,
+                cipherBytes,
+                cipherBytes.length,
+                new byte[0],
+                0L
+        );
+
+        if (res != 0) {
+            throw new SodiumException("Error when decrypting a message using secret stream.");
+        }
+
+        return str(message);
+    }
+
+    @Override
+    public void cryptoSecretStreamRekey(SecretStream.State state) {
+        nacl.crypto_secretstream_xchacha20poly1305_rekey(state);
+    }
+
+
 
 
     //// -------------------------------------------|
     //// CRYPTO AUTH
     //// -------------------------------------------|
+
     @Override
     public boolean cryptoAuth(byte[] tag, byte[] in, long inLen, byte[] key) {
         return boolify(nacl.crypto_auth(tag, in, inLen, key));

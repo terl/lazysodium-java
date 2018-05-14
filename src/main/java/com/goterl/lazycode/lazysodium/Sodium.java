@@ -365,7 +365,7 @@ public class Sodium {
 
 
     //// -------------------------------------------|
-    //// SECRET SCREAM
+    //// SECRET STREAM
     //// -------------------------------------------|
     native void crypto_secretstream_xchacha20poly1305_keygen(byte[] key);
 
@@ -383,7 +383,7 @@ public class Sodium {
             long messageLen,
             byte[] additionalData,
             long additionalDataLen,
-            byte tag
+            byte  tag
     );
 
     native int crypto_secretstream_xchacha20poly1305_init_pull(
@@ -396,12 +396,14 @@ public class Sodium {
             SecretStream.State state,
             byte[] message,
             Long messageAddress,
-            byte tagAddress,
+            byte[] tagAddress,
             byte[] cipher,
             long cipherLen,
             byte[] additionalData,
             long additionalDataLen
     );
+
+    native void crypto_secretstream_xchacha20poly1305_rekey(SecretStream.State state);
 
 
 

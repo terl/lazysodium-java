@@ -22,8 +22,36 @@ public interface Base {
 
     // --- Conversion handling
 
+    /**
+     * Converts a byte array to a string
+     * using a charset. Warning
+     * this will produce null bytes and unexpected
+     * carriage returns. Please use {@link Helpers.Lazy#sodiumBin2Hex(byte[])}
+     * to ensure no nulls or carriage breaks.
+     * @param bs The byte array.
+     * @return The string.
+     */
     String str(byte[] bs);
+
+
+    /**
+     * Convert a byte array to a string
+     * with a charset. Warning
+     * this will produce null bytes and unexpected
+     * carriage returns. Please use {@link Helpers.Lazy#sodiumBin2Hex(byte[])}
+     * to ensure no nulls or carriage breaks.
+     * @param bs Byte array.
+     * @param charset The charset.
+     * @return The byte array as a string.
+     */
     String str(byte[] bs, Charset charset);
+
+
+    /**
+     * Convert a string to bytes.
+     * @param s The String to convert to a byte array.
+     * @return A byte array from {@code s}.
+     */
     byte[] bytes(String s);
 
 
