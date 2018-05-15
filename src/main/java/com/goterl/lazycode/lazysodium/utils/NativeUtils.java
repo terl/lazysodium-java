@@ -10,11 +10,7 @@ package com.goterl.lazycode.lazysodium.utils;
 import com.goterl.lazycode.lazysodium.Sodium;
 import com.sun.jna.Native;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.*;
+import java.io.*;
 
 /**
  * A simple library class which helps with loading dynamic libraries stored in the
@@ -82,7 +78,7 @@ public class NativeUtils {
         File temp = new File(temporaryDir, filename);
 
         try (InputStream is = NativeUtils.class.getResourceAsStream(path)) {
-            Files.copy(is, temp.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            copy(is, temp);
         } catch (IOException e) {
             temp.delete();
             throw e;
@@ -95,25 +91,18 @@ public class NativeUtils {
         try {
             Native.register(Sodium.class, temp.getAbsolutePath());
         } finally {
-            if (isPosixCompliant()) {
-                // Assume POSIX compliant file system, can be deleted after loading
-                temp.delete();
-            } else {
-                // Assume non-POSIX, and don't delete until last file descriptor closed
-                temp.deleteOnExit();
-            }
+            temp.deleteOnExit();
         }
     }
 
-    private static boolean isPosixCompliant() {
-        try {
-            return FileSystems.getDefault()
-                    .supportedFileAttributeViews()
-                    .contains("posix");
-        } catch (FileSystemNotFoundException
-                | ProviderNotFoundException
-                | SecurityException e) {
-            return false;
+    public static void copy(InputStream in, File dst) throws IOException {
+        try (OutputStream out = new FileOutputStream(dst)) {
+            // Transfer bytes from in to out
+            byte[] buf = new byte[1024];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                out.write(buf, 0, len);
+            }
         }
     }
 

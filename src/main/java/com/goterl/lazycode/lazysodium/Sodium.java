@@ -19,6 +19,7 @@ import java.io.IOException;
 
 public class Sodium {
 
+    private boolean isAndroid = false;
 
     private Sodium() {
         registerFromResources();
@@ -47,6 +48,8 @@ public class Sodium {
      * @param isAndroid Set to true if the program will execute in an Android environment.
      */
     private Sodium(String path, boolean isAndroid) {
+        this.isAndroid = isAndroid;
+
         // If it's the android platform then we load
         // the libsodium.so files from the "src/main/libs" folder.
         // This folder should have folders with ABI names
