@@ -10,12 +10,11 @@ package com.goterl.lazycode.lazysodium.utils;
 import com.goterl.lazycode.lazysodium.Sodium;
 import com.sun.jna.Native;
 
-import java.io.*;
-import java.nio.file.FileSystemNotFoundException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.ProviderNotFoundException;
-import java.nio.file.StandardCopyOption;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.*;
 
 /**
  * A simple library class which helps with loading dynamic libraries stored in the
