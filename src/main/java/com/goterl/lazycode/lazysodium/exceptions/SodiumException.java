@@ -22,7 +22,4 @@ public class SodiumException extends Exception {
         super(cause);
     }
 
-    protected SodiumException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
-    }
 }
