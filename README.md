@@ -1,9 +1,9 @@
-<p align="center"><img width="260" style="float: center;" style="display: inline;" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/lazysodium.png" /></p>
+<p align="center"><img width="260" style="float: center;" style="display: inline;" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/lazysodium-plain.png" /></p>
 
 
 # Lazysodium for Java
 
-Lazysodium is a **Java 8+** crypto wrapper around a **near complete** implementation of the [Libsodium](https://github.com/jedisct1/libsodium) library, providing developers with a **smooth and effortless** experience. 
+Lazysodium is a **complete** Java (JNA) wrapper over the [Libsodium](https://github.com/jedisct1/libsodium) library that provides developers with a **smooth and effortless** cryptography experience.
 
 
 [![Build Status](https://semaphoreci.com/api/v1/terl/lazysodium-java/branches/master/badge.svg)](https://semaphoreci.com/terl/lazysodium-java)
@@ -16,11 +16,7 @@ We were exasperated and annoyed with current Libsodium implementations as some o
 
 Thus, Lazysodium was born with the blessings of *Lazycode*, a part of [Terl](https://terl.co) that specialises in giving developers easy-to-use software and tools that just work. Read more about us below.
 
-### The difference in code
-
-We just wanted to entice you with a few snippets of code, to show you the ease of Lazysodium.
-
-#### Using native functions
+#### Here's what it's like to use native functions
 
 ```java
 byte[] subkey = subkey[32];
@@ -37,7 +33,7 @@ if (res == 0) {
 }
 ```
 
-#### Using Lazysodium's lazy functions
+#### Here's what it's like to use Lazysodium's lazy functions
 You could use the above native functions **or** you could use the "Lazy" functions 😄
  
 ```java
@@ -51,13 +47,13 @@ String subkeyString = lazySodium.cryptoKdfDeriveFromKey(subKeyId, context, maste
 As you can see Lazysodium's lazy functions **save you a lot of pain**!
 
 
-
+<br>
 
 ## Get started
 
 This section will help you get started with Lazysodium quickly (and with utmost laziness).
 
-### Check
+### Requirements
 Lazysodium for Java requires:
 
 * JDK 8 or higher.
@@ -82,7 +78,7 @@ allprojects {
 }
 ```
 
-The process of adding a new repository is different depending on what build tool you use. Google or [DuckDuckGo](https://duckduckgo.com/?q=adding+a+repository+to+gradle+or+maven+or+sbt&t=hg&ia=qa) can help.
+The process of adding a new repository is different depending on what build tool you use. A quick Google or [DuckDuckGo](https://duckduckgo.com/?q=adding+a+repository+to+gradle+or+maven+or+sbt&t=hg&ia=qa) search can help.
 
 
 Now, after adding the above, all you have to do is tell your build tool what package/artifact to include. Substitute `VERSION_NUMBER` with the number provided in the following button:
@@ -133,9 +129,6 @@ For **documentation, roadmap, compiling, usage, etc** we invite you to head over
 
 ### Contribute
 Contributions are welcome! For more information please see the [Contributor's Guide](https://github.com/terl/lazysodium-java/wiki/Contributor%27s-Guide).
-
-## Licence
-The licence is `MPLv2` as it is a nice middle-ground between copyleft and copyright. I know some developer's would rather not get bogged down in legalities (and we don't blame them). Therefore a brief read of [Mozilla's MPLv2 FAQ](https://www.mozilla.org/en-US/MPL/2.0/FAQ/#apply) will show you the luxuries afforded to you by the `MPLv2` Licence.
 
 <br>
 <br>
