@@ -100,7 +100,7 @@ public interface SecretStream {
         /**
          * Encrypt a {@code message}. This is like {@link #cryptoSecretStreamPush(State, byte[], Long, byte[], long, byte[], long, byte)}
          * but without additional data.
-         * @param state State as initialised in {@link #cryptoSecretStreamInitPush(State, byte[], byte[])}}.
+         * @param state State.
          * @param cipher The resulting cipher of size {@link #ABYTES} + {@code messageLen}.
          * @param cipherAddr The cipher address will be stored here if not null.
          * @param message The message to encrypt.

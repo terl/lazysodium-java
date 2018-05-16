@@ -23,6 +23,7 @@ public interface KeyDerivation {
         BYTES_MAX = BLAKE2B_BYTES_MAX;
 
     interface Native {
+
         /**
          * Creates a master key.
          * @param masterKey The byte array to populate. Should be
@@ -76,12 +77,12 @@ public interface KeyDerivation {
 
         /**
          * Same as {@link #cryptoKdfDeriveFromKey(int, long, String, byte[])}.
-         * @param lengthOfSubKey
-         * @param subKeyId
-         * @param context
-         * @param masterKey
+         * @param lengthOfSubKey The length of subkey.
+         * @param subKeyId The ID of the subkey to assign this one.
+         * @param context The context.
+         * @param masterKey The master key.
          * @return A subkey.
-         * @throws SodiumException
+         * @throws SodiumException If any of the lengths were not correct.
          */
         String cryptoKdfDeriveFromKey(int lengthOfSubKey, long subKeyId, String context, String masterKey) throws SodiumException;
     }

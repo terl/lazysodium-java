@@ -120,18 +120,10 @@ public class Sodium {
         return resourcePath;
     }
 
+    public boolean isAndroid() {
+        return isAndroid;
+    }
 
-
-    //// -------------------------------------------|
-    //// HELPERS
-    //// -------------------------------------------|
-
-    // Cannot implement as these methods request pointers.
-    // native int sodium_memcmp(ptr b1, ptr b2, int len);
-    // native byte[] sodium_bin2hex(char[] hex, int hexMaxLen, char[] bin, int binLen);
-
-    // TODO: sodium_bin2base64, sodium_base642bin, sodium_increment, sodium_add
-    // TODO: sodium_compare, sodium_is_zero, sodium_stackzero
 
 
     //// -------------------------------------------|

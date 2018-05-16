@@ -95,14 +95,17 @@ public class NativeUtils {
         }
     }
 
-    public static void copy(InputStream in, File dst) throws IOException {
+    public static long copy(InputStream in, File dst) throws IOException {
         try (OutputStream out = new FileOutputStream(dst)) {
-            // Transfer bytes from in to out
-            byte[] buf = new byte[1024];
-            int len;
-            while ((len = in.read(buf)) > 0) {
-                out.write(buf, 0, len);
+            long nread = 0L;
+            byte[] buf = new byte[8192];
+            int n;
+            while ((n = in.read(buf)) > 0) {
+                out.write(buf, 0, n);
+                nread += n;
             }
+            out.close();
+            return nread;
         }
     }
 

@@ -595,7 +595,7 @@ public class LazySodium implements
     @Override
     public String cryptoBoxEasy(String message, byte[] nonce, KeyPair keyPair) throws SodiumException {
         byte[] messageBytes = bytes(message);
-        byte[] cipherBytes = randomBytesBuf(Box.MACBYTES + messageBytes.length);
+        byte[] cipherBytes = new byte[Box.MACBYTES + messageBytes.length];
         boolean res = cryptoBoxEasy(
                 cipherBytes,
                 messageBytes,
@@ -613,7 +613,7 @@ public class LazySodium implements
     @Override
     public String cryptoBoxOpenEasy(String cipherText, byte[] nonce, KeyPair keyPair) throws SodiumException {
         byte[] cipher = toBin(cipherText);
-        byte[] message = randomBytesBuf(cipher.length - Box.MACBYTES);
+        byte[] message = new byte[cipher.length - Box.MACBYTES];
         boolean res =
                 cryptoBoxOpenEasy(message, cipher, cipher.length, nonce, keyPair.getPublicKey(), keyPair.getSecretKey());
 
