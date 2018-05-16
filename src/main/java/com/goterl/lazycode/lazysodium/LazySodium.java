@@ -985,9 +985,9 @@ public class LazySodium implements
         byte[] inBytes = hexToBytes(in);
         byte[] keyBytes = hexToBytes(key);
         byte[] out = randomBytesBuf(ShortHash.SIPHASHX24_KEYBYTES);
-        if (nacl.crypto_shorthash_siphashx24(out, inBytes, inBytes.length, keyBytes) != 0) {
-            throw new SodiumException("Failed short-input hashing.");
-        }
+//        if (nacl.crypto_shorthash_siphashx24(out, inBytes, inBytes.length, keyBytes) != 0) {
+//            throw new SodiumException("Failed short-input hashing.");
+//        }
         return sodiumBin2Hex(out);
     }
 
