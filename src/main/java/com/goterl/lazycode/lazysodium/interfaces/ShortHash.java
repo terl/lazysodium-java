@@ -10,7 +10,6 @@ package com.goterl.lazycode.lazysodium.interfaces;
 
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
-import com.goterl.lazycode.lazysodium.utils.BaseChecker;
 
 public interface ShortHash {
 
@@ -21,12 +20,6 @@ public interface ShortHash {
 
         BYTES = SIPHASH24_BYTES,
         KEYBYTES = SIPHASH24_KEYBYTES;
-
-
-
-    class Checker extends BaseChecker {
-
-    }
 
 
 
