@@ -11,6 +11,7 @@
  */
 import com.goterl.lazycode.lazysodium.LazySodium;
 import com.goterl.lazycode.lazysodium.Sodium;
+import com.goterl.lazycode.lazysodium.SodiumJava;
 import com.goterl.lazycode.lazysodium.interfaces.*;
 import org.junit.BeforeClass;
 
@@ -39,7 +40,7 @@ public class BaseTest {
 
     @BeforeClass
     public static void beforeClass() {
-        sodium = Sodium.loadJava();
+        sodium = new SodiumJava();
         lazySodium = new LazySodium(sodium);
         random = (Random) lazySodium;
         pwHash = (PwHash.Native) lazySodium;
