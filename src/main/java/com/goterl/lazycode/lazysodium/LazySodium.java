@@ -14,6 +14,8 @@ import com.goterl.lazycode.lazysodium.utils.DetachedDecrypt;
 import com.goterl.lazycode.lazysodium.utils.DetachedEncrypt;
 import com.goterl.lazycode.lazysodium.utils.KeyPair;
 import com.goterl.lazycode.lazysodium.utils.SessionPair;
+import com.sun.jna.Memory;
+import com.sun.jna.Pointer;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -130,7 +132,8 @@ public class LazySodium implements
     @Override
     public byte[] randomBytesBuf(int size) {
         byte[] bs = new byte[size];
-        nacl.randombytes_buf(bs, size);
+        Pointer ptr = new Memory(bs.length);
+        nacl.randombytes_buf(ptr, size);
         return bs;
     }
 

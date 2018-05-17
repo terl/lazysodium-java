@@ -10,6 +10,7 @@ package com.goterl.lazycode.lazysodium;
 
 import com.goterl.lazycode.lazysodium.interfaces.GenericHash;
 import com.goterl.lazycode.lazysodium.interfaces.SecretStream;
+import com.sun.jna.Pointer;
 
 public class Sodium {
 
@@ -32,7 +33,7 @@ public class Sodium {
 
     native byte randombytes_uniform(int upperBound);
 
-    native void randombytes_buf(byte[] buffer, int size);
+    native void randombytes_buf(Pointer buffer, int size);
 
     native void randombytes_buf_deterministic(byte[] buffer, int size, byte[] seed);
 
