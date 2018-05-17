@@ -64,13 +64,11 @@ Lazysodium for Java requires:
 ### Add 
 If you didn't know already, all Java libraries are hosted on a central repository. Lazysodium is hosted on [Bintray](https://bintray.com/terl/lazysodium-maven). This is important because you need to configure your build tool to pull and cache Lazysodium's packages from Bintray. The process is simple for Android projects... It's as simple as adding a few lines to your top-level `build.gradle` file.
 
+
 ```groovy
 allprojects {
     repositories {
-        google()
-        jcenter()
-        
-        // Add this line here!
+        // Add this block here!
         maven {
             url  "https://dl.bintray.com/terl/lazysodium-maven"
         }
@@ -78,21 +76,15 @@ allprojects {
 }
 ```
 
-The process of adding a new repository is different depending on what build tool you use. A quick Google or [DuckDuckGo](https://duckduckgo.com/?q=adding+a+repository+to+gradle+or+maven+or+sbt&t=hg&ia=qa) search can help.
-
-
-Now, after adding the above, all you have to do is tell your build tool what package/artifact to include. Substitute `VERSION_NUMBER` with the number provided in the following button:
+Then, after adding the above, all you have to do is tell your build tool what package/artifact to include. Substitute `VERSION_NUMBER` with the number provided in the following button:
 
 [![Download](https://api.bintray.com/packages/terl/lazysodium-maven/lazysodium-java/images/download.svg) ](https://bintray.com/terl/lazysodium-maven/lazysodium-java/_latestVersion)
-
-
 
 
 ##### Gradle
 
 ```groovy
 dependencies {
-    // ...
     implementation "com.goterl.lazycode:lazysodium-java:VERSION_NUMBER"
 }
 ```

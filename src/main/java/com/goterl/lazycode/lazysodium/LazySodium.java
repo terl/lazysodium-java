@@ -132,8 +132,7 @@ public class LazySodium implements
     @Override
     public byte[] randomBytesBuf(int size) {
         byte[] bs = new byte[size];
-        Pointer ptr = new Memory(bs.length);
-        nacl.randombytes_buf(ptr, size);
+        nacl.randombytes_buf(bs, size);
         return bs;
     }
 

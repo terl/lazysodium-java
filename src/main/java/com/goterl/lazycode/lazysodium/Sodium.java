@@ -33,7 +33,7 @@ public class Sodium {
 
     native byte randombytes_uniform(int upperBound);
 
-    native void randombytes_buf(Pointer buffer, int size);
+    native void randombytes_buf(byte[] buffer, int size);
 
     native void randombytes_buf_deterministic(byte[] buffer, int size, byte[] seed);
 
