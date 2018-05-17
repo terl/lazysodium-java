@@ -12,6 +12,8 @@
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.Box;
+import com.goterl.lazycode.lazysodium.utils.DetachedDecrypt;
+import com.goterl.lazycode.lazysodium.utils.DetachedEncrypt;
 import com.goterl.lazycode.lazysodium.utils.KeyPair;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -78,6 +80,51 @@ public class BoxTest extends BaseTest {
     }
 
 
+    @Test
+    public void encryptMessageBeforeNm() throws SodiumException {
+        String message = "This should get encrypted";
+
+        // Generate a keypair
+        KeyPair keyPair = cryptoBoxLazy.cryptoBoxKeypair();
+
+        // Generate a shared key which can be used
+        // to encrypt and decrypt data
+        String sharedKey = cryptoBoxLazy.cryptoBoxBeforeNm(keyPair);
+
+        byte[] nonce = lazySodium.nonce(Box.NONCEBYTES);
+
+        // Encrypt the data using the shared key
+        String encrypted = cryptoBoxLazy.cryptoBoxEasyAfterNm(message, nonce, sharedKey);
+
+        // Decrypt the data using the shared key
+        String decryptedMessage = cryptoBoxLazy.cryptoBoxOpenEasyAfterNm(encrypted, nonce, sharedKey);
+
+        byte[] nonce2 = lazySodium.nonce(Box.NONCEBYTES);
+        DetachedEncrypt encDet = cryptoBoxLazy.cryptoBoxDetachedAfterNm(message, nonce2, sharedKey);
+        DetachedDecrypt decryptDet = cryptoBoxLazy.cryptoBoxOpenDetachedAfterNm(encDet, nonce2, sharedKey);
+
+        TestCase.assertEquals(message, lazySodium.str(decryptDet.getMessage()));
+    }
+
+    @Test
+    public void encryptMessageBeforeNmDetached() throws SodiumException {
+        String message = "This should get encrypted";
+
+        // Generate a keypair
+        KeyPair keyPair = cryptoBoxLazy.cryptoBoxKeypair();
+
+        // Generate a shared key which can be used
+        // to encrypt and decrypt data
+        String sharedKey = cryptoBoxLazy.cryptoBoxBeforeNm(keyPair);
+
+        byte[] nonce2 = lazySodium.nonce(Box.NONCEBYTES);
+
+        // Use the detached functions
+        DetachedEncrypt encDet = cryptoBoxLazy.cryptoBoxDetachedAfterNm(message, nonce2, sharedKey);
+        DetachedDecrypt decryptDet = cryptoBoxLazy.cryptoBoxOpenDetachedAfterNm(encDet, nonce2, sharedKey);
+
+        TestCase.assertEquals(message, lazySodium.str(decryptDet.getMessage()));
+    }
 
 
 }

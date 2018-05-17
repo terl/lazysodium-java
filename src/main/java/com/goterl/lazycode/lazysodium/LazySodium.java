@@ -537,7 +537,7 @@ public class LazySodium implements
     }
 
     @Override
-    public boolean cryptoBoxOpenDetachedAfterNm(byte[] message, byte[] cipherText, byte[] mac, byte[] cipherTextLen, byte[] nonce, byte[] key) {
+    public boolean cryptoBoxOpenDetachedAfterNm(byte[] message, byte[] cipherText, byte[] mac, long cipherTextLen, byte[] nonce, byte[] key) {
         return boolify(nacl.crypto_box_open_detached_afternm(message, cipherText, mac, cipherTextLen, nonce, key));
     }
 
@@ -624,7 +624,120 @@ public class LazySodium implements
         return str(message);
     }
 
+    @Override
+    public String cryptoBoxBeforeNm(byte[] publicKey, byte[] secretKey) throws SodiumException {
+        byte[] sharedKey = new byte[Box.BEFORENMBYTES];
+        if (!Box.Checker.checkPublicKey(publicKey.length)) {
+            throw new SodiumException("Public key length is incorrect.");
+        }
+        if (!Box.Checker.checkSecretKey(secretKey.length)) {
+            throw new SodiumException("Secret key length is incorrect.");
+        }
+        boolean res = cryptoBoxBeforeNm(sharedKey, publicKey, secretKey);
+        if (!res) {
+            throw new SodiumException("Unable to encrypt using shared secret key.");
+        }
+        return toHex(sharedKey);
+    }
 
+    @Override
+    public String cryptoBoxBeforeNm(KeyPair keyPair) throws SodiumException {
+        return cryptoBoxBeforeNm(keyPair.getPublicKey(), keyPair.getSecretKey());
+    }
+
+    @Override
+    public String cryptoBoxEasyAfterNm(String message, byte[] nonce, String sharedSecretKey) throws SodiumException {
+        if (!Box.Checker.checkNonce(nonce.length)) {
+            throw new SodiumException("Incorrect nonce length.");
+        }
+
+        byte[] sharedKey = toBin(sharedSecretKey);
+
+        if (!Box.Checker.checkBeforeNmBytes(sharedKey.length)) {
+            throw new SodiumException("Incorrect shared secret key length.");
+        }
+
+        byte[] messageBytes = bytes(message);
+        byte[] cipher = new byte[messageBytes.length + Box.MACBYTES];
+
+        boolean res = cryptoBoxEasyAfterNm(cipher, messageBytes, messageBytes.length, nonce, sharedKey);
+        if (!res) {
+            throw new SodiumException("Could not fully complete shared secret key encryption.");
+        }
+
+        return toHex(cipher);
+    }
+
+    @Override
+    public String cryptoBoxOpenEasyAfterNm(String cipher, byte[] nonce, String sharedSecretKey) throws SodiumException {
+        if (!Box.Checker.checkNonce(nonce.length)) {
+            throw new SodiumException("Incorrect nonce length.");
+        }
+
+        byte[] sharedKey = toBin(sharedSecretKey);
+        if (!Box.Checker.checkBeforeNmBytes(sharedKey.length)) {
+            throw new SodiumException("Incorrect shared secret key length.");
+        }
+
+        byte[] cipherBytes = toBin(cipher);
+        byte[] message = new byte[cipherBytes.length - Box.MACBYTES];
+
+        boolean res = cryptoBoxOpenEasyAfterNm(message, cipherBytes, cipherBytes.length, nonce, sharedKey);
+        if (!res) {
+            throw new SodiumException("Could not fully complete shared secret key decryption.");
+        }
+
+        return str(message);
+    }
+
+    @Override
+    public DetachedEncrypt cryptoBoxDetachedAfterNm(String message, byte[] nonce, String sharedSecretKey) throws SodiumException {
+        if (!Box.Checker.checkNonce(nonce.length)) {
+            throw new SodiumException("Incorrect nonce length.");
+        }
+
+        byte[] sharedKey = toBin(sharedSecretKey);
+
+        if (!Box.Checker.checkBeforeNmBytes(sharedKey.length)) {
+            throw new SodiumException("Incorrect shared secret key length.");
+        }
+
+        byte[] messageBytes = bytes(message);
+        byte[] cipher = new byte[messageBytes.length];
+        byte[] mac = new byte[Box.MACBYTES];
+
+
+        boolean res = cryptoBoxDetachedAfterNm(cipher, mac, messageBytes, messageBytes.length, nonce, sharedKey);
+        if (!res) {
+            throw new SodiumException("Could not fully complete shared secret key detached encryption.");
+        }
+
+
+        return new DetachedEncrypt(cipher, mac);
+    }
+
+    @Override
+    public DetachedDecrypt cryptoBoxOpenDetachedAfterNm(DetachedEncrypt detachedEncrypt, byte[] nonce, String sharedSecretKey) throws SodiumException {
+        if (!Box.Checker.checkNonce(nonce.length)) {
+            throw new SodiumException("Incorrect nonce length.");
+        }
+
+        byte[] sharedKey = toBin(sharedSecretKey);
+        if (!Box.Checker.checkBeforeNmBytes(sharedKey.length)) {
+            throw new SodiumException("Incorrect shared secret key length.");
+        }
+
+        byte[] cipherBytes = detachedEncrypt.getCipher();
+        byte[] mac = detachedEncrypt.getMac();
+        byte[] message = new byte[cipherBytes.length];
+
+        boolean res = cryptoBoxOpenDetachedAfterNm(message, cipherBytes, mac, cipherBytes.length, nonce, sharedKey);
+        if (!res) {
+            throw new SodiumException("Could not fully complete shared secret key detached decryption.");
+        }
+
+        return new DetachedDecrypt(message, mac);
+    }
 
 
     //// -------------------------------------------|

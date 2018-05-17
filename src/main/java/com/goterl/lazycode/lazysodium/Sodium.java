@@ -13,9 +13,9 @@ import com.goterl.lazycode.lazysodium.interfaces.SecretStream;
 
 public class Sodium {
 
-    public Sodium() { }
+    public Sodium() {
 
-
+    }
 
     //// -------------------------------------------|
     //// PADDING
@@ -209,7 +209,7 @@ public class Sodium {
     native int crypto_box_open_detached_afternm(byte[] message,
                                         byte[] cipherText,
                                         byte[] mac,
-                                        byte[] cipherTextLen,
+                                        long cipherTextLen,
                                         byte[] nonce,
                                         byte[] key);
 
