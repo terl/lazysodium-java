@@ -29,6 +29,7 @@ public class LazySodium implements
         Padding.Native, Padding.Lazy,
         Helpers.Native, Helpers.Lazy,
         PwHash.Native, PwHash.Lazy,
+        Hash.Native, Hash.Lazy,
         Sign.Native, Sign.Lazy,
         Box.Native, Box.Lazy,
         SecretBox.Native, SecretBox.Lazy,
@@ -410,9 +411,97 @@ public class LazySodium implements
     }
 
 
+
+
+    //// -------------------------------------------|
+    //// HASH
+    //// -------------------------------------------|
+
+
+    @Override
+    public boolean cryptoHashSha256(byte[] out, byte[] in, long inLen) {
+        return boolify(nacl.crypto_hash_sha256(out, in, inLen));
+    }
+
+    @Override
+    public boolean cryptoHashSha256Init(Hash.State256 state) {
+        return boolify(nacl.crypto_hash_sha256_init(state));
+    }
+
+    @Override
+    public boolean cryptoHashSha256Update(Hash.State256 state, byte[] in, long inLen) {
+        return boolify(nacl.crypto_hash_sha256_update(state, in, inLen));
+    }
+
+    @Override
+    public boolean cryptoHashSha256Final(Hash.State256 state, byte[] out) {
+        return boolify(nacl.crypto_hash_sha256_final(state, out));
+    }
+
+    @Override
+    public boolean cryptoHashSha512(byte[] out, byte[] in, long inLen) {
+        return boolify(nacl.crypto_hash_sha512(out, in, inLen));
+    }
+
+    @Override
+    public boolean cryptoHash512Init(Hash.State512 state) {
+        return boolify(nacl.crypto_hash_sha512_init(state));
+    }
+
+    @Override
+    public boolean cryptoHash512Update(Hash.State512 state, byte[] in, long inLen) {
+        return boolify(nacl.crypto_hash_sha512_update(state, in, inLen));
+    }
+
+    @Override
+    public boolean cryptoHash512Final(Hash.State512 state, byte[] out) {
+        return boolify(nacl.crypto_hash_sha512_final(state, out));
+    }
+
+    // -- lazy
+
+
+//    @Override
+//    public String cryptoHashSha256(String message) {
+//
+//        return null;
+//    }
+//
+//    @Override
+//    public String cryptoHashSha512(String message) {
+//        return null;
+//    }
+//
+//
+//    @Override
+//    public boolean cryptoHashSha256Update(Hash.State256 state, String messagePart) {
+//        return false;
+//    }
+//
+//    @Override
+//    public String cryptoHashSha256Final(Hash.State256 state) {
+//        return null;
+//    }
+//
+//
+//    @Override
+//    public boolean cryptoHash512Update(Hash.State512 state, String messagePart) {
+//        return false;
+//    }
+//
+//    @Override
+//    public String cryptoHash512Final(Hash.State512 state) {
+//        return null;
+//    }
+
+
+
+
+
     //// -------------------------------------------|
     //// SECRET BOX
     //// -------------------------------------------|
+
     @Override
     public void cryptoSecretBoxKeygen(byte[] key) {
         nacl.crypto_secretbox_keygen(key);
@@ -796,7 +885,7 @@ public class LazySodium implements
     }
 
     @Override
-    public boolean cryptoSignDetached(byte[] signature, long sigLength, byte[] message, long messageLen, byte[] secretKey) {
+    public boolean cryptoSignDetached(byte[] signature, Long sigLength, byte[] message, long messageLen, byte[] secretKey) {
         return boolify(nacl.crypto_sign_detached(signature, sigLength, message, messageLen, secretKey));
     }
 
@@ -870,7 +959,7 @@ public class LazySodium implements
         byte[] skBytes = toBin(secretKey);
         byte[] signatureBytes = new byte[Sign.BYTES];
 
-        if (!cryptoSignDetached(signatureBytes, signatureBytes.length, messageBytes, messageBytes.length, skBytes)) {
+        if (!cryptoSignDetached(signatureBytes, null, messageBytes, messageBytes.length, skBytes)) {
             throw new SodiumException("Could not create a signature for your message in detached mode.");
         }
 
@@ -1644,5 +1733,7 @@ public class LazySodium implements
     public static void main(String[] args) {
         // Can implement some code here to test
     }
+
+
 
 }

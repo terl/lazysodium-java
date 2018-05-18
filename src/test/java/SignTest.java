@@ -18,9 +18,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 
-/**
- * Tests public and private key encryption.
- */
+
 public class SignTest extends BaseTest {
 
 
@@ -63,6 +61,16 @@ public class SignTest extends BaseTest {
     }
 
 
+    @Test
+    public void signDetached() throws SodiumException {
+        String message = "sign this please";
+        KeyPair keyPair = lazySodium.cryptoSignKeypair();
+
+        String signature = lazySodium.cryptoSignDetached(message, keyPair.getSecretKeyString());
+        boolean result = lazySodium.cryptoSignVerifyDetached(signature, message, keyPair.getPublicKeyString());
+
+        TestCase.assertTrue(result);
+    }
 
 
 }

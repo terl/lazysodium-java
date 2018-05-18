@@ -11,44 +11,8 @@
  */
 
 
-import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
-import com.goterl.lazycode.lazysodium.interfaces.GenericHash;
-import junit.framework.TestCase;
-import org.junit.Test;
-
 public class HashTest extends BaseTest {
 
-    @Test
-    public void genKey() {
-        String key = lazySodium.cryptoGenericHashKeygen();
-        TestCase.assertNotNull(key);
-    }
 
-    @Test
-    public void hash() throws SodiumException {
-        String message = "https://terl.co";
-        String key = lazySodium.cryptoGenericHashKeygen();
-        String hash = lazySodium.cryptoGenericHash(message, key);
-        TestCase.assertNotNull(hash);
-    }
-
-    @Test
-    public void hashMultiPart() throws SodiumException {
-        String message = "The sun";
-        String message2 = "is shining";
-
-        final GenericHash.State state = new GenericHash.State.ByReference();
-
-        String key = lazySodium.cryptoGenericHashKeygen();
-        int sizeOfHash = GenericHash.BYTES_MAX;
-
-        lazySodium.cryptoGenericHashInit(state, key, sizeOfHash);
-        String hashedMessage1 = lazySodium.cryptoGenericHashUpdate(state, message);
-        String hashedMessage2 = lazySodium.cryptoGenericHashUpdate(state, message2);
-
-        String hash = lazySodium.cryptoGenericHashFinal(state, sizeOfHash);
-
-        TestCase.assertNotNull(hash);
-    }
 
 }

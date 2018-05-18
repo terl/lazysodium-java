@@ -58,21 +58,21 @@ public interface Hash {
 
     interface Lazy {
 
-        String cryptoHashSha256(String message);
-
-        String cryptoHashSha512(String message);
-
-        boolean cryptoHashSha256Init(Hash.State256 state);
-
-        boolean cryptoHashSha256Update(Hash.State256 state, String messagePart);
-
-        String cryptoHashSha256Final(Hash.State256 state);
-
-        boolean cryptoHash512Init(Hash.State512 state);
-
-        boolean cryptoHash512Update(Hash.State512 state, String messagePart);
-
-        String cryptoHash512Final(Hash.State512 state);
+//        String cryptoHashSha256(String message);
+//
+//        String cryptoHashSha512(String message);
+//
+//        boolean cryptoHashSha256Init(Hash.State256 state);
+//
+//        boolean cryptoHashSha256Update(Hash.State256 state, String messagePart);
+//
+//        String cryptoHashSha256Final(Hash.State256 state);
+//
+//        boolean cryptoHash512Init(Hash.State512 state);
+//
+//        boolean cryptoHash512Update(Hash.State512 state, String messagePart);
+//
+//        String cryptoHash512Final(Hash.State512 state);
 
     }
 

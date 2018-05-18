@@ -105,7 +105,7 @@ public interface Sign {
          */
         boolean cryptoSignDetached(
                 byte[] signature,
-                long sigLength,
+                Long sigLength,
                 byte[] message,
                 long messageLen,
                 byte[] secretKey
