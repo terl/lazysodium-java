@@ -115,12 +115,9 @@ dependencies {
 libraryDependencies += "com.goterl.lazycode" % "lazysodium-java" % "VERSION_NUMBER"
 ```
 
-### Learn
-For **documentation, roadmap, compiling, usage, etc** we invite you to head over to the [wiki](https://github.com/terl/lazysodium-java/wiki).
+## Documentation
+For **documentation, roadmap, compiling, usage, etc** we invite you to head over to the [official documentation](https://docs.lazycode.co/lazysodium).
 
-
-### Contribute
-Contributions are welcome! For more information please see the [Contributor's Guide](https://github.com/terl/lazysodium-java/wiki/Contributor%27s-Guide).
 
 <br>
 <br>
