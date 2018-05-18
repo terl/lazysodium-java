@@ -12,6 +12,7 @@ package com.goterl.lazycode.lazysodium.interfaces;
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.utils.BaseChecker;
 import com.goterl.lazycode.lazysodium.utils.Constants;
+import com.goterl.lazycode.lazysodium.utils.DetachedEncrypt;
 import com.goterl.lazycode.lazysodium.utils.KeyPair;
 
 public interface Sign {
@@ -91,6 +92,36 @@ public interface Sign {
                 byte[] publicKey
         );
 
+        /**
+         * Returns a signature for a message. This
+         * does not prepend the signature to the message.
+         * See {@link #cryptoSign(byte[], Long, byte[], long, byte[])} for that.
+         * @param signature The signature will be added to this byte array.
+         * @param sigLength The signature length
+         * @param message The message to sign.
+         * @param messageLen The message length.
+         * @param secretKey The secret key.
+         * @return True if the secret key could provide a signature.
+         */
+        boolean cryptoSignDetached(
+                byte[] signature,
+                long sigLength,
+                byte[] message,
+                long messageLen,
+                byte[] secretKey
+        );
+
+        /**
+         * Verifies that {@code signature} is valid for the
+         * {@code message}.
+         * @param signature The signature.
+         * @param message The message.
+         * @param messageLen The message length.
+         * @param publicKey The public key that signed the message.
+         * @return Returns true if the signature is valid for the message.
+         * @see #cryptoSignDetached(byte[], long, byte[], long, byte[])
+         */
+        boolean cryptoSignOpenDetached(byte[] signature, byte[] message, long messageLen, byte[] publicKey);
 
     }
 
@@ -125,6 +156,28 @@ public interface Sign {
          * the message is not validly signed by the publicKey.
          */
         String cryptoSignOpen(String signedMessage, String publicKey);
+
+        /**
+         * Returns a signature for a message. This
+         * does not prepend the signature to the message.
+         * See {@link #cryptoSign(String, String)} for that.
+         * @param message The message to sign.
+         * @param secretKey The secret key.
+         * @throws SodiumException If could not sign.
+         * @return The signature for a message.
+         */
+        String cryptoSignDetached(String message, String secretKey) throws SodiumException;
+
+        /**
+         * Verifies that {@code signature} is valid for the
+         * {@code message}.
+         * @param signature The signature.
+         * @param message The message.
+         * @param publicKey The public key that signed the message.
+         * @return Returns true if the signature is valid for the message.
+         * @see #cryptoSignDetached(String, String)
+         */
+        boolean cryptoSignOpenDetached(String signature, String message, String publicKey);
 
 
     }

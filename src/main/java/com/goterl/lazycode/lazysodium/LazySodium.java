@@ -795,6 +795,16 @@ public class LazySodium implements
         return boolify(nacl.crypto_sign_open(message, messageLen, signedMessage, signedMessageLen, publicKey));
     }
 
+    @Override
+    public boolean cryptoSignDetached(byte[] signature, long sigLength, byte[] message, long messageLen, byte[] secretKey) {
+        return boolify(nacl.crypto_sign_detached(signature, sigLength, message, messageLen, secretKey));
+    }
+
+    @Override
+    public boolean cryptoSignOpenDetached(byte[] signature, byte[] message, long messageLen, byte[] publicKey) {
+        return boolify(nacl.crypto_sign_open_detached(signature, message, messageLen, publicKey));
+    }
+
 
     // -- lazy
 
@@ -854,6 +864,27 @@ public class LazySodium implements
         return str(messageBytes);
     }
 
+    @Override
+    public String cryptoSignDetached(String message, String secretKey) throws SodiumException {
+        byte[] messageBytes = bytes(message);
+        byte[] skBytes = toBin(secretKey);
+        byte[] signatureBytes = new byte[Sign.BYTES];
+
+        if (!cryptoSignDetached(signatureBytes, signatureBytes.length, messageBytes, messageBytes.length, skBytes)) {
+            throw new SodiumException("Could not create a signature for your message in detached mode.");
+        }
+
+        return toHex(signatureBytes);
+    }
+
+    @Override
+    public boolean cryptoSignOpenDetached(String signature, String message, String publicKey) {
+        byte[] messageBytes = bytes(message);
+        byte[] pkBytes = toBin(publicKey);
+        byte[] signatureBytes = toBin(signature);
+
+        return cryptoSignOpenDetached(signatureBytes, messageBytes, messageBytes.length, pkBytes);
+    }
 
 
     //// -------------------------------------------|
