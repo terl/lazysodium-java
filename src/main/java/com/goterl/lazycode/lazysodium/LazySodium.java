@@ -1483,14 +1483,14 @@ public class LazySodium implements
     }
 
     @Override
-    public DetachedDecrypt decryptDetached(String cipher, String additionalData, byte[] nSec, byte[] nPub, String k, AEAD.Method method) {
-        byte[] cipherBytes = bytes(cipher);
+    public DetachedDecrypt decryptDetached(DetachedEncrypt detachedEncrypt, String additionalData, byte[] nSec, byte[] nPub, String k, AEAD.Method method) {
+        byte[] cipherBytes = detachedEncrypt.getCipher();
         byte[] additionalDataBytes = bytes(additionalData);
         byte[] keyBytes = toBin(k);
         byte[] messageBytes = new byte[cipherBytes.length];
+        byte[] macBytes = detachedEncrypt.getMac();
 
         if (method.equals(AEAD.Method.CHACHA20_POLY1305)) {
-            byte[] macBytes = new byte[AEAD.CHACHA20POLY1305_ABYTES];
             cryptoAeadChaCha20Poly1305DecryptDetached(
                     messageBytes,
                     nSec,
@@ -1504,7 +1504,6 @@ public class LazySodium implements
             );
             return new DetachedDecrypt(messageBytes, macBytes);
         } else if (method.equals(AEAD.Method.CHACHA20_POLY1305_IETF)) {
-            byte[] macBytes = new byte[AEAD.CHACHA20POLY1305_IETF_ABYTES];
             cryptoAeadChaCha20Poly1305IetfDecryptDetached(
                     messageBytes,
                     nSec,
@@ -1518,7 +1517,6 @@ public class LazySodium implements
             );
             return new DetachedDecrypt(messageBytes, macBytes);
         } else  {
-            byte[] macBytes = new byte[AEAD.XCHACHA20POLY1305_IETF_ABYTES];
             cryptoAeadXChaCha20Poly1305IetfDecryptDetached(
                     messageBytes,
                     nSec,

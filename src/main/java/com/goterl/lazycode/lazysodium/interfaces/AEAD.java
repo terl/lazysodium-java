@@ -248,7 +248,7 @@ public interface AEAD {
         );
 
         DetachedDecrypt decryptDetached(
-                String cipher,
+                DetachedEncrypt detachedEncrypt,
                 String additionalData,
                 byte[] nSec,
                 byte[] nPub,
