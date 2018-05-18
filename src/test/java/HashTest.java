@@ -19,9 +19,9 @@ import org.junit.Test;
 public class HashTest extends BaseTest {
 
 
-    private static String M1 = "With great power ";
-    private static String M2 = "comes great responsibility";
-    private static String MESSAGE = M1 + M2;
+    private String M1 = "With great power ";
+    private String M2 = "comes great responsibility";
+    private String MESSAGE = M1 + M2;
 
     @Test
     public void sha256Compare() throws SodiumException {
@@ -68,7 +68,6 @@ public class HashTest extends BaseTest {
 
         String hash = lazySodium.cryptoHashSha512Final(state);
 
-        System.out.println(hash);
         TestCase.assertNotNull(hash);
     }
 }

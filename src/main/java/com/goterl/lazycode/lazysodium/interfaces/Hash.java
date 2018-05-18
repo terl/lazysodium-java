@@ -87,7 +87,7 @@ public interface Hash {
             return Arrays.asList("state", "count", "buf");
         }
 
-        public byte[] state = new byte[8];
+        public long[] state = new long[8];
         public long count;
         public byte[] buf = new byte[64];
 
