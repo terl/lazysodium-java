@@ -444,55 +444,74 @@ public class LazySodium implements
     }
 
     @Override
-    public boolean cryptoHash512Init(Hash.State512 state) {
+    public boolean cryptoHashSha512Init(Hash.State512 state) {
         return boolify(nacl.crypto_hash_sha512_init(state));
     }
 
     @Override
-    public boolean cryptoHash512Update(Hash.State512 state, byte[] in, long inLen) {
+    public boolean cryptoHashSha512Update(Hash.State512 state, byte[] in, long inLen) {
         return boolify(nacl.crypto_hash_sha512_update(state, in, inLen));
     }
 
     @Override
-    public boolean cryptoHash512Final(Hash.State512 state, byte[] out) {
+    public boolean cryptoHashSha512Final(Hash.State512 state, byte[] out) {
         return boolify(nacl.crypto_hash_sha512_final(state, out));
     }
 
     // -- lazy
 
 
-//    @Override
-//    public String cryptoHashSha256(String message) {
-//
-//        return null;
-//    }
-//
-//    @Override
-//    public String cryptoHashSha512(String message) {
-//        return null;
-//    }
-//
-//
-//    @Override
-//    public boolean cryptoHashSha256Update(Hash.State256 state, String messagePart) {
-//        return false;
-//    }
-//
-//    @Override
-//    public String cryptoHashSha256Final(Hash.State256 state) {
-//        return null;
-//    }
-//
-//
-//    @Override
-//    public boolean cryptoHash512Update(Hash.State512 state, String messagePart) {
-//        return false;
-//    }
-//
-//    @Override
-//    public String cryptoHash512Final(Hash.State512 state) {
-//        return null;
-//    }
+    @Override
+    public String cryptoHashSha256(String message) throws SodiumException {
+        byte[] msgBytes = bytes(message);
+        byte[] hashedBytes = new byte[Hash.SHA256_BYTES];
+        if (!cryptoHashSha256(hashedBytes, msgBytes, msgBytes.length)) {
+            throw new SodiumException("Unsuccessful sha-256 hash.");
+        }
+        return toHex(hashedBytes);
+    }
+
+    @Override
+    public String cryptoHashSha512(String message) throws SodiumException {
+        byte[] msgBytes = bytes(message);
+        byte[] hashedBytes = new byte[Hash.SHA512_BYTES];
+        if (!cryptoHashSha512(hashedBytes, msgBytes, msgBytes.length)) {
+            throw new SodiumException("Unsuccessful sha-512 hash.");
+        }
+        return toHex(hashedBytes);
+    }
+
+
+    @Override
+    public boolean cryptoHashSha256Update(Hash.State256 state, String messagePart) {
+        byte[] msgBytes = bytes(messagePart);
+        return cryptoHashSha256Update(state, msgBytes, msgBytes.length);
+    }
+
+    @Override
+    public String cryptoHashSha256Final(Hash.State256 state) throws SodiumException {
+        byte[] finalHash = new byte[Hash.SHA256_BYTES];
+        if (!cryptoHashSha256Final(state, finalHash)) {
+            throw new SodiumException("Could not finalise sha-256.");
+        }
+        return toHex(finalHash);
+    }
+
+
+    @Override
+    public boolean cryptoHashSha512Update(Hash.State512 state, String messagePart) {
+        byte[] msgBytes = bytes(messagePart);
+        return cryptoHashSha512Update(state, msgBytes, msgBytes.length);
+    }
+
+    @Override
+    public String cryptoHashSha512Final(Hash.State512 state) throws SodiumException {
+        byte[] finalHash = new byte[Hash.SHA512_BYTES];
+        if (!cryptoHashSha512Final(state, finalHash)) {
+            throw new SodiumException("Could not finalise sha-512.");
+        }
+        return toHex(finalHash);
+    }
 
 
 

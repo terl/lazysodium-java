@@ -11,8 +11,64 @@
  */
 
 
+import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
+import com.goterl.lazycode.lazysodium.interfaces.Hash;
+import junit.framework.TestCase;
+import org.junit.Test;
+
 public class HashTest extends BaseTest {
 
 
+    private static String M1 = "With great power ";
+    private static String M2 = "comes great responsibility";
+    private static String MESSAGE = M1 + M2;
 
+    @Test
+    public void sha256Compare() throws SodiumException {
+        String hashed1 = lazySodium.cryptoHashSha256(MESSAGE);
+        String hashed2 = lazySodium.cryptoHashSha256(MESSAGE);
+        TestCase.assertNotSame(hashed1, hashed2);
+    }
+
+    @Test
+    public void sha512Compare() throws SodiumException {
+        String hash1 = lazySodium.cryptoHashSha512(MESSAGE);
+        String hash2 = lazySodium.cryptoHashSha512(MESSAGE);
+        TestCase.assertNotSame(hash1, hash2);
+    }
+
+    @Test
+    public void sha512IsLonger() throws SodiumException {
+        String hash1 = lazySodium.cryptoHashSha256(MESSAGE);
+        String hash2 = lazySodium.cryptoHashSha512(MESSAGE);
+        TestCase.assertTrue(hash1.length() < hash2.length());
+    }
+
+    @Test
+    public void multipartSha256() throws SodiumException {
+        Hash.State256 state = new Hash.State256.ByReference();
+        lazySodium.cryptoHashSha256Init(state);
+
+        lazySodium.cryptoHashSha256Update(state, M1);
+        lazySodium.cryptoHashSha256Update(state, M2);
+        lazySodium.cryptoHashSha256Update(state, "more text to be hashed");
+
+        String hash = lazySodium.cryptoHashSha256Final(state);
+        TestCase.assertNotNull(hash);
+    }
+
+    @Test
+    public void multipartSha512() throws SodiumException {
+        Hash.State512 state = new Hash.State512.ByReference();
+        lazySodium.cryptoHashSha512Init(state);
+
+        lazySodium.cryptoHashSha512Update(state, M1);
+        lazySodium.cryptoHashSha512Update(state, M2);
+        lazySodium.cryptoHashSha512Update(state, "more text to be hashed");
+
+        String hash = lazySodium.cryptoHashSha512Final(state);
+
+        System.out.println(hash);
+        TestCase.assertNotNull(hash);
+    }
 }
