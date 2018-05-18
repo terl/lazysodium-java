@@ -14,8 +14,6 @@ import com.goterl.lazycode.lazysodium.utils.DetachedDecrypt;
 import com.goterl.lazycode.lazysodium.utils.DetachedEncrypt;
 import com.goterl.lazycode.lazysodium.utils.KeyPair;
 import com.goterl.lazycode.lazysodium.utils.SessionPair;
-import com.sun.jna.Memory;
-import com.sun.jna.Pointer;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -1080,11 +1078,6 @@ public class LazySodium implements
     }
 
     @Override
-    public void cryptoShortHashX24Keygen(byte[] k) {
-        nacl.crypto_shorthash_keygen(k);
-    }
-
-    @Override
     public String cryptoShortHash(String in, String key) throws SodiumException {
         byte[] inBytes = hexToBytes(in);
         byte[] keyBytes = hexToBytes(key);
@@ -1096,26 +1089,8 @@ public class LazySodium implements
     }
 
     @Override
-    public String cryptoShortHashX24(String in, String key) throws SodiumException {
-        byte[] inBytes = hexToBytes(in);
-        byte[] keyBytes = hexToBytes(key);
-        byte[] out = randomBytesBuf(ShortHash.SIPHASHX24_KEYBYTES);
-//        if (nacl.crypto_shorthash_siphashx24(out, inBytes, inBytes.length, keyBytes) != 0) {
-//            throw new SodiumException("Failed short-input hashing.");
-//        }
-        return sodiumBin2Hex(out);
-    }
-
-    @Override
     public String cryptoShortHashKeygen() {
         byte[] key = randomBytesBuf(ShortHash.SIPHASH24_KEYBYTES);
-        nacl.crypto_shorthash_keygen(key);
-        return sodiumBin2Hex(key);
-    }
-
-    @Override
-    public String cryptoShortHashX24Keygen() {
-        byte[] key = randomBytesBuf(ShortHash.SIPHASHX24_KEYBYTES);
         nacl.crypto_shorthash_keygen(key);
         return sodiumBin2Hex(key);
     }

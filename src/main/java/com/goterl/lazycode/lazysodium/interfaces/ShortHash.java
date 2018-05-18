@@ -31,8 +31,7 @@ public interface ShortHash {
          *            {@link #SIPHASHX24_BYTES} depending on {@code in} size.
          * @param in The short-input text to hash of size {@link #BYTES} or of size {@link #SIPHASHX24_BYTES}.
          * @param inLen The length of the short-input.
-         * @param key The key generated via {@link #cryptoShortHashKeygen(byte[])} or
-         *            {@link #cryptoShortHashX24Keygen(byte[])}.
+         * @param key The key generated via {@link #cryptoShortHashKeygen(byte[])}.
          * @return true if success, false if fail.
          */
         boolean cryptoShortHash(byte[] out, byte[] in, long inLen, byte[] key);
@@ -44,11 +43,6 @@ public interface ShortHash {
          */
         void cryptoShortHashKeygen(byte[] k);
 
-        /**
-         * Output a 128-bit key.
-         * @param k The key of size {@link #SIPHASHX24_KEYBYTES}.
-         */
-        void cryptoShortHashX24Keygen(byte[] k);
     }
 
     interface Lazy {
@@ -56,20 +50,11 @@ public interface ShortHash {
         /**
          * Hash a short message using a key.
          * @param in The short message to hash.
-         * @param key The key generated via {@link #cryptoShortHashKeygen()} or
-         *            {@link #cryptoShortHashX24Keygen()}.
+         * @param key The key generated via {@link #cryptoShortHashKeygen()}.
          * @return Your message hashed of size {@link #BYTES}.
          */
         String cryptoShortHash(String in, String key) throws SodiumException;
 
-        /**
-         * Hash a short message using a key.
-         * @param in The short message to hash.
-         * @param key The key generated via {@link #cryptoShortHashKeygen()} or
-         *            {@link #cryptoShortHashX24Keygen()}.
-         * @return Your message hashed of size {@link #SIPHASHX24_BYTES}.
-         */
-        String cryptoShortHashX24(String in, String key) throws SodiumException;
 
         /**
          * Generate a 64-bit key for short-input hashing.
@@ -77,11 +62,6 @@ public interface ShortHash {
          */
         String cryptoShortHashKeygen();
 
-        /**
-         * Generate a 128-bit key for short-input hashing.
-         * @return A 128-bit key in string format.
-         */
-        String cryptoShortHashX24Keygen();
     }
 
 

@@ -314,8 +314,6 @@ public class Sodium {
 
     native int crypto_shorthash_keygen(byte[] key);
 
-    //native int crypto_shorthash_siphashx24(byte[] out, byte[] in, long inLen, byte[] key);
-
 
 
     //// -------------------------------------------|
