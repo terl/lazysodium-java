@@ -9,6 +9,7 @@
 package com.goterl.lazycode.lazysodium;
 
 import com.goterl.lazycode.lazysodium.interfaces.GenericHash;
+import com.goterl.lazycode.lazysodium.interfaces.Hash;
 import com.goterl.lazycode.lazysodium.interfaces.SecretStream;
 import com.sun.jna.Pointer;
 
@@ -108,6 +109,34 @@ public class Sodium {
 
     public native int crypto_pwhash_str_needs_rehash(byte[] hash, long opsLimit, long memLimit);
 
+
+
+
+    //// -------------------------------------------|
+    //// HASHING
+    //// -------------------------------------------|
+
+    public native int crypto_hash_sha256(byte[] out, byte[] in, long inLen);
+
+    public native int crypto_hash_sha512(byte[] out, byte[] in, long inLen);
+
+
+    public native int crypto_hash_sha256_init(Hash.State256 state);
+
+    public native int crypto_hash_sha256_update(Hash.State256 state,
+                                                byte[] in,
+                                                long inLen);
+
+    public native int crypto_hash_sha256_final(Hash.State256 state, byte[] out);
+
+
+    public native int crypto_hash_sha512_init(Hash.State512 state);
+
+    public native int crypto_hash_sha512_update(Hash.State512 state,
+                                                byte[] in,
+                                                long inLen);
+
+    public native int crypto_hash_sha512_final(Hash.State512 state, byte[] out);
 
 
 
@@ -413,6 +442,21 @@ public class Sodium {
     public native int crypto_generichash_final(GenericHash.State state, byte[] out, int outLen);
 
 
+    public native int crypto_generichash_blake2b_salt_personal(
+            byte[] subKey,
+            int subKeyLen,
+            byte[] in,
+            long inLen,
+            byte[] masterKey,
+            int masterKeyLen,
+            long subKeyId,
+            byte[] context
+    );
+
+    public native int crypto_core_hchacha20(byte[] out,
+                                            byte[] in,
+                                            byte[] k,
+                                            byte[] c);
 
 
 
