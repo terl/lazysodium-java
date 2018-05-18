@@ -119,7 +119,7 @@ public interface Sign {
          * @param messageLen The message length.
          * @param publicKey The public key that signed the message.
          * @return Returns true if the signature is valid for the message.
-         * @see #cryptoSignDetached(byte[], long, byte[], long, byte[])
+         * @see #cryptoSignDetached(byte[], Long, byte[], long, byte[])
          */
         boolean cryptoSignVerifyDetached(byte[] signature, byte[] message, long messageLen, byte[] publicKey);
 
