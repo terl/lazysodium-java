@@ -8,6 +8,9 @@
 
 package com.goterl.lazycode.lazysodium.utils;
 
+import com.goterl.lazycode.lazysodium.LazySodium;
+
+
 public class DetachedDecrypt extends Detached {
 
     byte[] message;
@@ -19,6 +22,10 @@ public class DetachedDecrypt extends Detached {
 
     public byte[] getMessage() {
         return message;
+    }
+
+    public String getMessageString() {
+        return LazySodium.toHex(getMessage());
     }
 
 }

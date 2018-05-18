@@ -8,6 +8,9 @@
 
 package com.goterl.lazycode.lazysodium.utils;
 
+import com.goterl.lazycode.lazysodium.LazySodium;
+
+
 public class Detached {
 
     byte[] mac;
@@ -18,6 +21,10 @@ public class Detached {
 
     public byte[] getMac() {
         return mac;
+    }
+
+    public String getMacString() {
+        return LazySodium.toHex(getMac());
     }
 
 }

@@ -434,7 +434,7 @@ public class LazySodium implements
     }
 
     @Override
-    public boolean cryptoSecretBoxOpenDetached(byte[] message, byte[] cipherText, byte[] mac, byte[] cipherTextLen, byte[] nonce, byte[] key) {
+    public boolean cryptoSecretBoxOpenDetached(byte[] message, byte[] cipherText, byte[] mac, long cipherTextLen, byte[] nonce, byte[] key) {
         return boolify(nacl.crypto_secretbox_open_detached(message, cipherText, mac, cipherTextLen, nonce, key));
     }
 
@@ -462,7 +462,7 @@ public class LazySodium implements
     }
 
     @Override
-    public String cryptoSecretBoxOpenEasy(String cipher, byte[] nonce, String key, Charset charset) throws SodiumException {
+    public String cryptoSecretBoxOpenEasy(String cipher, byte[] nonce, String key) throws SodiumException {
         byte[] keyBytes = toBin(key);
         byte[] cipherBytes = toBin(cipher);
         byte[] messageBytes = new byte[cipherBytes.length - SecretBox.MACBYTES];
@@ -472,8 +472,38 @@ public class LazySodium implements
             throw new SodiumException("Could not decrypt message.");
         }
 
-        return str(messageBytes, charset);
+        return str(messageBytes);
     }
+
+    @Override
+    public DetachedEncrypt cryptoSecretBoxDetached(String message, byte[] nonce, String key) throws SodiumException {
+        byte[] keyBytes = toBin(key);
+        byte[] messageBytes = bytes(message);
+        byte[] cipherTextBytes = new byte[messageBytes.length];
+        byte[] macBytes = new byte[SecretBox.MACBYTES];
+
+        if (!cryptoSecretBoxDetached(cipherTextBytes, macBytes, messageBytes, messageBytes.length, nonce, keyBytes)) {
+            throw new SodiumException("Could not encrypt detached message.");
+        }
+
+        return new DetachedEncrypt(cipherTextBytes, macBytes);
+    }
+
+    @Override
+    public String cryptoSecretBoxOpenDetached(DetachedEncrypt cipherAndMac, byte[] nonce, String key) throws SodiumException {
+        byte[] keyBytes = toBin(key);
+        byte[] cipherBytes = cipherAndMac.getCipher();
+        byte[] macBytes = cipherAndMac.getMac();
+        byte[] messageBytes = new byte[cipherBytes.length];
+
+
+        if (!cryptoSecretBoxOpenDetached(messageBytes, cipherBytes, macBytes, cipherBytes.length, nonce, keyBytes)) {
+            throw new SodiumException("Could not decrypt detached message.");
+        }
+
+        return str(messageBytes);
+    }
+
 
 
 

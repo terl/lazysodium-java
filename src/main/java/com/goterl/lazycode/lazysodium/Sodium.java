@@ -10,7 +10,6 @@ package com.goterl.lazycode.lazysodium;
 
 import com.goterl.lazycode.lazysodium.interfaces.GenericHash;
 import com.goterl.lazycode.lazysodium.interfaces.SecretStream;
-import com.sun.jna.Pointer;
 
 public class Sodium {
 
@@ -18,17 +17,22 @@ public class Sodium {
 
     }
 
+
     //// -------------------------------------------|
     //// PADDING
     //// -------------------------------------------|
+
     native int sodium_pad(int paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize, int maxBufLen);
 
     native int sodium_unpad(int paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize);
 
 
+
+
     //// -------------------------------------------|
     //// RANDOM
     //// -------------------------------------------|
+
     native byte randombytes_random();
 
     native byte randombytes_uniform(int upperBound);
@@ -39,9 +43,12 @@ public class Sodium {
 
 
 
+
+
     //// -------------------------------------------|
     //// PASSWORD HASHING
     //// -------------------------------------------|
+
     native int crypto_pwhash(byte[] outputHash,
                                  long outputHashLen,
                                  byte[] password,
@@ -64,9 +71,11 @@ public class Sodium {
 
 
 
+
     //// -------------------------------------------|
     //// KEY DERIVATION FUNCTIONS
     //// -------------------------------------------|
+
     native void crypto_kdf_keygen(byte[] masterKey);
 
     native int crypto_kdf_derive_from_key(byte[] subkey,
@@ -76,9 +85,13 @@ public class Sodium {
                                           byte[] masterKey);
 
 
+
+
+
     //// -------------------------------------------|
     //// KEY EXCHANGE
     //// -------------------------------------------|
+
     native int crypto_kx_keypair(byte[] publicKey, byte[] secretKey);
 
     native int crypto_kx_seed_keypair(byte[] publicKey, byte[] secretKey, byte[] seed);
@@ -103,9 +116,11 @@ public class Sodium {
 
 
 
+
     //// -------------------------------------------|
     //// SECRET BOX
     //// -------------------------------------------|
+
     native void crypto_secretbox_keygen(byte[] key);
 
 
@@ -131,7 +146,7 @@ public class Sodium {
     native int crypto_secretbox_open_detached(byte[] message,
                                               byte[] cipherText,
                                               byte[] mac,
-                                              byte[] cipherTextLen,
+                                              long cipherTextLen,
                                               byte[] nonce,
                                               byte[] key);
 
@@ -223,6 +238,9 @@ public class Sodium {
                                     byte[] publicKey,
                                     byte[] secretKey);
 
+
+
+
     //// -------------------------------------------|
     //// CRYPTO SIGN
     //// -------------------------------------------|
@@ -295,9 +313,11 @@ public class Sodium {
 
 
 
+
     //// -------------------------------------------|
     //// CRYPTO AUTH
     //// -------------------------------------------|
+
     native int crypto_auth(byte[] tag, byte[] in, long inLen, byte[] key);
 
     native int crypto_auth_verify(byte[] tag, byte[] in, long inLen, byte[] key);
@@ -307,12 +327,16 @@ public class Sodium {
 
 
 
+
     //// -------------------------------------------|
     //// SHORT HASH
     //// -------------------------------------------|
+
     native int crypto_shorthash(byte[] out, byte[] in, long inLen, byte[] key);
 
     native int crypto_shorthash_keygen(byte[] key);
+
+
 
 
 
@@ -338,6 +362,7 @@ public class Sodium {
                                          long inLen);
 
     native int crypto_generichash_final(GenericHash.State state, byte[] out, int outLen);
+
 
 
 

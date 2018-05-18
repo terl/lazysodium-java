@@ -60,5 +60,12 @@ public interface Base {
     boolean wrongLen(byte[] bs, int shouldBeLen);
     boolean wrongLen(int byteLength, int shouldBeLen);
     boolean wrongLen(int byteLength, long shouldBeLen);
+
+    /**
+     * Remove all the null bytes from the
+     * end of a byte array.
+     * @param bs A byte array.
+     * @return The byte array with no null bytes at the end.
+     */
     byte[] removeNulls(byte[] bs);
 }
