@@ -30,7 +30,7 @@ public class SecretBoxTest extends BaseTest {
         // Generate a random nonce.
         byte[] nonce = lazySodium.nonce(SecretBox.NONCEBYTES);
         String cipher = secretBoxLazy.cryptoSecretBoxEasy(message, nonce, key);
-        String decrypted = secretBoxLazy.cryptoSecretBoxOpenEasy(cipher, nonce, key, null);
+        String decrypted = secretBoxLazy.cryptoSecretBoxOpenEasy(cipher, nonce, key);
 
         TestCase.assertEquals(decrypted, message);
     }

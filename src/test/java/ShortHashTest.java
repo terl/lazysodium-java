@@ -11,6 +11,8 @@
  */
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.PwHash;
+import com.sun.jna.Memory;
+import com.sun.jna.Pointer;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -22,8 +24,8 @@ public class ShortHashTest extends BaseTest {
     public void hash() throws SodiumException {
         String hashThis = "This should get hashed";
 
-        String key = lazySodium.cryptoShortHashX24Keygen();
-        String hash = lazySodium.cryptoShortHashX24(hashThis, key);
+        String key = lazySodium.cryptoShortHashKeygen();
+        String hash = lazySodium.cryptoShortHash(hashThis, key);
 
         assertNotNull(hash);
     }

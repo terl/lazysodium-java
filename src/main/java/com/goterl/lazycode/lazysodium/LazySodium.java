@@ -801,8 +801,8 @@ public class LazySodium implements
     }
 
     @Override
-    public boolean cryptoSignOpenDetached(byte[] signature, byte[] message, long messageLen, byte[] publicKey) {
-        return boolify(nacl.crypto_sign_open_detached(signature, message, messageLen, publicKey));
+    public boolean cryptoSignVerifyDetached(byte[] signature, byte[] message, long messageLen, byte[] publicKey) {
+        return boolify(nacl.crypto_sign_verify_detached(signature, message, messageLen, publicKey));
     }
 
 
@@ -878,12 +878,12 @@ public class LazySodium implements
     }
 
     @Override
-    public boolean cryptoSignOpenDetached(String signature, String message, String publicKey) {
+    public boolean cryptoSignVerifyDetached(String signature, String message, String publicKey) {
         byte[] messageBytes = bytes(message);
         byte[] pkBytes = toBin(publicKey);
         byte[] signatureBytes = toBin(signature);
 
-        return cryptoSignOpenDetached(signatureBytes, messageBytes, messageBytes.length, pkBytes);
+        return cryptoSignVerifyDetached(signatureBytes, messageBytes, messageBytes.length, pkBytes);
     }
 
 

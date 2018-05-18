@@ -121,7 +121,7 @@ public interface Sign {
          * @return Returns true if the signature is valid for the message.
          * @see #cryptoSignDetached(byte[], long, byte[], long, byte[])
          */
-        boolean cryptoSignOpenDetached(byte[] signature, byte[] message, long messageLen, byte[] publicKey);
+        boolean cryptoSignVerifyDetached(byte[] signature, byte[] message, long messageLen, byte[] publicKey);
 
     }
 
@@ -177,7 +177,7 @@ public interface Sign {
          * @return Returns true if the signature is valid for the message.
          * @see #cryptoSignDetached(String, String)
          */
-        boolean cryptoSignOpenDetached(String signature, String message, String publicKey);
+        boolean cryptoSignVerifyDetached(String signature, String message, String publicKey);
 
 
     }
