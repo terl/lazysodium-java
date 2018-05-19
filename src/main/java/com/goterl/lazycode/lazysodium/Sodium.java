@@ -120,7 +120,7 @@ public class Sodium {
             long memLimit
     );
 
-    public  native int crypto_pwhash_scryptsalsa208sha256_str(
+    public native int crypto_pwhash_scryptsalsa208sha256_str(
             byte[] out,
             byte[] password,
             long passwordLen,

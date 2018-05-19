@@ -358,6 +358,10 @@ public class LazySodium implements
         return boolify(nacl.crypto_pwhash_str_needs_rehash(hash, opsLimit, memLimit));
     }
 
+
+    // lazy
+
+
     @Override
     public byte[] cryptoPwHash(int lengthOfHash, byte[] password, byte[] salt, long opsLimit, long memLimit, PwHash.Alg alg)
             throws SodiumException {
@@ -408,6 +412,28 @@ public class LazySodium implements
 
 
         return cryptoPwHashStrVerify(hashBytes, passwordBytes, passwordBytes.length);
+    }
+
+
+
+    @Override
+    public boolean cryptoPwHashScryptSalsa208Sha256(byte[] out, long outLen, byte[] password, long passwordLen, byte[] salt, long opsLimit, long memLimit) {
+        return boolify(nacl.crypto_pwhash_scryptsalsa208sha256(out, outLen, password, passwordLen, salt, opsLimit, memLimit));
+    }
+
+    @Override
+    public boolean cryptoPwHashScryptSalsa208Sha256Str(byte[] out, byte[] password, long passwordLen, long opsLimit, long memLimit) {
+        return boolify(nacl.crypto_pwhash_scryptsalsa208sha256_str(out, password, passwordLen, opsLimit, memLimit));
+    }
+
+    @Override
+    public boolean cryptoPwHashScryptSalsa208Sha256StrVerify(byte[] str, byte[] password, long passwordLen) {
+        return boolify(nacl.crypto_pwhash_scryptsalsa208sha256_str_verify(str, password, passwordLen));
+    }
+
+    @Override
+    public boolean cryptoPwHashScryptSalsa208Sha256Ll(byte[] password, int passwordLen, byte[] salt, int saltLen, long N, long r, long p, byte[] buf, int bufLen) {
+        return boolify(nacl.crypto_pwhash_scryptsalsa208sha256_ll(password, passwordLen, salt, saltLen, N, r, p, buf, bufLen));
     }
 
 

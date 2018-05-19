@@ -21,8 +21,9 @@ import static com.goterl.lazycode.lazysodium.utils.Constants.SIZE_MAX;
 public interface PwHash {
 
 
-    int
-        ARGON2ID_SALTBYTES = 16,
+    // Argon2 constants
+
+    int ARGON2ID_SALTBYTES = 16,
         ARGON2ID_BYTES_MIN = 16,
         ARGON2ID_STR_BYTES = 128,
         SALTBYTES = ARGON2ID_SALTBYTES,
@@ -66,6 +67,30 @@ public interface PwHash {
         MEMLIMIT_SENSITIVE = ARGON2ID_MEMLIMIT_SENSITIVE,
         MEMLIMIT_MODERATE = ARGON2ID_MEMLIMIT_MODERATE,
         MEMLIMIT_MAX = ARGON2ID_MEMLIMIT_MAX;
+
+
+
+    // Scrypt constants
+
+    long SCRYPTSALSA208SHA256_BYTES_MIN = 16L,
+            SCRYPTSALSA208SHA256_BYTES_MAX = 16L,
+            SCRYPTSALSA208SHA256_PASSWD_MIN = 0L,
+            SCRYPTSALSA208SHA256_PASSWD_MAX = Constants.SIZE_MAX,
+            SCRYPTSALSA208SHA256_SALT_BYTES = 32L,
+            SCRYPTSALSA208SHA256_STRBYTES = 102L,
+
+            SCRYPTSALSA208SHA256_OPSLIMIT_MIN = 32768L,
+            SCRYPTSALSA208SHA256_OPSLIMIT_MAX = 4294967295L,
+            SCRYPTSALSA208SHA256_OPSLIMIT_INTERACTIVE = 524288L,
+            SCRYPTSALSA208SHA256_OPSLIMIT_SENSITIVE = 33554432L,
+
+            SCRYPTSALSA208SHA256_MEMLIMIT_MIN = 16777216L,
+            SCRYPTSALSA208SHA256_MEMLIMIT_MAX = 68719476736L,
+            SCRYPTSALSA208SHA256_MEMLIMIT_INTERACTIVE = 16777216L,
+            SCRYPTSALSA208SHA256_MEMLIMIT_SENSITIVE = 1073741824L;
+
+
+
 
 
 
@@ -166,7 +191,53 @@ public interface PwHash {
         boolean cryptoPwHashStrVerify(byte[] hash, byte[] password, long passwordLen);
 
 
+        /**
+         * Checks whether the hash needs a rehash.
+         * @param hash The hash.
+         * @param opsLimit The operations limit used.
+         * @param memLimit The memory limit used.
+         * @return True if the hash needs to be rehashed.
+         */
         boolean cryptoPwHashStrNeedsRehash(byte[] hash, long opsLimit, long memLimit);
+
+
+
+        boolean cryptoPwHashScryptSalsa208Sha256(
+                byte[] out,
+                long outLen,
+                byte[] password,
+                long passwordLen,
+                byte[] salt,
+                long opsLimit,
+                long memLimit
+        );
+
+
+        boolean cryptoPwHashScryptSalsa208Sha256Str(
+                byte[] out,
+                byte[] password,
+                long passwordLen,
+                long opsLimit,
+                long memLimit
+        );
+
+        boolean cryptoPwHashScryptSalsa208Sha256StrVerify(
+                byte[] str,
+                byte[] password,
+                long passwordLen
+        );
+
+        boolean cryptoPwHashScryptSalsa208Sha256Ll(
+                byte[] password,
+                int passwordLen,
+                byte[] salt,
+                int saltLen,
+                long N,
+                long r,
+                long p,
+                byte[] buf,
+                int bufLen
+        );
 
     }
 
@@ -205,8 +276,8 @@ public interface PwHash {
          * @param memLimit The amount of memory to use.
          *                 Between {@link PwHash#MEMLIMIT_MIN}
          *                 and {@link PwHash#MEMLIMIT_MAX}.
-         * @return
-         * @throws SodiumException
+         * @return The hashed password
+         * @throws SodiumException If the password could not be hashed.
          */
         String cryptoPwHashStr(String password,
                                long opsLimit,
@@ -224,7 +295,7 @@ public interface PwHash {
          *                 and {@link PwHash#MEMLIMIT_MAX}.
          * @return The hash without null bytes at the end. WARNING: when
          * verifying please remember to ADD a null byte to the end!
-         * @throws SodiumException
+         * @throws SodiumException If the password could not be hashed.
          */
         String cryptoPwHashStrRemoveNulls(String password,
                                            long opsLimit,
