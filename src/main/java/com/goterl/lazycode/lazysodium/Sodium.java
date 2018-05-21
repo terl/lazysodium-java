@@ -146,6 +146,12 @@ public class Sodium {
             int bufLen
     );
 
+    public native int crypto_pwhash_scryptsalsa208sha256_str_needs_rehash(
+            byte[] password,
+            long opsLimit,
+            long memLimit
+    );
+
 
 
     //// -------------------------------------------|

@@ -363,12 +363,13 @@ public class LazySodium implements
 
 
     @Override
-    public byte[] cryptoPwHash(int lengthOfHash, byte[] password, byte[] salt, long opsLimit, long memLimit, PwHash.Alg alg)
+    public String cryptoPwHash(String password, long lengthOfHash, byte[] salt, long opsLimit, long memLimit, PwHash.Alg alg)
             throws SodiumException {
-        PwHash.Checker.checkAll(password.length, salt.length, opsLimit, memLimit);
-        byte[] hash = new byte[lengthOfHash];
-        cryptoPwHash(hash, hash.length, password, password.length, salt, opsLimit, memLimit, alg);
-        return hash;
+        byte[] passwordBytes = bytes(password);
+        PwHash.Checker.checkAll(passwordBytes.length, salt.length, opsLimit, memLimit);
+        byte[] hash = new byte[longToInt(lengthOfHash)];
+        cryptoPwHash(hash, hash.length, passwordBytes, passwordBytes.length, salt, opsLimit, memLimit, alg);
+        return toHex(hash);
     }
 
     @Override
@@ -415,6 +416,7 @@ public class LazySodium implements
     }
 
 
+    // native Scrypt
 
     @Override
     public boolean cryptoPwHashScryptSalsa208Sha256(byte[] out, long outLen, byte[] password, long passwordLen, byte[] salt, long opsLimit, long memLimit) {
@@ -436,7 +438,70 @@ public class LazySodium implements
         return boolify(nacl.crypto_pwhash_scryptsalsa208sha256_ll(password, passwordLen, salt, saltLen, N, r, p, buf, bufLen));
     }
 
+    @Override
+    public boolean cryptoPwHashScryptSalsa208Sha256StrNeedsRehash(byte[] hash, long opsLimit, long memLimit) {
+        return boolify(nacl.crypto_pwhash_scryptsalsa208sha256_str_needs_rehash(hash, opsLimit, memLimit));
+    }
 
+
+    // Lazy Scrypt
+
+
+    @Override
+    public String cryptoPwHashScryptSalsa208Sha256(String password, byte[] salt, long opsLimit, long memLimit) throws SodiumException {
+        byte[] passwordBytes = bytes(password);
+        PwHash.Checker.checkAllScrypt(passwordBytes.length, salt.length, opsLimit, memLimit);
+
+        byte[] hash = new byte[longToInt(PwHash.SCRYPTSALSA208SHA256_BYTES_MAX)];
+        boolean res = cryptoPwHashScryptSalsa208Sha256(hash, hash.length, passwordBytes, passwordBytes.length, salt, opsLimit, memLimit);
+
+        if (!res) {
+            throw new SodiumException("Could not Scrypt hash your password.");
+        }
+
+        return toHex(hash);
+    }
+
+    @Override
+    public String cryptoPwHashScryptSalsa208Sha256Str(String password, long opsLimit, long memLimit) throws SodiumException {
+        byte[] passwordBytes = bytes(password);
+
+        if (!PwHash.Checker.checkOpsLimitScrypt(opsLimit)) {
+            throw new SodiumException("The ops limit provided is not between the correct values.");
+        }
+
+        if (!PwHash.Checker.checkMemLimitScrypt(memLimit)) {
+            throw new SodiumException("The mem limit provided is not between the correct values.");
+        }
+
+        byte[] hash = new byte[longToInt(PwHash.SCRYPTSALSA208SHA256_STRBYTES)];
+
+        boolean res = cryptoPwHashScryptSalsa208Sha256Str(hash, passwordBytes, passwordBytes.length, opsLimit, memLimit);
+
+        if (!res) {
+            throw new SodiumException("Could not string Scrypt hash your password.");
+        }
+
+        return toHex(hash);
+    }
+
+    @Override
+    public boolean cryptoPwHashScryptSalsa208Sha256StrVerify(String hash, String password) {
+        byte[] hashBytes = toBin(hash);
+        byte[] passwordBytes = bytes(password);
+
+        // If the end of the hash does not have an null byte,
+        // let's add it.
+        byte endOfHash = hashBytes[hashBytes.length - 1];
+
+        if (endOfHash != 0) {
+            byte[] hashWithNullByte = new byte[hashBytes.length + 1];
+            System.arraycopy(hashBytes, 0, hashWithNullByte, 0, hashBytes.length);
+            hashBytes = hashWithNullByte;
+        }
+
+        return cryptoPwHashScryptSalsa208Sha256StrVerify(hashBytes, passwordBytes, passwordBytes.length);
+    }
 
 
     //// -------------------------------------------|
@@ -1768,6 +1833,16 @@ public class LazySodium implements
         return trimmed;
     }
 
+    public static Integer longToInt(long lng) {
+        if (lng > Integer.MAX_VALUE) {
+            return Integer.MAX_VALUE - 200;
+        }
+        if (lng < 0) {
+            return 0;
+        }
+
+        return (int) lng;
+    }
 
 
     // --

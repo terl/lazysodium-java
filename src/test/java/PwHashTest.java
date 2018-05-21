@@ -12,20 +12,19 @@
 import com.goterl.lazycode.lazysodium.LazySodium;
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.PwHash;
-import com.goterl.lazycode.lazysodium.interfaces.Random;
-import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class PwHashTest extends BaseTest {
 
     @Test
     public void nativeHash() throws SodiumException {
 
-        byte[] output = pwHashLazy.cryptoPwHash(
-                200,
-                PASSWORD_BYTES,
+        String output = pwHashLazy.cryptoPwHash(
+                PASSWORD,
+                PwHash.BYTES_MIN + 20,
                 lazySodium.randomBytesBuf(PwHash.SALTBYTES),
                 5L,
                 8192L * 2,
@@ -55,5 +54,27 @@ public class PwHashTest extends BaseTest {
     // will fail on most machines
     public void cryptoPwHashStrTestSensitive() { }
 
+
+    @Test
+    public void scryptHash() throws SodiumException {
+
+        byte[] salt = new byte[LazySodium.longToInt(PwHash.SCRYPTSALSA208SHA256_SALT_BYTES)];
+        String scryptHash = pwHashLazy.cryptoPwHashScryptSalsa208Sha256(
+                PASSWORD,
+                salt,
+                PwHash.SCRYPTSALSA208SHA256_OPSLIMIT_MIN,
+                PwHash.SCRYPTSALSA208SHA256_MEMLIMIT_MIN
+        );
+
+        String hash = pwHashLazy.cryptoPwHashScryptSalsa208Sha256Str(
+                PASSWORD,
+                PwHash.SCRYPTSALSA208SHA256_OPSLIMIT_MIN,
+                PwHash.SCRYPTSALSA208SHA256_MEMLIMIT_MIN
+        );
+
+        boolean isCorrect = pwHashLazy.cryptoPwHashScryptSalsa208Sha256StrVerify(hash, PASSWORD);
+
+        assertTrue("Minimum hashing failed.", isCorrect);
+    }
 
 }

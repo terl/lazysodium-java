@@ -127,6 +127,39 @@ public interface PwHash {
             }
             return true;
         }
+
+
+        public static boolean checkOpsLimitScrypt(long opsLimit) {
+            return isBetween(opsLimit, PwHash.SCRYPTSALSA208SHA256_OPSLIMIT_MIN, PwHash.SCRYPTSALSA208SHA256_OPSLIMIT_MAX);
+        }
+
+        public static boolean checkMemLimitScrypt(long memLimit) {
+            return isBetween(memLimit, PwHash.SCRYPTSALSA208SHA256_MEMLIMIT_MIN, PwHash.SCRYPTSALSA208SHA256_MEMLIMIT_MAX);
+        }
+
+        public static boolean checkAllScrypt(long passwordBytesLen,
+                                       long saltBytesLen,
+                                       long opsLimit,
+                                       long memLimit)
+                throws SodiumException {
+            if (!isBetween(passwordBytesLen, SCRYPTSALSA208SHA256_PASSWD_MIN, SCRYPTSALSA208SHA256_PASSWD_MAX)) {
+                throw new SodiumException("The password provided is not the correct size.");
+            }
+
+            if (!correctLen(saltBytesLen, SCRYPTSALSA208SHA256_SALT_BYTES)) {
+                throw new SodiumException("The password provided is not the correct size.");
+            }
+
+            if (!checkOpsLimitScrypt(opsLimit)) {
+                throw new SodiumException("The ops limit provided is not between the correct values.");
+            }
+
+            if (!checkMemLimitScrypt(memLimit)) {
+                throw new SodiumException("The mem limit provided is not between the correct values.");
+            }
+
+            return true;
+        }
     }
 
     interface Native {
@@ -239,6 +272,16 @@ public interface PwHash {
                 int bufLen
         );
 
+        /**
+         * Checks whether the Scrypt hash needs a rehash.
+         * @param hash The Scrypt hash.
+         * @param opsLimit The operations limit used.
+         * @param memLimit The memory limit used.
+         * @return True if the Scrypt hash needs to be rehashed.
+         */
+        boolean cryptoPwHashScryptSalsa208Sha256StrNeedsRehash(byte[] hash, long opsLimit, long memLimit);
+
+
     }
 
     interface Lazy {
@@ -257,8 +300,8 @@ public interface PwHash {
          * @return A hash of the password in bytes.
          * @throws SodiumException If the password is too short or the opsLimit is not correct.
          */
-        byte[] cryptoPwHash(int cryptoPwHashLen,
-                            byte[] password,
+        String cryptoPwHash(String password,
+                            long cryptoPwHashLen,
                             byte[] salt,
                             long opsLimit,
                             long memLimit,
@@ -311,6 +354,55 @@ public interface PwHash {
          * @return True if the password 'unlocks' the hash.
          */
         boolean cryptoPwHashStrVerify(String hash, String password);
+
+
+
+        /**
+         * Hash a password using a salt.
+         * @param password The password string to hash.
+         * @param salt The salt to use.
+         * @param opsLimit The number of cycles to perform whilst hashing.
+         *                 Between {@link #OPSLIMIT_MIN} and {@link #OPSLIMIT_MAX}.
+         * @param memLimit The amount of memory to use.
+         *                 Between {@link #MEMLIMIT_MIN} and {@link #MEMLIMIT_MAX}.
+         * @return The hashed password.
+         * @throws SodiumException If the password could not be hashed.
+         */
+        String cryptoPwHashScryptSalsa208Sha256(
+                String password,
+                byte[] salt,
+                long opsLimit,
+                long memLimit
+        ) throws SodiumException;
+
+
+        /**
+         * The most minimal way of hashing a given password
+         * using Scrypt.
+         * @param password The password string to hash.
+         * @param opsLimit The number of cycles to perform whilst hashing.
+         *                 Between {@link #OPSLIMIT_MIN} and {@link #OPSLIMIT_MAX}.
+         * @param memLimit The amount of memory to use.
+         *                 Between {@link #MEMLIMIT_MIN} and {@link #MEMLIMIT_MAX}.
+         * @return The hashed password
+         * @throws SodiumException If the password could not be hashed.
+         */
+        String cryptoPwHashScryptSalsa208Sha256Str(
+                String password,
+                long opsLimit,
+                long memLimit
+        ) throws SodiumException;
+
+
+        /**
+         * Verifies a string that was hashed
+         * using Scrypt. This automatically adds
+         * a null byte at the end if there isn't one already.
+         * @param hash The hash with or without a null terminating byte.
+         * @param password The password
+         * @return True if the password 'unlocks' the hash.
+         */
+        boolean cryptoPwHashScryptSalsa208Sha256StrVerify(String hash, String password);
 
     }
 
