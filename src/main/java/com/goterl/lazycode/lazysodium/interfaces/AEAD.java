@@ -11,6 +11,10 @@ package com.goterl.lazycode.lazysodium.interfaces;
 
 import com.goterl.lazycode.lazysodium.utils.DetachedDecrypt;
 import com.goterl.lazycode.lazysodium.utils.DetachedEncrypt;
+import com.sun.jna.Structure;
+
+import java.util.Arrays;
+import java.util.List;
 
 public interface AEAD {
 
@@ -38,65 +42,75 @@ public interface AEAD {
         XCHACHA20POLY1305_IETF_NPUBBYTES = 24;
 
 
+    // AES256
+
+    int AES256GCM_KEYBYTES = 32;
+    int AES256GCM_NSECBYTES = 0;
+    int AES256GCM_NPUBBYTES = 12;
+    int AES256GCM_ABYTES = 16;
+
+
+
     enum Method {
         CHACHA20_POLY1305,
         CHACHA20_POLY1305_IETF,
         XCHACHA20_POLY1305_IETF,
+        AES256GCM,
     }
 
 
 
     interface Native {
 
-        void cryptoAeadChaCha20Poly1305Keygen(byte[] key);
+        void cryptoAeadChaCha20Poly1305Keygen(byte[] keyey);
 
         boolean cryptoAeadChaCha20Poly1305Encrypt(
-                byte[] c,
-                long cLen,
-                byte[] m,
-                long mLen,
-                byte[] ad,
-                long adLen,
+                byte[] cipher,
+                Long cipherLen,
+                byte[] message,
+                long messageLen,
+                byte[] additionalData,
+                long additionalDataLen,
                 byte[] nSec,
                 byte[] nPub,
-                byte[] k
+                byte[] key
         );
 
         boolean cryptoAeadChaCha20Poly1305Decrypt(
-                byte[] m,
-                long mLen,
+                byte[] message,
+                Long messageLen,
                 byte[] nSec,
-                byte[] c,
-                long cLen,
-                byte[] ad,
-                long adLen,
+                byte[] cipher,
+                long cipherLen,
+                byte[] additionalData,
+                long additionalDataLen,
                 byte[] nPub,
-                byte[] k
+                byte[] key
         );
 
         boolean cryptoAeadChaCha20Poly1305EncryptDetached(
-                byte[] c,
+                byte[] cipher,
                 byte[] mac,
                 Long macLenAddress,
-                byte[] m,
-                long mLen,
-                byte[] ad,
-                long adLen,
+                byte[] message,
+                long messageLen,
+                byte[] additionalData,
+                long additionalDataLen,
                 byte[] nSec,
                 byte[] nPub,
-                byte[] k
+                byte[] key
         );
 
         boolean cryptoAeadChaCha20Poly1305DecryptDetached(
-                byte[] m,
+                byte[] message,
                 byte[] nSec,
-                byte[] c,
-                long cLen,
+                byte[] cipher,
+                long cipherLen,
                 byte[] mac,
-                byte[] ad,
-                long adLen,
+                byte[] additionalData,
+                long additionalDataLen,
                 byte[] nPub,
-                byte[] k
+                byte[] key
         );
 
 
@@ -107,52 +121,52 @@ public interface AEAD {
         void cryptoAeadChaCha20Poly1305IetfKeygen(byte[] key);
 
         boolean cryptoAeadChaCha20Poly1305IetfEncrypt(
-                byte[] c,
-                long cLen,
-                byte[] m,
-                long mLen,
-                byte[] ad,
-                long adLen,
+                byte[] cipher,
+                Long cipherLen,
+                byte[] message,
+                long messageLen,
+                byte[] additionalData,
+                long additionalDataLen,
                 byte[] nSec,
                 byte[] nPub,
-                byte[] k
+                byte[] key
         );
 
         boolean cryptoAeadChaCha20Poly1305IetfDecrypt(
-                byte[] m,
-                long mLen,
+                byte[] message,
+                Long messageLen,
                 byte[] nSec,
-                byte[] c,
-                long cLen,
-                byte[] ad,
-                long adLen,
+                byte[] cipher,
+                long cipherLen,
+                byte[] additionalData,
+                long additionalDataLen,
                 byte[] nPub,
-                byte[] k
+                byte[] key
         );
 
         boolean cryptoAeadChaCha20Poly1305IetfEncryptDetached(
-                byte[] c,
+                byte[] cipher,
                 byte[] mac,
                 Long macLenAddress,
-                byte[] m,
-                long mLen,
-                byte[] ad,
-                long adLen,
+                byte[] message,
+                long messageLen,
+                byte[] additionalData,
+                long additionalDataLen,
                 byte[] nSec,
                 byte[] nPub,
-                byte[] k
+                byte[] key
         );
 
         boolean cryptoAeadChaCha20Poly1305IetfDecryptDetached(
-                byte[] m,
+                byte[] message,
                 byte[] nSec,
-                byte[] c,
-                long cLen,
+                byte[] cipher,
+                long cipherLen,
                 byte[] mac,
-                byte[] ad,
-                long adLen,
+                byte[] additionalData,
+                long additionalDataLen,
                 byte[] nPub,
-                byte[] k
+                byte[] key
         );
 
 
@@ -160,56 +174,111 @@ public interface AEAD {
 
         // xchacha
 
-        void cryptoAeadXChaCha20Poly1305IetfKeygen(byte[] k);
+        void cryptoAeadXChaCha20Poly1305IetfKeygen(byte[] key);
 
         boolean cryptoAeadXChaCha20Poly1305IetfEncrypt(
-                byte[] c,
-                long cLen,
-                byte[] m,
-                long mLen,
-                byte[] ad,
-                long adLen,
+                byte[] cipher,
+                Long cipherLen,
+                byte[] message,
+                long messageLen,
+                byte[] additionalData,
+                long additionalDataLen,
                 byte[] nSec,
                 byte[] nPub,
-                byte[] k
+                byte[] key
         );
 
         boolean cryptoAeadXChaCha20Poly1305IetfDecrypt(
-                byte[] m,
-                long mLen,
+                byte[] message,
+                Long messageLen,
                 byte[] nSec,
-                byte[] c,
-                long cLen,
-                byte[] ad,
-                long adLen,
+                byte[] cipher,
+                long cipherLen,
+                byte[] additionalData,
+                long additionalDataLen,
                 byte[] nPub,
-                byte[] k
+                byte[] key
         );
 
 
         boolean cryptoAeadXChaCha20Poly1305IetfEncryptDetached(
-                byte[] c,
+                byte[] cipher,
                 byte[] mac,
                 Long macLenAddress,
-                byte[] m,
-                long mLen,
-                byte[] ad,
-                long adLen,
+                byte[] message,
+                long messageLen,
+                byte[] additionalData,
+                long additionalDataLen,
                 byte[] nSec,
                 byte[] nPub,
-                byte[] k
+                byte[] key
         );
 
         boolean cryptoAeadXChaCha20Poly1305IetfDecryptDetached(
-                byte[] m,
+                byte[] message,
                 byte[] nSec,
-                byte[] c,
-                long cLen,
+                byte[] cipher,
+                long cipherLen,
                 byte[] mac,
-                byte[] ad,
-                long adLen,
+                byte[] additionalData,
+                long additionalDataLen,
                 byte[] nPub,
-                byte[] k
+                byte[] key
+        );
+
+
+        // AES
+
+        void cryptoAeadAES256GCMKeygen(byte[] key);
+
+        boolean cryptoAeadAES256GCMEncrypt(
+                byte[] cipher,
+                Long cipherLen,
+                byte[] message,
+                long messageLen,
+                byte[] additionalData,
+                long additionalDataLen,
+                byte[] nSec,
+                byte[] nPub,
+                byte[] key
+        );
+
+        boolean cryptoAeadAES256GCMDecrypt(
+                byte[] message,
+                Long messageLen,
+                byte[] nSec,
+                byte[] cipher,
+                long cipherLen,
+                byte[] additionalData,
+                long additionalDataLen,
+                byte[] nPub,
+                byte[] key
+        );
+
+
+        boolean cryptoAeadAES256GCMEncryptDetached(
+                byte[] cipher,
+                byte[] mac,
+                Long macLenAddress,
+                byte[] message,
+                long messageLen,
+                byte[] additionalData,
+                long additionalDataLen,
+                byte[] nSec,
+                byte[] nPub,
+                byte[] key
+        );
+
+        boolean cryptoAeadAES256GCMDecryptDetached(
+                byte[] message,
+                byte[] nSec,
+                byte[] cipher,
+                long cipherLen,
+                byte[] mac,
+                byte[] additionalData,
+                long additionalDataLen,
+                byte[] nPub,
+                byte[] key
         );
 
     }
@@ -220,6 +289,12 @@ public interface AEAD {
 
         String keygen(Method method);
 
+        String encrypt(String m,
+                      String additionalData,
+                      byte[] nPub,
+                      String k,
+                      AEAD.Method method);
+
         String encrypt(
                 String m,
                 String additionalData,
@@ -227,6 +302,14 @@ public interface AEAD {
                 byte[] nPub,
                 String k,
                 Method method
+        );
+
+        String decrypt(
+                String cipher,
+                String additionalData,
+                byte[] nPub,
+                String k,
+                AEAD.Method method
         );
 
         String decrypt(
@@ -260,6 +343,21 @@ public interface AEAD {
     }
 
 
+
+    class StateAES extends Structure {
+
+        public static class ByReference extends StateAES implements Structure.ByReference {
+
+        }
+
+        @Override
+        protected List<String> getFieldOrder() {
+            return Arrays.asList("arr");
+        }
+
+        public byte[] arr = new byte[512];
+
+    }
 
 
 }

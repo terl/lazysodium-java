@@ -8,24 +8,37 @@
 
 package com.goterl.lazycode.lazysodium.utils;
 
-import com.goterl.lazycode.lazysodium.LazySodium;
+import java.nio.charset.Charset;
 
 
 public class DetachedDecrypt extends Detached {
 
     byte[] message;
+    Charset charset;
 
     public DetachedDecrypt(byte[] message, byte[] mac) {
         super(mac);
         this.message = message;
+        this.charset = Charset.forName("UTF-8");
     }
+
+    public DetachedDecrypt(byte[] message, byte[] mac, Charset charset) {
+        super(mac);
+        this.message = message;
+        this.charset = charset;
+    }
+
 
     public byte[] getMessage() {
         return message;
     }
 
+    public String getMessageString(Charset charset) {
+        return new String(getMessage(), charset);
+    }
+
     public String getMessageString() {
-        return LazySodium.toHex(getMessage());
+        return new String(getMessage(), charset);
     }
 
 }

@@ -1465,12 +1465,12 @@ public class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAeadChaCha20Poly1305Encrypt(byte[] c, long cLen, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
+    public boolean cryptoAeadChaCha20Poly1305Encrypt(byte[] c, Long cLen, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
         return boolify(nacl.crypto_aead_chacha20poly1305_encrypt(c, cLen, m, mLen, ad, adLen, nSec, nPub, k));
     }
 
     @Override
-    public boolean cryptoAeadChaCha20Poly1305Decrypt(byte[] m, long mLen, byte[] nSec, byte[] c, long cLen, byte[] ad, long adLen, byte[] nPub, byte[] k) {
+    public boolean cryptoAeadChaCha20Poly1305Decrypt(byte[] m, Long mLen, byte[] nSec, byte[] c, long cLen, byte[] ad, long adLen, byte[] nPub, byte[] k) {
         return boolify(nacl.crypto_aead_chacha20poly1305_decrypt(m, mLen, nSec, c, cLen, ad, adLen, nPub, k));
     }
 
@@ -1490,12 +1490,12 @@ public class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAeadChaCha20Poly1305IetfEncrypt(byte[] c, long cLen, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
+    public boolean cryptoAeadChaCha20Poly1305IetfEncrypt(byte[] c, Long cLen, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
         return boolify(nacl.crypto_aead_chacha20poly1305_ietf_encrypt(c, cLen, m, mLen, ad, adLen, nSec, nPub, k));
     }
 
     @Override
-    public boolean cryptoAeadChaCha20Poly1305IetfDecrypt(byte[] m, long mLen, byte[] nSec, byte[] c, long cLen, byte[] ad, long adLen, byte[] nPub, byte[] k) {
+    public boolean cryptoAeadChaCha20Poly1305IetfDecrypt(byte[] m, Long mLen, byte[] nSec, byte[] c, long cLen, byte[] ad, long adLen, byte[] nPub, byte[] k) {
         return boolify(nacl.crypto_aead_chacha20poly1305_ietf_decrypt(m, mLen, nSec, c, cLen, ad, adLen, nPub, k));
     }
 
@@ -1506,7 +1506,7 @@ public class LazySodium implements
 
     @Override
     public boolean cryptoAeadChaCha20Poly1305IetfDecryptDetached(byte[] m, byte[] nSec, byte[] c, long cLen, byte[] mac, byte[] ad, long adLen, byte[] nPub, byte[] k) {
-        return boolify(nacl.crypto_aead_chacha20poly1305_decrypt_detached(m, nSec, c, cLen, mac, ad, adLen, nPub, k));
+        return boolify(nacl.crypto_aead_chacha20poly1305_ietf_decrypt_detached(m, nSec, c, cLen, mac, ad, adLen, nPub, k));
     }
 
     @Override
@@ -1515,12 +1515,12 @@ public class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAeadXChaCha20Poly1305IetfEncrypt(byte[] c, long cLen, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
+    public boolean cryptoAeadXChaCha20Poly1305IetfEncrypt(byte[] c, Long cLen, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
         return boolify(nacl.crypto_aead_xchacha20poly1305_ietf_encrypt(c, cLen, m, mLen, ad, adLen, nSec, nPub, k));
     }
 
     @Override
-    public boolean cryptoAeadXChaCha20Poly1305IetfDecrypt(byte[] m, long mLen, byte[] nSec, byte[] c, long cLen, byte[] ad, long adLen, byte[] nPub, byte[] k) {
+    public boolean cryptoAeadXChaCha20Poly1305IetfDecrypt(byte[] m, Long mLen, byte[] nSec, byte[] c, long cLen, byte[] ad, long adLen, byte[] nPub, byte[] k) {
         return boolify(nacl.crypto_aead_xchacha20poly1305_ietf_decrypt(m, mLen, nSec, c, cLen, ad, adLen, nPub, k));
     }
 
@@ -1532,6 +1532,31 @@ public class LazySodium implements
     @Override
     public boolean cryptoAeadXChaCha20Poly1305IetfDecryptDetached(byte[] m, byte[] nSec, byte[] c, long cLen, byte[] mac, byte[] ad, long adLen, byte[] nPub, byte[] k) {
         return boolify(nacl.crypto_aead_xchacha20poly1305_ietf_decrypt_detached(m, nSec, c, cLen, mac, ad, adLen, nPub, k));
+    }
+
+    @Override
+    public void cryptoAeadAES256GCMKeygen(byte[] key) {
+        nacl.crypto_aead_aes256gcm_keygen(key);
+    }
+
+    @Override
+    public boolean cryptoAeadAES256GCMEncrypt(byte[] cipher, Long cipherLen, byte[] message, long messageLen, byte[] additionalData, long additionalDataLen, byte[] nSec, byte[] nPub, byte[] key) {
+        return boolify(nacl.crypto_aead_aes256gcm_encrypt(cipher, cipherLen, message, messageLen, additionalData, additionalDataLen, nSec, nPub, key));
+    }
+
+    @Override
+    public boolean cryptoAeadAES256GCMDecrypt(byte[] message, Long messageLen, byte[] nSec, byte[] cipher, long cipherLen, byte[] additionalData, long additionalDataLen, byte[] nPub, byte[] key) {
+        return boolify(nacl.crypto_aead_aes256gcm_decrypt(message, messageLen, nSec, cipher, cipherLen, additionalData, additionalDataLen, nPub, key));
+    }
+
+    @Override
+    public boolean cryptoAeadAES256GCMEncryptDetached(byte[] cipher, byte[] mac, Long macLenAddress, byte[] message, long messageLen, byte[] additionalData, long additionalDataLen, byte[] nSec, byte[] nPub, byte[] key) {
+        return boolify(nacl.crypto_aead_aes256gcm_encrypt_detached(cipher, mac, macLenAddress, message, messageLen, additionalData, additionalDataLen, nSec, nPub, key));
+    }
+
+    @Override
+    public boolean cryptoAeadAES256GCMDecryptDetached(byte[] message, byte[] nSec, byte[] cipher, long cipherLen, byte[] mac, byte[] additionalData, long additionalDataLen, byte[] nPub, byte[] key) {
+        return boolify(nacl.crypto_aead_aes256gcm_decrypt_detached(message, nSec, cipher, cipherLen, mac, additionalData, additionalDataLen, nPub, key));
     }
 
 
@@ -1552,105 +1577,150 @@ public class LazySodium implements
                 byte[] key3 = randomBytesBuf(AEAD.XCHACHA20POLY1305_IETF_KEYBYTES);
                 cryptoAeadChaCha20Poly1305IetfKeygen(key3);
                 return toHex(key3);
+            case AES256GCM:
+                byte[] key4 = randomBytesBuf(AEAD.AES256GCM_KEYBYTES);
+                cryptoAeadAES256GCMKeygen(key4);
+                return toHex(key4);
         }
         return null;
     }
 
     @Override
+    public String encrypt(String m, String additionalData, byte[] nPub, String k, AEAD.Method method) {
+        return encrypt(m, additionalData, null, nPub,  k, method);
+    }
+
+    @Override
     public String encrypt(String m, String additionalData, byte[] nSec, byte[] nPub, String k, AEAD.Method method) {
         byte[] messageBytes = bytes(m);
-        byte[] additionalDataBytes = bytes(additionalData);
+        byte[] additionalDataBytes = additionalData == null ? new byte[0] : bytes(additionalData);
+        long additionalBytesLen = additionalData == null ? 0L : additionalDataBytes.length;
         byte[] keyBytes = toBin(k);
 
         if (method.equals(AEAD.Method.CHACHA20_POLY1305)) {
             byte[] cipherBytes = new byte[messageBytes.length + AEAD.CHACHA20POLY1305_ABYTES];
             cryptoAeadChaCha20Poly1305Encrypt(
                     cipherBytes,
-                    cipherBytes.length,
+                    null,
                     messageBytes,
                     messageBytes.length,
                     additionalDataBytes,
-                    additionalDataBytes.length,
+                    additionalBytesLen,
                     nSec,
                     nPub,
                     keyBytes
             );
             return toHex(cipherBytes);
         } else if (method.equals(AEAD.Method.CHACHA20_POLY1305_IETF)) {
-            byte[] cipherBytes2 = new byte[messageBytes.length + AEAD.CHACHA20POLY1305_IETF_ABYTES];
+            byte[] cipherBytes = new byte[messageBytes.length + AEAD.CHACHA20POLY1305_IETF_ABYTES];
             cryptoAeadChaCha20Poly1305IetfEncrypt(
-                    cipherBytes2,
-                    cipherBytes2.length,
+                    cipherBytes,
+                    null,
                     messageBytes,
                     messageBytes.length,
                     additionalDataBytes,
-                    additionalDataBytes.length,
+                    additionalBytesLen,
                     nSec,
                     nPub,
                     keyBytes
             );
-            return toHex(cipherBytes2);
-        } else {
+            return toHex(cipherBytes);
+        } else if (method.equals(AEAD.Method.XCHACHA20_POLY1305_IETF)) {
             byte[] cipherBytes3 = new byte[messageBytes.length + AEAD.XCHACHA20POLY1305_IETF_ABYTES];
             cryptoAeadXChaCha20Poly1305IetfEncrypt(
                     cipherBytes3,
-                    cipherBytes3.length,
+                    null,
                     messageBytes,
                     messageBytes.length,
                     additionalDataBytes,
-                    additionalDataBytes.length,
+                    additionalBytesLen,
                     nSec,
                     nPub,
                     keyBytes
             );
             return toHex(cipherBytes3);
+        } else {
+            byte[] cipherBytes = new byte[messageBytes.length + AEAD.AES256GCM_ABYTES];
+            cryptoAeadAES256GCMEncrypt(
+                    cipherBytes,
+                    null,
+                    messageBytes,
+                    messageBytes.length,
+                    additionalDataBytes,
+                    additionalBytesLen,
+                    nSec,
+                    nPub,
+                    keyBytes
+            );
+            return toHex(cipherBytes);
         }
     }
 
+
     @Override
-    public String decrypt(String cipher, String ad, byte[] nSec, byte[] nPub, String k, AEAD.Method method) {
-        byte[] cipherBytes = bytes(cipher);
-        byte[] additionalDataBytes = bytes(ad);
+    public String decrypt(String cipher, String additionalData, byte[] nPub, String k, AEAD.Method method) {
+        return decrypt(cipher, additionalData, null, nPub, k, method);
+    }
+
+    @Override
+    public String decrypt(String cipher, String additionalData, byte[] nSec, byte[] nPub, String k, AEAD.Method method) {
+        byte[] cipherBytes = toBin(cipher);
+        byte[] additionalDataBytes = additionalData == null ? new byte[0] : bytes(additionalData);
+        long additionalBytesLen = additionalData == null ? 0L : additionalDataBytes.length;
         byte[] keyBytes = toBin(k);
 
         if (method.equals(AEAD.Method.CHACHA20_POLY1305)) {
             byte[] messageBytes = new byte[cipherBytes.length - AEAD.CHACHA20POLY1305_ABYTES];
             cryptoAeadChaCha20Poly1305Decrypt(
                     messageBytes,
-                    messageBytes.length,
+                    null,
                     nSec,
                     cipherBytes,
                     cipherBytes.length,
                     additionalDataBytes,
-                    additionalDataBytes.length,
+                    additionalBytesLen,
                     nPub,
                     keyBytes
             );
             return str(messageBytes);
         } else if (method.equals(AEAD.Method.CHACHA20_POLY1305_IETF)) {
             byte[] messageBytes = new byte[cipherBytes.length - AEAD.CHACHA20POLY1305_IETF_ABYTES];
-            cryptoAeadChaCha20Poly1305Decrypt(
+            cryptoAeadChaCha20Poly1305IetfDecrypt(
                     messageBytes,
-                    messageBytes.length,
+                    null,
                     nSec,
                     cipherBytes,
                     cipherBytes.length,
                     additionalDataBytes,
-                    additionalDataBytes.length,
+                    additionalBytesLen,
                     nPub,
                     keyBytes
             );
             return str(messageBytes);
-        } else  {
+        } else if (method.equals(AEAD.Method.XCHACHA20_POLY1305_IETF)) {
             byte[] messageBytes = new byte[cipherBytes.length - AEAD.XCHACHA20POLY1305_IETF_ABYTES];
             cryptoAeadXChaCha20Poly1305IetfDecrypt(
                     messageBytes,
-                    messageBytes.length,
+                    null,
                     nSec,
                     cipherBytes,
                     cipherBytes.length,
                     additionalDataBytes,
-                    additionalDataBytes.length,
+                    additionalBytesLen,
+                    nPub,
+                    keyBytes
+            );
+            return str(messageBytes);
+        } else {
+            byte[] messageBytes = new byte[cipherBytes.length - AEAD.AES256GCM_ABYTES];
+            cryptoAeadAES256GCMDecrypt(
+                    messageBytes,
+                    null,
+                    nSec,
+                    cipherBytes,
+                    cipherBytes.length,
+                    additionalDataBytes,
+                    additionalBytesLen,
                     nPub,
                     keyBytes
             );
@@ -1661,7 +1731,8 @@ public class LazySodium implements
     @Override
     public DetachedEncrypt encryptDetached(String m, String additionalData, byte[] nSec, byte[] nPub, String k, AEAD.Method method) {
         byte[] messageBytes = bytes(m);
-        byte[] additionalDataBytes = bytes(additionalData);
+        byte[] additionalDataBytes = additionalData == null ? new byte[0] : bytes(additionalData);
+        long additionalBytesLen = additionalData == null ? 0L : additionalDataBytes.length;
         byte[] keyBytes = toBin(k);
         byte[] cipherBytes = new byte[messageBytes.length];
 
@@ -1675,7 +1746,7 @@ public class LazySodium implements
                     messageBytes,
                     messageBytes.length,
                     additionalDataBytes,
-                    additionalDataBytes.length,
+                    additionalBytesLen,
                     nSec,
                     nPub,
                     keyBytes
@@ -1683,27 +1754,44 @@ public class LazySodium implements
             return new DetachedEncrypt(cipherBytes, macBytes);
         } else if (method.equals(AEAD.Method.CHACHA20_POLY1305_IETF)) {
             byte[] macBytes = new byte[AEAD.CHACHA20POLY1305_IETF_ABYTES];
-            cryptoAeadChaCha20Poly1305IetfEncrypt(
+            cryptoAeadChaCha20Poly1305IetfEncryptDetached(
                     cipherBytes,
-                    cipherBytes.length,
+                    macBytes,
+                    null,
                     messageBytes,
                     messageBytes.length,
                     additionalDataBytes,
-                    additionalDataBytes.length,
+                    additionalBytesLen,
+                    nSec,
+                    nPub,
+                    keyBytes
+            );
+            return new DetachedEncrypt(cipherBytes, macBytes);
+        } else if (method.equals(AEAD.Method.XCHACHA20_POLY1305_IETF)) {
+            byte[] macBytes = new byte[AEAD.XCHACHA20POLY1305_IETF_ABYTES];
+            cryptoAeadXChaCha20Poly1305IetfEncryptDetached(
+                    cipherBytes,
+                    macBytes,
+                    null,
+                    messageBytes,
+                    messageBytes.length,
+                    additionalDataBytes,
+                    additionalBytesLen,
                     nSec,
                     nPub,
                     keyBytes
             );
             return new DetachedEncrypt(cipherBytes, macBytes);
         } else {
-            byte[] macBytes = new byte[AEAD.XCHACHA20POLY1305_IETF_ABYTES];
-            cryptoAeadXChaCha20Poly1305IetfEncrypt(
+            byte[] macBytes = new byte[AEAD.AES256GCM_ABYTES];
+            cryptoAeadAES256GCMEncryptDetached(
                     cipherBytes,
-                    cipherBytes.length,
+                    macBytes,
+                    null,
                     messageBytes,
                     messageBytes.length,
                     additionalDataBytes,
-                    additionalDataBytes.length,
+                    additionalBytesLen,
                     nSec,
                     nPub,
                     keyBytes
@@ -1715,7 +1803,8 @@ public class LazySodium implements
     @Override
     public DetachedDecrypt decryptDetached(DetachedEncrypt detachedEncrypt, String additionalData, byte[] nSec, byte[] nPub, String k, AEAD.Method method) {
         byte[] cipherBytes = detachedEncrypt.getCipher();
-        byte[] additionalDataBytes = bytes(additionalData);
+        byte[] additionalDataBytes = additionalData == null ? new byte[0] : bytes(additionalData);
+        long additionalBytesLen = additionalData == null ? 0L : additionalDataBytes.length;
         byte[] keyBytes = toBin(k);
         byte[] messageBytes = new byte[cipherBytes.length];
         byte[] macBytes = detachedEncrypt.getMac();
@@ -1728,11 +1817,11 @@ public class LazySodium implements
                     cipherBytes.length,
                     macBytes,
                     additionalDataBytes,
-                    additionalDataBytes.length,
+                    additionalBytesLen,
                     nPub,
                     keyBytes
             );
-            return new DetachedDecrypt(messageBytes, macBytes);
+            return new DetachedDecrypt(messageBytes, macBytes, charset);
         } else if (method.equals(AEAD.Method.CHACHA20_POLY1305_IETF)) {
             cryptoAeadChaCha20Poly1305IetfDecryptDetached(
                     messageBytes,
@@ -1741,12 +1830,12 @@ public class LazySodium implements
                     cipherBytes.length,
                     macBytes,
                     additionalDataBytes,
-                    additionalDataBytes.length,
+                    additionalBytesLen,
                     nPub,
                     keyBytes
             );
-            return new DetachedDecrypt(messageBytes, macBytes);
-        } else  {
+            return new DetachedDecrypt(messageBytes, macBytes, charset);
+        } else if (method.equals(AEAD.Method.XCHACHA20_POLY1305_IETF)) {
             cryptoAeadXChaCha20Poly1305IetfDecryptDetached(
                     messageBytes,
                     nSec,
@@ -1754,11 +1843,24 @@ public class LazySodium implements
                     cipherBytes.length,
                     macBytes,
                     additionalDataBytes,
-                    additionalDataBytes.length,
+                    additionalBytesLen,
                     nPub,
                     keyBytes
             );
-            return new DetachedDecrypt(messageBytes, macBytes);
+            return new DetachedDecrypt(messageBytes, macBytes, charset);
+        } else {
+            cryptoAeadAES256GCMDecryptDetached(
+                    messageBytes,
+                    nSec,
+                    cipherBytes,
+                    cipherBytes.length,
+                    macBytes,
+                    additionalDataBytes,
+                    additionalBytesLen,
+                    nPub,
+                    keyBytes
+            );
+            return new DetachedDecrypt(messageBytes, macBytes, charset);
         }
     }
 

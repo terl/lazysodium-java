@@ -8,6 +8,7 @@
 
 package com.goterl.lazycode.lazysodium;
 
+import com.goterl.lazycode.lazysodium.interfaces.AEAD;
 import com.goterl.lazycode.lazysodium.interfaces.GenericHash;
 import com.goterl.lazycode.lazysodium.interfaces.Hash;
 import com.goterl.lazycode.lazysodium.interfaces.SecretStream;
@@ -510,7 +511,7 @@ public class Sodium {
 
     public native int crypto_aead_chacha20poly1305_encrypt(
             byte[] c,
-            long cLen,
+            Long cLen,
             byte[] m,
             long mLen,
             byte[] ad,
@@ -522,7 +523,7 @@ public class Sodium {
 
     public native int crypto_aead_chacha20poly1305_decrypt(
             byte[] m,
-            long mLen,
+            Long mLen,
             byte[] nSec,
             byte[] c,
             long cLen,
@@ -563,7 +564,7 @@ public class Sodium {
 
     public native int crypto_aead_chacha20poly1305_ietf_encrypt(
             byte[] c,
-            long cLen,
+            Long cLen,
             byte[] m,
             long mLen,
             byte[] ad,
@@ -575,7 +576,7 @@ public class Sodium {
 
     public native int crypto_aead_chacha20poly1305_ietf_decrypt(
             byte[] m,
-            long mLen,
+            Long mLen,
             byte[] nSec,
             byte[] c,
             long cLen,
@@ -616,7 +617,7 @@ public class Sodium {
 
     public native int crypto_aead_xchacha20poly1305_ietf_encrypt(
             byte[] c,
-            long cLen,
+            Long cLen,
             byte[] m,
             long mLen,
             byte[] ad,
@@ -628,7 +629,7 @@ public class Sodium {
 
     public native int crypto_aead_xchacha20poly1305_ietf_decrypt(
             byte[] m,
-            long mLen,
+            Long mLen,
             byte[] nSec,
             byte[] c,
             long cLen,
@@ -640,28 +641,139 @@ public class Sodium {
 
 
     public native int crypto_aead_xchacha20poly1305_ietf_encrypt_detached(
-            byte[] c,
+            byte[] cipher,
             byte[] mac,
             Long macLenAddress,
-            byte[] m,
-            long mLen,
-            byte[] ad,
-            long adLen,
+            byte[] message,
+            long messageLen,
+            byte[] additionalData,
+            long additionalDataLen,
             byte[] nSec,
             byte[] nPub,
-            byte[] k
+            byte[] key
     );
 
     public native int crypto_aead_xchacha20poly1305_ietf_decrypt_detached(
-            byte[] m,
+            byte[] message,
             byte[] nSec,
-            byte[] c,
-            long cLen,
+            byte[] cipher,
+            long cipherLen,
             byte[] mac,
-            byte[] ad,
-            long adLen,
+            byte[] additionalData,
+            long additionalDataLen,
             byte[] nPub,
-            byte[] k
+            byte[] key
+    );
+
+
+    // AES
+
+    public native void crypto_aead_aes256gcm_keygen(byte[] key);
+
+    public native int crypto_aead_aes256gcm_encrypt(
+            byte[] cipher,
+            Long cipherLen,
+            byte[] message,
+            long messageLen,
+            byte[] additionalData,
+            long additionalDataLen,
+            byte[] nSec,
+            byte[] nPub,
+            byte[] key
+    );
+
+    public native int crypto_aead_aes256gcm_decrypt(
+            byte[] message,
+            Long messageLen,
+            byte[] nSec,
+            byte[] cipher,
+            long cipherLen,
+            byte[] additionalData,
+            long additionalDataLen,
+            byte[] nPub,
+            byte[] key
+    );
+
+    public native int crypto_aead_aes256gcm_encrypt_detached(
+        byte[] cipher,
+        byte[] mac,
+        Long macLenAddress,
+        byte[] message,
+        long messageLen,
+        byte[] additionalData,
+        long additionalDataLen,
+        byte[] nSec,
+        byte[] nPub,
+        byte[] key
+    );
+
+    public native int crypto_aead_aes256gcm_decrypt_detached(
+            byte[] message,
+            byte[] nSec,
+            byte[] cipher,
+            long cipherLen,
+            byte[] mac,
+            byte[] additionalData,
+            long additionalDataLen,
+            byte[] nPub,
+            byte[] key
+    );
+
+
+
+    public native int crypto_aead_aes256gcm_beforenm(
+            AEAD.StateAES state,
+            byte[] key
+    );
+
+    public native int crypto_aead_aes256gcm_encrypt_afternm(
+            byte[] cipher,
+            Long cipherLength,
+            byte[] message,
+            long messageLen,
+            byte[] additionalData,
+            long additionalDataLen,
+            byte[] nSec,
+            byte[] nPub,
+            AEAD.StateAES state
+    );
+
+    public native int crypto_aead_aes256gcm_decrypt_afternm(
+            byte[] message,
+            Long messageLength,
+            byte[] nSec,
+            byte[] cipher,
+            long cipherLen,
+            byte[] additionalData,
+            long additionalDataLen,
+            byte[] nPub,
+            AEAD.StateAES state
+    );
+
+    public native int crypto_aead_aes256gcm_encrypt_detached_afternm(
+            byte[] cipher,
+            byte[] mac,
+            Long macLenAddress,
+            byte[] message,
+            long messageLen,
+            byte[] additionalData,
+            long additionalDataLen,
+            byte[] nSec,
+            byte[] nPub,
+            AEAD.StateAES state
+    );
+
+
+    public native int crypto_aead_aes256gcm_decrypt_detached_afternm(
+            byte[] message,
+            byte[] nSec,
+            byte[] cipher,
+            long cipherLen,
+            byte[] mac,
+            byte[] additionalData,
+            long additionalDataLen,
+            byte[] nPub,
+            AEAD.StateAES state
     );
 
 
