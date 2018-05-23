@@ -111,48 +111,6 @@ public class Sodium {
     public native int crypto_pwhash_str_needs_rehash(byte[] hash, long opsLimit, long memLimit);
 
 
-    public native int crypto_pwhash_scryptsalsa208sha256(
-            byte[] out,
-            long outLen,
-            byte[] password,
-            long passwordLen,
-            byte[] salt,
-            long opsLimit,
-            long memLimit
-    );
-
-    public native int crypto_pwhash_scryptsalsa208sha256_str(
-            byte[] out,
-            byte[] password,
-            long passwordLen,
-            long opsLimit,
-            long memLimit
-    );
-
-    public native int crypto_pwhash_scryptsalsa208sha256_str_verify(
-            byte[] str,
-            byte[] password,
-            long passwordLen
-    );
-
-    public native int crypto_pwhash_scryptsalsa208sha256_ll(
-            byte[] password,
-            int passwordLen,
-            byte[] salt,
-            int saltLen,
-            long N,
-            long r,
-            long p,
-            byte[] buf,
-            int bufLen
-    );
-
-    public native int crypto_pwhash_scryptsalsa208sha256_str_needs_rehash(
-            byte[] password,
-            long opsLimit,
-            long memLimit
-    );
-
 
 
     //// -------------------------------------------|
