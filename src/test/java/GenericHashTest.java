@@ -45,8 +45,9 @@ public class GenericHashTest extends BaseTest {
         lazySodium.cryptoGenericHashInit(state, key, sizeOfHash);
         String hashedMessage1 = lazySodium.cryptoGenericHashUpdate(state, message);
         String hashedMessage2 = lazySodium.cryptoGenericHashUpdate(state, message2);
-
         String hash = lazySodium.cryptoGenericHashFinal(state, sizeOfHash);
+
+        state.clear();
 
         TestCase.assertNotNull(hash);
     }
