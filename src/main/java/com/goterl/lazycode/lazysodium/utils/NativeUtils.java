@@ -8,6 +8,7 @@
 package com.goterl.lazycode.lazysodium.utils;
 
 import com.goterl.lazycode.lazysodium.Sodium;
+import com.goterl.lazycode.lazysodium.SodiumJava;
 import com.sun.jna.Native;
 
 import java.io.*;
@@ -91,6 +92,7 @@ public class NativeUtils {
         // Modified to work with JNA
         try {
             Native.register(Sodium.class, temp.getAbsolutePath());
+            Native.register(SodiumJava.class, temp.getAbsolutePath());
         } finally {
             if (isPosixCompliant()) {
                 // Assume POSIX compliant file system, can be deleted after loading
