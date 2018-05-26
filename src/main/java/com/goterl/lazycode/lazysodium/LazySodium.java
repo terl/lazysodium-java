@@ -1311,8 +1311,18 @@ public abstract class LazySodium implements
     }
 
     @Override
+    public boolean cryptoGenericHash(byte[] out, int outLen, byte[] in, long inLen) {
+        return boolify(getSodium().crypto_generichash(out, outLen, in, inLen, null, 0));
+    }
+
+    @Override
     public boolean cryptoGenericHashInit(GenericHash.State state, byte[] key, int keyLength, int outLen) {
         return boolify(getSodium().crypto_generichash_init(state, key, keyLength, outLen));
+    }
+
+    @Override
+    public boolean cryptoGenericHashInit(GenericHash.State state, int outLen) {
+        return boolify(getSodium().crypto_generichash_init(state, null, 0, outLen));
     }
 
     @Override
@@ -1340,21 +1350,17 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public String cryptoGenericHash(String in) throws SodiumException {
-        byte[] message = bytes(in);
-        byte[] hash = randomBytesBuf(GenericHash.BYTES);
-        boolean res = cryptoGenericHash(hash, hash.length, message, message.length, null, 0);
-
-        if (!res) {
-            throw new SodiumException("Error could not hash the message.");
+    public String cryptoGenericHashKeygen(int size) throws SodiumException {
+        if (size == GenericHash.KEYBYTES_MIN) {
+            throw new SodiumException("Please do not use a key size of " + GenericHash.KEYBYTES_MIN);
         }
-
-        return toHex(hash);
+        byte[] key = randomBytesBuf(size);
+        cryptoGenericHashKeygen(key);
+        return toHex(key);
     }
 
     @Override
     public String cryptoGenericHash(String in, String key) throws SodiumException {
-
         byte[] message = bytes(in);
         byte[] keyBytes = toBin(key);
 
@@ -1370,27 +1376,42 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoGenericHashInit(GenericHash.State state, String key, int outLen) {
+    public String cryptoGenericHash(String in) throws SodiumException {
+        byte[] message = bytes(in);
+        byte[] hash = randomBytesBuf(GenericHash.BYTES);
+        boolean res = cryptoGenericHash(hash, hash.length, message, message.length, null, 0);
+
+        if (!res) {
+            throw new SodiumException("Could not hash the message.");
+        }
+
+        return toHex(hash);
+    }
+
+    @Override
+    public boolean cryptoGenericHashInit(GenericHash.State state, String key, int outLen) throws SodiumException {
         byte[] keyBytes = toBin(key);
+
+        if (keyBytes.length == GenericHash.KEYBYTES_MIN) {
+            throw new SodiumException("Please do not use a key size of " + GenericHash.KEYBYTES_MIN);
+        }
+
         return cryptoGenericHashInit(state, keyBytes, keyBytes.length, outLen);
     }
 
     @Override
-    public String cryptoGenericHashUpdate(GenericHash.State state, String in) throws SodiumException {
+    public boolean cryptoGenericHashUpdate(GenericHash.State state, String in) {
         byte[] inBytes = bytes(in);
         boolean res = cryptoGenericHashUpdate(state, inBytes, inBytes.length);
-        if (!res) {
-            throw new SodiumException("Could not hash part of the message.");
-        }
-        return toHex(inBytes);
+        return res;
     }
 
     @Override
     public String cryptoGenericHashFinal(GenericHash.State state, int outLen) throws SodiumException {
-        byte[] hash = randomBytesBuf(outLen);
+        byte[] hash = new byte[outLen];
         boolean res = cryptoGenericHashFinal(state, hash, hash.length);
         if (!res) {
-            throw new SodiumException("Could not hash the final part of the message.");
+            throw new SodiumException("Could not finalise the hashing process.");
         }
         return toHex(hash);
     }

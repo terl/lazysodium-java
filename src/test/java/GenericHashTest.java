@@ -32,24 +32,55 @@ public class GenericHashTest extends BaseTest {
         TestCase.assertNotNull(hash);
     }
 
+
     @Test
-    public void hashMultiPart() throws SodiumException {
+    public void hashMultiPartRecommended() throws SodiumException {
         String message = "The sun";
         String message2 = "is shining";
 
-        GenericHash.State state = new GenericHash.State.ByReference();
+        String hash = hashMultiPart(
+                GenericHash.KEYBYTES,
+                GenericHash.BYTES,
+                message,
+                message2
+        );
 
-        String key = lazySodium.cryptoGenericHashKeygen();
-        int sizeOfHash = GenericHash.BYTES_MAX;
-
-        lazySodium.cryptoGenericHashInit(state, key, sizeOfHash);
-        String hashedMessage1 = lazySodium.cryptoGenericHashUpdate(state, message);
-        String hashedMessage2 = lazySodium.cryptoGenericHashUpdate(state, message2);
-        String hash = lazySodium.cryptoGenericHashFinal(state, sizeOfHash);
-
-        state.clear();
 
         TestCase.assertNotNull(hash);
+    }
+
+    @Test
+    public void hashMultiPartMax() throws SodiumException {
+        String message = "Do not go gentle into that good night";
+        String message2 = "Old age should burn and rave at close of day";
+        String message3 = "Rage, rage against the dying of the light";
+
+        String hash = hashMultiPart(
+                GenericHash.KEYBYTES_MAX,
+                GenericHash.BYTES_MAX,
+                message,
+                message2,
+                message3
+        );
+
+        TestCase.assertNotNull(hash);
+    }
+
+
+    private String hashMultiPart(int keySize, int hashSize, String... messages) throws SodiumException {
+
+        GenericHash.State state = new GenericHash.State.ByReference();
+
+        // Both the key and the resulting hash must be the same size
+        String key = lazySodium.cryptoGenericHashKeygen(keySize);
+        lazySodium.cryptoGenericHashInit(state, key, hashSize);
+
+        for (String msg : messages) {
+            lazySodium.cryptoGenericHashUpdate(state, msg);
+        }
+
+        String hash = lazySodium.cryptoGenericHashFinal(state, hashSize);
+        return hash;
     }
 
 }
