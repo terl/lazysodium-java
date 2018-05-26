@@ -1393,20 +1393,20 @@ public abstract class LazySodium implements
     @Override
     public boolean cryptoGenericHashInit(byte[] state, String key, int outLen)  {
         byte[] keyBytes = toBin(key);
-        return cryptoGenericHashInit(state, keyBytes, keyBytes.length, outLen);
+        return getSodium().crypto_generichash_init(state, keyBytes, keyBytes.length, outLen) == 0;
     }
 
     @Override
     public boolean cryptoGenericHashUpdate(byte[] state, String in) {
         byte[] inBytes = bytes(in);
-        boolean res = cryptoGenericHashUpdate(state, inBytes, inBytes.length);
+        boolean res = getSodium().crypto_generichash_update(state, inBytes, inBytes.length) == 0;
         return res;
     }
 
     @Override
     public String cryptoGenericHashFinal(byte[] state, int outLen) throws SodiumException {
         byte[] hash = new byte[outLen];
-        boolean res = cryptoGenericHashFinal(state, hash, hash.length);
+        boolean res = getSodium().crypto_generichash_final(state, hash, hash.length) == 0;
         if (!res) {
             throw new SodiumException("Could not finalise the hashing process.");
         }
