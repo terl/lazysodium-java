@@ -920,6 +920,15 @@ public abstract class LazySodium implements
         return boolify(getSodium().crypto_sign_verify_detached(signature, message, messageLen, publicKey));
     }
 
+    @Override
+    public boolean convertPublicKeyEd25519ToCurve25519(byte[] curve, byte[] ed) {
+        return boolify(getSodium().crypto_sign_ed25519_pk_to_curve25519(curve, ed));
+    }
+
+    @Override
+    public boolean convertSecretKeyEd25519ToCurve25519(byte[] curve, byte[] ed) {
+        return boolify(getSodium().crypto_sign_ed25519_sk_to_curve25519(curve, ed));
+    }
 
     // -- lazy
 
@@ -999,6 +1008,24 @@ public abstract class LazySodium implements
         byte[] signatureBytes = toBin(signature);
 
         return cryptoSignVerifyDetached(signatureBytes, messageBytes, messageBytes.length, pkBytes);
+    }
+
+    @Override
+    public KeyPair convertKeyPairEd25519ToCurve25519(KeyPair ed25519KeyPair) throws SodiumException {
+        byte[] edPkBytes = ed25519KeyPair.getPublicKey();
+        byte[] edSkBytes = ed25519KeyPair.getSecretKey();
+
+        byte[] curvePkBytes = new byte[Sign.CURVE25519_PUBLICKEYBYTES];
+        byte[] curveSkBytes = new byte[Sign.CURVE25519_SECRETKEYBYTES];
+
+        boolean pkSuccess = convertPublicKeyEd25519ToCurve25519(curvePkBytes, edPkBytes);
+        boolean skSuccess = convertSecretKeyEd25519ToCurve25519(curveSkBytes, edSkBytes);
+
+        if (!pkSuccess || !skSuccess){
+            throw new SodiumException("Could not convert this key pair.");
+        }
+
+        return new KeyPair(curvePkBytes, curveSkBytes);
     }
 
 
@@ -1779,8 +1806,6 @@ public abstract class LazySodium implements
             return new DetachedDecrypt(messageBytes, macBytes, charset);
         }
     }
-
-
 
 
     //// -------------------------------------------|
