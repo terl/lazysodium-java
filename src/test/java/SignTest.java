@@ -72,5 +72,17 @@ public class SignTest extends BaseTest {
         TestCase.assertTrue(result);
     }
 
+    @Test
+    public void convertEd25519ToCurve25519() throws SodiumException {
+        KeyPair ed25519KeyPair = new KeyPair(
+                "0ae5c84877c9c534ffbb1f854550895a25a9ded6bd6b8a9035f38b9e03a0dfe2",
+                "0ae5c84877c9c534ffbb1f854550895a25a9ded6bd6b8a9035f38b9e03a0dfe2"
+        );
+
+        KeyPair curve25519KeyPair = lazySodium.convertKeyPairEd25519ToCurve25519(ed25519KeyPair);
+
+        TestCase.assertEquals("4c261ac83d4ffec2fd3f3d3e7082c5c18e2d5e144dae343069f48207edcdc43a", curve25519KeyPair.getPublicKeyString().toLowerCase());
+        TestCase.assertEquals("588c6bcb80ebcbca68c0d039faeac79c0d0abc3f6078f23900760035ff9d0459", curve25519KeyPair.getSecretKeyString().toLowerCase());
+    }
 
 }

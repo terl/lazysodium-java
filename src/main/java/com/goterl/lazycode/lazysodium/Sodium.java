@@ -347,6 +347,15 @@ public class Sodium {
     public native int crypto_sign_verify_detached(byte[] signature, byte[] message, long messageLen, byte[] publicKey);
 
 
+    public native int crypto_sign_ed25519_pk_to_curve25519(
+            byte[] curve25519_pk,
+            byte[] ed25519_pk
+    );
+
+    public native int crypto_sign_ed25519_sk_to_curve25519(
+            byte[] curve25519_pk,
+            byte[] ed25519_pk
+    );
 
     //// -------------------------------------------|
     //// SECRET STREAM
@@ -733,6 +742,5 @@ public class Sodium {
             byte[] nPub,
             AEAD.StateAES state
     );
-
 
 }

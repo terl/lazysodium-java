@@ -21,7 +21,9 @@ public interface Sign {
     int ED25519_PUBLICKEYBYTES = 32,
         ED25519_BYTES = 64,
         ED25519_SECRETKEYBYTES = 64,
-        ED25519_SEEDBYTES = 32;
+        ED25519_SEEDBYTES = 32,
+        CURVE25519_PUBLICKEYBYTES = 32,
+        CURVE25519_SECRETKEYBYTES = 32;
 
     long ED25519_MESSAGEBYTES_MAX = Constants.SIZE_MAX - ED25519_BYTES;
 
@@ -123,6 +125,22 @@ public interface Sign {
          */
         boolean cryptoSignVerifyDetached(byte[] signature, byte[] message, long messageLen, byte[] publicKey);
 
+        /**
+         * Converts a public key of ed25519 to curve25519
+         * @param curve The array in which the generated key will be placed.
+         * @param ed The public key in ed25519.
+         * @return Return true if the conversion was successful
+         */
+        boolean convertPublicKeyEd25519ToCurve25519(byte[] curve, byte[] ed);
+
+        /**
+         * Converts a secret key of ed25519 to curve25519
+         * @param curve The array in which the generated key will be placed.
+         * @param ed The secret key in ed25519.
+         * @return Return true if the conversion was successful
+         */
+        boolean convertSecretKeyEd25519ToCurve25519(byte[] curve, byte[] ed);
+
     }
 
     interface Lazy {
@@ -179,7 +197,12 @@ public interface Sign {
          */
         boolean cryptoSignVerifyDetached(String signature, String message, String publicKey);
 
-
+        /**
+         * Converts a key pair of ed25519 keys to curve25519
+         * @param ed25519KeyPair The key pair.
+         * @return curve25519KeyPair
+         * */
+        KeyPair convertKeyPairEd25519ToCurve25519(KeyPair ed25519KeyPair) throws SodiumException;
     }
 
 
