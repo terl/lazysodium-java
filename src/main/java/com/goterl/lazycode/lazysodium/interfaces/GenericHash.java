@@ -186,8 +186,8 @@ public interface GenericHash {
         public long[] t = new long[2];
         public long[] f = new long[2];
         public byte[] buf = new byte[2 * 128];
-        public int buflen = 2 * 128;
-        public int last_node;
+        public int buflen;
+        public byte last_node;
 
     }
 

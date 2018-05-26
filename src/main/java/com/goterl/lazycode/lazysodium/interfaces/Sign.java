@@ -42,7 +42,7 @@ public interface Sign {
     interface Native {
 
         /**
-         * Get a signing keypair.
+         * Generate a signing keypair (ed25519).
          * @param publicKey Public key.
          * @param secretKey Secret key.
          * @return True if successful.
@@ -126,18 +126,18 @@ public interface Sign {
         boolean cryptoSignVerifyDetached(byte[] signature, byte[] message, long messageLen, byte[] publicKey);
 
         /**
-         * Converts a public key of ed25519 to curve25519
+         * Converts a public ed25519 key to a public curve25519 key.
          * @param curve The array in which the generated key will be placed.
          * @param ed The public key in ed25519.
-         * @return Return true if the conversion was successful
+         * @return Return true if the conversion was successful.
          */
         boolean convertPublicKeyEd25519ToCurve25519(byte[] curve, byte[] ed);
 
         /**
-         * Converts a secret key of ed25519 to curve25519
+         * Converts a secret ed25519 key to a secret curve25519 key.
          * @param curve The array in which the generated key will be placed.
          * @param ed The secret key in ed25519.
-         * @return Return true if the conversion was successful
+         * @return Return true if the conversion was successful.
          */
         boolean convertSecretKeyEd25519ToCurve25519(byte[] curve, byte[] ed);
 
@@ -146,7 +146,7 @@ public interface Sign {
     interface Lazy {
 
         /**
-         * Generate a signing keypair.
+         * Generate a signing keypair (ed25519).
          * @return Public and private keypair.
          */
         KeyPair cryptoSignKeypair() throws SodiumException;
@@ -198,9 +198,10 @@ public interface Sign {
         boolean cryptoSignVerifyDetached(String signature, String message, String publicKey);
 
         /**
-         * Converts a key pair of ed25519 keys to curve25519
+         * Converts a ed25519 keypair to a curve25519 keypair.
          * @param ed25519KeyPair The key pair.
          * @return curve25519KeyPair
+         * @throws SodiumException If conversion was unsuccessful.
          * */
         KeyPair convertKeyPairEd25519ToCurve25519(KeyPair ed25519KeyPair) throws SodiumException;
     }

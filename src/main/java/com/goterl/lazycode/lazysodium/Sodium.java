@@ -348,13 +348,13 @@ public class Sodium {
 
 
     public native int crypto_sign_ed25519_pk_to_curve25519(
-            byte[] curve25519_pk,
-            byte[] ed25519_pk
+            byte[] curve25519PublicKey,
+            byte[] ed25519PublicKey
     );
 
     public native int crypto_sign_ed25519_sk_to_curve25519(
-            byte[] curve25519_pk,
-            byte[] ed25519_pk
+            byte[] curve25519SecretKey,
+            byte[] ed25519SecretKey
     );
 
     //// -------------------------------------------|

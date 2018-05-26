@@ -37,7 +37,7 @@ public class GenericHashTest extends BaseTest {
         String message = "The sun";
         String message2 = "is shining";
 
-        final GenericHash.State state = new GenericHash.State.ByReference();
+        GenericHash.State state = new GenericHash.State.ByReference();
 
         String key = lazySodium.cryptoGenericHashKeygen();
         int sizeOfHash = GenericHash.BYTES_MAX;
