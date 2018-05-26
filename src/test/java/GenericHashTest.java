@@ -28,7 +28,14 @@ public class GenericHashTest extends BaseTest {
     public void hash() throws SodiumException {
         String message = "https://terl.co";
         String key = lazySodium.cryptoGenericHashKeygen();
-        String hash = lazySodium.cryptoGenericHash(message, key);
+        String hash = lazySodium.cryptoGenericHash(message);
+        TestCase.assertNotNull(hash);
+    }
+
+    @Test
+    public void hashNoKey() throws SodiumException {
+        String message = "https://terl.co";
+        String hash = lazySodium.cryptoGenericHash(message);
         TestCase.assertNotNull(hash);
     }
 
@@ -45,6 +52,23 @@ public class GenericHashTest extends BaseTest {
                 message2
         );
 
+
+        TestCase.assertNotNull(hash);
+    }
+
+    @Test
+    public void hashMultiPartMin() throws SodiumException {
+        String message = "Do not go gentle into that good night";
+        String message2 = "Old age should burn and rave at close of day";
+        String message3 = "Rage, rage against the dying of the light";
+
+        String hash = hashMultiPart(
+                GenericHash.KEYBYTES_MIN,
+                GenericHash.BYTES_MIN,
+                message,
+                message2,
+                message3
+        );
 
         TestCase.assertNotNull(hash);
     }
@@ -69,10 +93,10 @@ public class GenericHashTest extends BaseTest {
 
     private String hashMultiPart(int keySize, int hashSize, String... messages) throws SodiumException {
 
-        GenericHash.State state = new GenericHash.State.ByReference();
 
         // Both the key and the resulting hash must be the same size
         String key = lazySodium.cryptoGenericHashKeygen(keySize);
+        byte[] state = new byte[lazySodium.cryptoGenericHashStateBytes()];
         lazySodium.cryptoGenericHashInit(state, key, hashSize);
 
         for (String msg : messages) {

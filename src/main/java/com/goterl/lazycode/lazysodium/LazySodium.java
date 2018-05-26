@@ -1316,23 +1316,28 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoGenericHashInit(GenericHash.State state, byte[] key, int keyLength, int outLen) {
+    public boolean cryptoGenericHashInit(byte[] state, byte[] key, int keyLength, int outLen) {
         return boolify(getSodium().crypto_generichash_init(state, key, keyLength, outLen));
     }
 
     @Override
-    public boolean cryptoGenericHashInit(GenericHash.State state, int outLen) {
+    public boolean cryptoGenericHashInit(byte[] state, int outLen) {
         return boolify(getSodium().crypto_generichash_init(state, null, 0, outLen));
     }
 
     @Override
-    public boolean cryptoGenericHashUpdate(GenericHash.State state, byte[] in, long inLen) {
+    public boolean cryptoGenericHashUpdate(byte[] state, byte[] in, long inLen) {
         return boolify(getSodium().crypto_generichash_update(state, in, inLen));
     }
 
     @Override
-    public boolean cryptoGenericHashFinal(GenericHash.State state, byte[] out, int outLen) {
+    public boolean cryptoGenericHashFinal(byte[] state, byte[] out, int outLen) {
         return boolify(getSodium().crypto_generichash_final(state, out, outLen));
+    }
+
+    @Override
+    public int cryptoGenericHashStateBytes() {
+        return getSodium().crypto_generichash_statebytes();
     }
 
     @Override
@@ -1351,9 +1356,6 @@ public abstract class LazySodium implements
 
     @Override
     public String cryptoGenericHashKeygen(int size) throws SodiumException {
-        if (size == GenericHash.KEYBYTES_MIN) {
-            throw new SodiumException("Please do not use a key size of " + GenericHash.KEYBYTES_MIN);
-        }
         byte[] key = randomBytesBuf(size);
         cryptoGenericHashKeygen(key);
         return toHex(key);
@@ -1389,25 +1391,20 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoGenericHashInit(GenericHash.State state, String key, int outLen) throws SodiumException {
+    public boolean cryptoGenericHashInit(byte[] state, String key, int outLen)  {
         byte[] keyBytes = toBin(key);
-
-        if (keyBytes.length == GenericHash.KEYBYTES_MIN) {
-            throw new SodiumException("Please do not use a key size of " + GenericHash.KEYBYTES_MIN);
-        }
-
         return cryptoGenericHashInit(state, keyBytes, keyBytes.length, outLen);
     }
 
     @Override
-    public boolean cryptoGenericHashUpdate(GenericHash.State state, String in) {
+    public boolean cryptoGenericHashUpdate(byte[] state, String in) {
         byte[] inBytes = bytes(in);
         boolean res = cryptoGenericHashUpdate(state, inBytes, inBytes.length);
         return res;
     }
 
     @Override
-    public String cryptoGenericHashFinal(GenericHash.State state, int outLen) throws SodiumException {
+    public String cryptoGenericHashFinal(byte[] state, int outLen) throws SodiumException {
         byte[] hash = new byte[outLen];
         boolean res = cryptoGenericHashFinal(state, hash, hash.length);
         if (!res) {

@@ -440,16 +440,18 @@ public class Sodium {
             byte[] key, int keyLen
     );
 
-    public native int crypto_generichash_init(GenericHash.State state,
+    public native int crypto_generichash_init(byte[] state,
                                        byte[] key,
                                        int keyLength,
                                        int outLen);
 
-    public native int crypto_generichash_update(GenericHash.State state,
+    public native int crypto_generichash_update(byte[] state,
                                          byte[] in,
                                          long inLen);
 
-    public native int crypto_generichash_final(GenericHash.State state, byte[] out, int outLen);
+    public native int crypto_generichash_final(byte[] state, byte[] out, int outLen);
+
+    public native int crypto_generichash_statebytes();
 
 
     public native int crypto_generichash_blake2b_salt_personal(
