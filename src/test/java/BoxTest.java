@@ -99,11 +99,7 @@ public class BoxTest extends BaseTest {
         // Decrypt the data using the shared key
         String decryptedMessage = cryptoBoxLazy.cryptoBoxOpenEasyAfterNm(encrypted, nonce, sharedKey);
 
-        byte[] nonce2 = lazySodium.nonce(Box.NONCEBYTES);
-        DetachedEncrypt encDet = cryptoBoxLazy.cryptoBoxDetachedAfterNm(message, nonce2, sharedKey);
-        DetachedDecrypt decryptDet = cryptoBoxLazy.cryptoBoxOpenDetachedAfterNm(encDet, nonce2, sharedKey);
-
-        TestCase.assertEquals(message, lazySodium.str(decryptDet.getMessage()));
+        TestCase.assertEquals(message, decryptedMessage);
     }
 
     @Test
