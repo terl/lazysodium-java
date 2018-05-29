@@ -9,10 +9,8 @@
 package com.goterl.lazycode.lazysodium;
 
 import com.goterl.lazycode.lazysodium.interfaces.AEAD;
-import com.goterl.lazycode.lazysodium.interfaces.GenericHash;
 import com.goterl.lazycode.lazysodium.interfaces.Hash;
 import com.goterl.lazycode.lazysodium.interfaces.SecretStream;
-import com.sun.jna.Pointer;
 
 public class Sodium {
 
@@ -321,7 +319,7 @@ public class Sodium {
 
     public native int crypto_sign(
             byte[] signedMessage,
-            Long signedMessageLen,
+            long[] signedMessageLen,
             byte[] message,
             long messageLen,
             byte[] secretKey
@@ -329,7 +327,7 @@ public class Sodium {
 
     public native int crypto_sign_open(
             byte[] message,
-            Long messageLen,
+            long[] messageLen,
             byte[] signedMessage,
             long signedMessageLen,
             byte[] publicKey
@@ -338,7 +336,7 @@ public class Sodium {
 
     public native int crypto_sign_detached(
             byte[] signature,
-            Long sigLength,
+            long[] sigLength,
             byte[] message,
             long messageLen,
             byte[] secretKey
@@ -372,7 +370,7 @@ public class Sodium {
     public native int crypto_secretstream_xchacha20poly1305_push(
             SecretStream.State state,
             byte[] cipher,
-            Long cipherAddr,
+            long[] cipherAddr,
             byte[] message,
             long messageLen,
             byte[] additionalData,
@@ -389,7 +387,7 @@ public class Sodium {
     public native int crypto_secretstream_xchacha20poly1305_pull(
             SecretStream.State state,
             byte[] message,
-            Long messageAddress,
+            long[] messageAddress,
             byte[] tagAddress,
             byte[] cipher,
             long cipherLen,
@@ -480,7 +478,7 @@ public class Sodium {
 
     public native int crypto_aead_chacha20poly1305_encrypt(
             byte[] c,
-            Long cLen,
+            long[] cLen,
             byte[] m,
             long mLen,
             byte[] ad,
@@ -492,7 +490,7 @@ public class Sodium {
 
     public native int crypto_aead_chacha20poly1305_decrypt(
             byte[] m,
-            Long mLen,
+            long[] mLen,
             byte[] nSec,
             byte[] c,
             long cLen,
@@ -505,7 +503,7 @@ public class Sodium {
     public native int crypto_aead_chacha20poly1305_encrypt_detached(
             byte[] c,
             byte[] mac,
-            Long macLenAddress,
+            long[] macLenAddress,
             byte[] m,
             long mLen,
             byte[] ad,
@@ -533,7 +531,7 @@ public class Sodium {
 
     public native int crypto_aead_chacha20poly1305_ietf_encrypt(
             byte[] c,
-            Long cLen,
+            long[] cLen,
             byte[] m,
             long mLen,
             byte[] ad,
@@ -545,7 +543,7 @@ public class Sodium {
 
     public native int crypto_aead_chacha20poly1305_ietf_decrypt(
             byte[] m,
-            Long mLen,
+            long[] mLen,
             byte[] nSec,
             byte[] c,
             long cLen,
@@ -558,7 +556,7 @@ public class Sodium {
     public native int crypto_aead_chacha20poly1305_ietf_encrypt_detached(
             byte[] c,
             byte[] mac,
-            Long macLenAddress,
+            long[] macLenAddress,
             byte[] m,
             long mLen,
             byte[] ad,
@@ -586,7 +584,7 @@ public class Sodium {
 
     public native int crypto_aead_xchacha20poly1305_ietf_encrypt(
             byte[] c,
-            Long cLen,
+            long[] cLen,
             byte[] m,
             long mLen,
             byte[] ad,
@@ -598,7 +596,7 @@ public class Sodium {
 
     public native int crypto_aead_xchacha20poly1305_ietf_decrypt(
             byte[] m,
-            Long mLen,
+            long[] mLen,
             byte[] nSec,
             byte[] c,
             long cLen,
@@ -612,7 +610,7 @@ public class Sodium {
     public native int crypto_aead_xchacha20poly1305_ietf_encrypt_detached(
             byte[] cipher,
             byte[] mac,
-            Long macLenAddress,
+            long[] macLenAddress,
             byte[] message,
             long messageLen,
             byte[] additionalData,
@@ -641,7 +639,7 @@ public class Sodium {
 
     public native int crypto_aead_aes256gcm_encrypt(
             byte[] cipher,
-            Long cipherLen,
+            long[] cipherLen,
             byte[] message,
             long messageLen,
             byte[] additionalData,
@@ -653,7 +651,7 @@ public class Sodium {
 
     public native int crypto_aead_aes256gcm_decrypt(
             byte[] message,
-            Long messageLen,
+            long[] messageLen,
             byte[] nSec,
             byte[] cipher,
             long cipherLen,
@@ -666,7 +664,7 @@ public class Sodium {
     public native int crypto_aead_aes256gcm_encrypt_detached(
         byte[] cipher,
         byte[] mac,
-        Long macLenAddress,
+        long[] macLenAddress,
         byte[] message,
         long messageLen,
         byte[] additionalData,
@@ -697,7 +695,7 @@ public class Sodium {
 
     public native int crypto_aead_aes256gcm_encrypt_afternm(
             byte[] cipher,
-            Long cipherLength,
+            long[] cipherLength,
             byte[] message,
             long messageLen,
             byte[] additionalData,
@@ -709,7 +707,7 @@ public class Sodium {
 
     public native int crypto_aead_aes256gcm_decrypt_afternm(
             byte[] message,
-            Long messageLength,
+            long[] messageLength,
             byte[] nSec,
             byte[] cipher,
             long cipherLen,
@@ -722,7 +720,7 @@ public class Sodium {
     public native int crypto_aead_aes256gcm_encrypt_detached_afternm(
             byte[] cipher,
             byte[] mac,
-            Long macLenAddress,
+            long[] macLenAddress,
             byte[] message,
             long messageLen,
             byte[] additionalData,

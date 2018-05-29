@@ -71,7 +71,7 @@ public interface Sign {
          */
         boolean cryptoSign(
                 byte[] signedMessage,
-                Long signedMessageLen,
+                long[] signedMessageLen,
                 byte[] message,
                 long messageLen,
                 byte[] secretKey
@@ -88,7 +88,7 @@ public interface Sign {
          */
         boolean cryptoSignOpen(
                 byte[] message,
-                Long messageLen,
+                long[] messageLen,
                 byte[] signedMessage,
                 long signedMessageLen,
                 byte[] publicKey
@@ -97,7 +97,7 @@ public interface Sign {
         /**
          * Returns a signature for a message. This
          * does not prepend the signature to the message.
-         * See {@link #cryptoSign(byte[], Long, byte[], long, byte[])} for that.
+         * See {@link #cryptoSign(byte[], long[], byte[], long, byte[])} for that.
          * @param signature The signature will be added to this byte array.
          * @param sigLength The signature length
          * @param message The message to sign.
@@ -107,7 +107,7 @@ public interface Sign {
          */
         boolean cryptoSignDetached(
                 byte[] signature,
-                Long sigLength,
+                long[] sigLength,
                 byte[] message,
                 long messageLen,
                 byte[] secretKey
@@ -121,7 +121,7 @@ public interface Sign {
          * @param messageLen The message length.
          * @param publicKey The public key that signed the message.
          * @return Returns true if the signature is valid for the message.
-         * @see #cryptoSignDetached(byte[], Long, byte[], long, byte[])
+         * @see #cryptoSignDetached(byte[], long[], byte[], long, byte[])
          */
         boolean cryptoSignVerifyDetached(byte[] signature, byte[] message, long messageLen, byte[] publicKey);
 

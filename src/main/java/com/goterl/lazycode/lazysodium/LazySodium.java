@@ -901,17 +901,17 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoSign(byte[] signedMessage, Long signedMessageLen, byte[] message, long messageLen, byte[] secretKey) {
+    public boolean cryptoSign(byte[] signedMessage, long[] signedMessageLen, byte[] message, long messageLen, byte[] secretKey) {
         return boolify(getSodium().crypto_sign(signedMessage, signedMessageLen, message, messageLen, secretKey));
     }
 
     @Override
-    public boolean cryptoSignOpen(byte[] message, Long messageLen, byte[] signedMessage, long signedMessageLen, byte[] publicKey) {
+    public boolean cryptoSignOpen(byte[] message, long[] messageLen, byte[] signedMessage, long signedMessageLen, byte[] publicKey) {
         return boolify(getSodium().crypto_sign_open(message, messageLen, signedMessage, signedMessageLen, publicKey));
     }
 
     @Override
-    public boolean cryptoSignDetached(byte[] signature, Long sigLength, byte[] message, long messageLen, byte[] secretKey) {
+    public boolean cryptoSignDetached(byte[] signature, long[] sigLength, byte[] message, long messageLen, byte[] secretKey) {
         return boolify(getSodium().crypto_sign_detached(signature, sigLength, message, messageLen, secretKey));
     }
 
@@ -994,7 +994,7 @@ public abstract class LazySodium implements
         byte[] skBytes = toBin(secretKey);
         byte[] signatureBytes = new byte[Sign.BYTES];
 
-        if (!cryptoSignDetached(signatureBytes, null, messageBytes, messageBytes.length, skBytes)) {
+        if (!cryptoSignDetached(signatureBytes, new long[1], messageBytes, messageBytes.length, skBytes)) {
             throw new SodiumException("Could not create a signature for your message in detached mode.");
         }
 
@@ -1044,7 +1044,7 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoSecretStreamPush(SecretStream.State state, byte[] cipher, Long cipherAddr, byte[] message, long messageLen, byte tag) {
+    public boolean cryptoSecretStreamPush(SecretStream.State state, byte[] cipher, long[] cipherAddr, byte[] message, long messageLen, byte tag) {
         return boolify(getSodium().crypto_secretstream_xchacha20poly1305_push(
                 state,
                 cipher,
@@ -1078,7 +1078,7 @@ public abstract class LazySodium implements
     @Override
     public boolean cryptoSecretStreamPush(SecretStream.State state,
                                           byte[] cipher,
-                                          Long cipherAddr,
+                                          long[] cipherAddr,
                                           byte[] message,
                                           long messageLen,
                                           byte[] additionalData,
@@ -1104,7 +1104,7 @@ public abstract class LazySodium implements
     @Override
     public boolean cryptoSecretStreamPull(SecretStream.State state,
                                           byte[] message,
-                                          Long messageAddress,
+                                          long[] messageAddress,
                                           byte[] tag,
                                           byte[] cipher,
                                           long cipherLen,
@@ -1120,7 +1120,7 @@ public abstract class LazySodium implements
         return boolify(getSodium().crypto_secretstream_xchacha20poly1305_pull(
                 state,
                 message,
-                0L,
+                new long[1],
                 tag,
                 cipher,
                 cipherLen,
@@ -1426,17 +1426,17 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAeadChaCha20Poly1305Encrypt(byte[] c, Long cLen, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
+    public boolean cryptoAeadChaCha20Poly1305Encrypt(byte[] c, long[] cLen, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
         return boolify(getSodium().crypto_aead_chacha20poly1305_encrypt(c, cLen, m, mLen, ad, adLen, nSec, nPub, k));
     }
 
     @Override
-    public boolean cryptoAeadChaCha20Poly1305Decrypt(byte[] m, Long mLen, byte[] nSec, byte[] c, long cLen, byte[] ad, long adLen, byte[] nPub, byte[] k) {
+    public boolean cryptoAeadChaCha20Poly1305Decrypt(byte[] m, long[] mLen, byte[] nSec, byte[] c, long cLen, byte[] ad, long adLen, byte[] nPub, byte[] k) {
         return boolify(getSodium().crypto_aead_chacha20poly1305_decrypt(m, mLen, nSec, c, cLen, ad, adLen, nPub, k));
     }
 
     @Override
-    public boolean cryptoAeadChaCha20Poly1305EncryptDetached(byte[] c, byte[] mac, Long macLenAddress, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
+    public boolean cryptoAeadChaCha20Poly1305EncryptDetached(byte[] c, byte[] mac, long[] macLenAddress, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
         return boolify(getSodium().crypto_aead_chacha20poly1305_encrypt_detached(c, mac, macLenAddress, m, mLen, ad, adLen, nSec, nPub, k));
     }
 
@@ -1451,17 +1451,17 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAeadChaCha20Poly1305IetfEncrypt(byte[] c, Long cLen, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
+    public boolean cryptoAeadChaCha20Poly1305IetfEncrypt(byte[] c, long[] cLen, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
         return boolify(getSodium().crypto_aead_chacha20poly1305_ietf_encrypt(c, cLen, m, mLen, ad, adLen, nSec, nPub, k));
     }
 
     @Override
-    public boolean cryptoAeadChaCha20Poly1305IetfDecrypt(byte[] m, Long mLen, byte[] nSec, byte[] c, long cLen, byte[] ad, long adLen, byte[] nPub, byte[] k) {
+    public boolean cryptoAeadChaCha20Poly1305IetfDecrypt(byte[] m, long[] mLen, byte[] nSec, byte[] c, long cLen, byte[] ad, long adLen, byte[] nPub, byte[] k) {
         return boolify(getSodium().crypto_aead_chacha20poly1305_ietf_decrypt(m, mLen, nSec, c, cLen, ad, adLen, nPub, k));
     }
 
     @Override
-    public boolean cryptoAeadChaCha20Poly1305IetfEncryptDetached(byte[] c, byte[] mac, Long macLenAddress, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
+    public boolean cryptoAeadChaCha20Poly1305IetfEncryptDetached(byte[] c, byte[] mac, long[] macLenAddress, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
         return boolify(getSodium().crypto_aead_chacha20poly1305_ietf_encrypt_detached(c, mac, macLenAddress, m, mLen, ad, adLen, nSec, nPub, k));
     }
 
@@ -1476,17 +1476,17 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAeadXChaCha20Poly1305IetfEncrypt(byte[] c, Long cLen, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
+    public boolean cryptoAeadXChaCha20Poly1305IetfEncrypt(byte[] c, long[] cLen, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
         return boolify(getSodium().crypto_aead_xchacha20poly1305_ietf_encrypt(c, cLen, m, mLen, ad, adLen, nSec, nPub, k));
     }
 
     @Override
-    public boolean cryptoAeadXChaCha20Poly1305IetfDecrypt(byte[] m, Long mLen, byte[] nSec, byte[] c, long cLen, byte[] ad, long adLen, byte[] nPub, byte[] k) {
+    public boolean cryptoAeadXChaCha20Poly1305IetfDecrypt(byte[] m, long[] mLen, byte[] nSec, byte[] c, long cLen, byte[] ad, long adLen, byte[] nPub, byte[] k) {
         return boolify(getSodium().crypto_aead_xchacha20poly1305_ietf_decrypt(m, mLen, nSec, c, cLen, ad, adLen, nPub, k));
     }
 
     @Override
-    public boolean cryptoAeadXChaCha20Poly1305IetfEncryptDetached(byte[] c, byte[] mac, Long macLenAddress, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
+    public boolean cryptoAeadXChaCha20Poly1305IetfEncryptDetached(byte[] c, byte[] mac, long[] macLenAddress, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
         return boolify(getSodium().crypto_aead_xchacha20poly1305_ietf_encrypt_detached(c, mac, macLenAddress, m, mLen, ad, adLen, nSec, nPub, k));
     }
 
@@ -1501,17 +1501,17 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAeadAES256GCMEncrypt(byte[] cipher, Long cipherLen, byte[] message, long messageLen, byte[] additionalData, long additionalDataLen, byte[] nSec, byte[] nPub, byte[] key) {
+    public boolean cryptoAeadAES256GCMEncrypt(byte[] cipher, long[] cipherLen, byte[] message, long messageLen, byte[] additionalData, long additionalDataLen, byte[] nSec, byte[] nPub, byte[] key) {
         return boolify(getSodium().crypto_aead_aes256gcm_encrypt(cipher, cipherLen, message, messageLen, additionalData, additionalDataLen, nSec, nPub, key));
     }
 
     @Override
-    public boolean cryptoAeadAES256GCMDecrypt(byte[] message, Long messageLen, byte[] nSec, byte[] cipher, long cipherLen, byte[] additionalData, long additionalDataLen, byte[] nPub, byte[] key) {
+    public boolean cryptoAeadAES256GCMDecrypt(byte[] message, long[] messageLen, byte[] nSec, byte[] cipher, long cipherLen, byte[] additionalData, long additionalDataLen, byte[] nPub, byte[] key) {
         return boolify(getSodium().crypto_aead_aes256gcm_decrypt(message, messageLen, nSec, cipher, cipherLen, additionalData, additionalDataLen, nPub, key));
     }
 
     @Override
-    public boolean cryptoAeadAES256GCMEncryptDetached(byte[] cipher, byte[] mac, Long macLenAddress, byte[] message, long messageLen, byte[] additionalData, long additionalDataLen, byte[] nSec, byte[] nPub, byte[] key) {
+    public boolean cryptoAeadAES256GCMEncryptDetached(byte[] cipher, byte[] mac, long[] macLenAddress, byte[] message, long messageLen, byte[] additionalData, long additionalDataLen, byte[] nSec, byte[] nPub, byte[] key) {
         return boolify(getSodium().crypto_aead_aes256gcm_encrypt_detached(cipher, mac, macLenAddress, message, messageLen, additionalData, additionalDataLen, nSec, nPub, key));
     }
 

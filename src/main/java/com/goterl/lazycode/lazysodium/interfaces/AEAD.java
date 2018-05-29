@@ -66,7 +66,7 @@ public interface AEAD {
 
         boolean cryptoAeadChaCha20Poly1305Encrypt(
                 byte[] cipher,
-                Long cipherLen,
+                long[] cipherLen,
                 byte[] message,
                 long messageLen,
                 byte[] additionalData,
@@ -78,7 +78,7 @@ public interface AEAD {
 
         boolean cryptoAeadChaCha20Poly1305Decrypt(
                 byte[] message,
-                Long messageLen,
+                long[] messageLen,
                 byte[] nSec,
                 byte[] cipher,
                 long cipherLen,
@@ -91,7 +91,7 @@ public interface AEAD {
         boolean cryptoAeadChaCha20Poly1305EncryptDetached(
                 byte[] cipher,
                 byte[] mac,
-                Long macLenAddress,
+                long[] macLenAddress,
                 byte[] message,
                 long messageLen,
                 byte[] additionalData,
@@ -122,7 +122,7 @@ public interface AEAD {
 
         boolean cryptoAeadChaCha20Poly1305IetfEncrypt(
                 byte[] cipher,
-                Long cipherLen,
+                long[] cipherLen,
                 byte[] message,
                 long messageLen,
                 byte[] additionalData,
@@ -134,7 +134,7 @@ public interface AEAD {
 
         boolean cryptoAeadChaCha20Poly1305IetfDecrypt(
                 byte[] message,
-                Long messageLen,
+                long[] messageLen,
                 byte[] nSec,
                 byte[] cipher,
                 long cipherLen,
@@ -147,7 +147,7 @@ public interface AEAD {
         boolean cryptoAeadChaCha20Poly1305IetfEncryptDetached(
                 byte[] cipher,
                 byte[] mac,
-                Long macLenAddress,
+                long[] macLenAddress,
                 byte[] message,
                 long messageLen,
                 byte[] additionalData,
@@ -178,7 +178,7 @@ public interface AEAD {
 
         boolean cryptoAeadXChaCha20Poly1305IetfEncrypt(
                 byte[] cipher,
-                Long cipherLen,
+                long[] cipherLen,
                 byte[] message,
                 long messageLen,
                 byte[] additionalData,
@@ -190,7 +190,7 @@ public interface AEAD {
 
         boolean cryptoAeadXChaCha20Poly1305IetfDecrypt(
                 byte[] message,
-                Long messageLen,
+                long[] messageLen,
                 byte[] nSec,
                 byte[] cipher,
                 long cipherLen,
@@ -204,7 +204,7 @@ public interface AEAD {
         boolean cryptoAeadXChaCha20Poly1305IetfEncryptDetached(
                 byte[] cipher,
                 byte[] mac,
-                Long macLenAddress,
+                long[] macLenAddress,
                 byte[] message,
                 long messageLen,
                 byte[] additionalData,
@@ -233,7 +233,7 @@ public interface AEAD {
 
         boolean cryptoAeadAES256GCMEncrypt(
                 byte[] cipher,
-                Long cipherLen,
+                long[] cipherLen,
                 byte[] message,
                 long messageLen,
                 byte[] additionalData,
@@ -245,7 +245,7 @@ public interface AEAD {
 
         boolean cryptoAeadAES256GCMDecrypt(
                 byte[] message,
-                Long messageLen,
+                long[] messageLen,
                 byte[] nSec,
                 byte[] cipher,
                 long cipherLen,
@@ -259,7 +259,7 @@ public interface AEAD {
         boolean cryptoAeadAES256GCMEncryptDetached(
                 byte[] cipher,
                 byte[] mac,
-                Long macLenAddress,
+                long[] macLenAddress,
                 byte[] message,
                 long messageLen,
                 byte[] additionalData,

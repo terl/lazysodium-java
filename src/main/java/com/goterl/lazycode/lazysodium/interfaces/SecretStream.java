@@ -89,7 +89,7 @@ public interface SecretStream {
         boolean cryptoSecretStreamPush(
                 State state,
                 byte[] cipher,
-                Long cipherAddr,
+                long[] cipherAddr,
                 byte[] message,
                 long messageLen,
                 byte[] additionalData,
@@ -98,7 +98,7 @@ public interface SecretStream {
         );
 
         /**
-         * Encrypt a {@code message}. This is like {@link #cryptoSecretStreamPush(State, byte[], Long, byte[], long, byte[], long, byte)}
+         * Encrypt a {@code message}. This is like {@link #cryptoSecretStreamPush(State, byte[], long[], byte[], long, byte[], long, byte)}
          * but without additional data.
          * @param state State.
          * @param cipher The resulting cipher of size {@link #ABYTES} + {@code messageLen}.
@@ -111,14 +111,14 @@ public interface SecretStream {
         boolean cryptoSecretStreamPush(
                 State state,
                 byte[] cipher,
-                Long cipherAddr,
+                long[] cipherAddr,
                 byte[] message,
                 long messageLen,
                 byte tag
         );
 
         /**
-         * Encrypt a {@code message}. This is like {@link #cryptoSecretStreamPush(State, byte[], Long, byte[], long, byte[], long, byte)}
+         * Encrypt a {@code message}. This is like {@link #cryptoSecretStreamPush(State, byte[], long[], byte[], long, byte[], long, byte)}
          * but without additional data or an address to store the cipher.
          * @param state State as initialised in {@link #cryptoSecretStreamInitPush(State, byte[], byte[])}}.
          * @param cipher The resulting cipher of size {@link #ABYTES} + {@code messageLen}.
@@ -165,7 +165,7 @@ public interface SecretStream {
         boolean cryptoSecretStreamPull(
                 State state,
                 byte[] message,
-                Long messageAddress,
+                long[] messageAddress,
                 byte[] tag,
                 byte[] cipher,
                 long cipherLen,
