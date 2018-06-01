@@ -65,7 +65,7 @@ public class NativeUtils {
         Path p = Paths.get(path);
         String fileName = p.getFileName().toString();
 
-        if (fileName.length() < MIN_PREFIX_LENGTH) {
+        if (fileName.length() <= MIN_PREFIX_LENGTH) {
             throw new IOException(
                     "The filename of your native library (" + fileName +
                     ") should be of length longer than " + MIN_PREFIX_LENGTH +
