@@ -58,17 +58,19 @@ public class NativeUtils {
      */
     public static void loadLibraryFromJar(String path) throws IOException {
 
-        if (null == path || !path.startsWith("/")) {
-            throw new IllegalArgumentException("The path has to be absolute (start with '/').");
+        if (path == null) {
+            throw new IOException("Path cannot be null.");
         }
 
-        // Obtain filename from path
-        String[] parts = path.split("/");
-        String filename = (parts.length > 1) ? parts[parts.length - 1] : null;
+        Path p = Paths.get(path);
+        String fileName = p.getFileName().toString();
 
-        // Check if the filename is okay
-        if (filename == null || filename.length() < MIN_PREFIX_LENGTH) {
-            throw new IllegalArgumentException("The filename has to be at least 3 characters long.");
+        if (fileName.length() < MIN_PREFIX_LENGTH) {
+            throw new IOException(
+                    "The filename of your native library (" + fileName +
+                    ") should be of length longer than " + MIN_PREFIX_LENGTH +
+                    " characters."
+            );
         }
 
         // Prepare temporary file
@@ -77,7 +79,7 @@ public class NativeUtils {
             temporaryDir.deleteOnExit();
         }
 
-        File temp = new File(temporaryDir, filename);
+        File temp = new File(temporaryDir, fileName);
 
         try (InputStream is = NativeUtils.class.getResourceAsStream(path)) {
             Files.copy(is, temp.toPath(), StandardCopyOption.REPLACE_EXISTING);

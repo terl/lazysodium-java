@@ -100,9 +100,10 @@ public class SodiumJava extends Sodium {
     }
 
     private String getPath(String folder, String name) {
-        String resourcePath = folder + File.separator + name;
-        if (!resourcePath.startsWith(File.separator)) {
-            resourcePath = File.separator + resourcePath;
+        String separator = "/";
+        String resourcePath = folder + separator + name;
+        if (!resourcePath.startsWith(separator)) {
+            resourcePath = separator + resourcePath;
         }
         return resourcePath;
     }
