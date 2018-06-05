@@ -49,74 +49,9 @@ As you can see Lazysodium's lazy functions **save you a lot of pain**!
 
 <br>
 
-## Get started
+## Installation, documentation, FAQ and everything else
 
-This section will help you get started with Lazysodium quickly (and with utmost laziness).
-
-### Requirements
-Lazysodium for Java requires:
-
-* JDK 8 or higher.
-* Gradle 4.7 or higher (if compiling and building).
-* No effort whatsoever.
-
-
-### Add 
-If you didn't know already, all Java libraries are hosted on a central repository. Lazysodium is hosted on [Bintray](https://bintray.com/terl/lazysodium-maven). This is important because you need to configure your build tool to pull and cache Lazysodium's packages from Bintray. The process is simple for Android projects... It's as simple as adding a few lines to your top-level `build.gradle` file.
-
-
-```groovy
-allprojects {
-    repositories {
-        // Add this block here!
-        maven {
-            url  "https://dl.bintray.com/terl/lazysodium-maven"
-        }
-    }
-}
-```
-
-Then, after adding the above, all you have to do is tell your build tool what package/artifact to include. Substitute `VERSION_NUMBER` with the number provided in the following button:
-
-[![Download](https://api.bintray.com/packages/terl/lazysodium-maven/lazysodium-java/images/download.svg) ](https://bintray.com/terl/lazysodium-maven/lazysodium-java/_latestVersion)
-
-
-##### Gradle
-
-```groovy
-dependencies {
-    implementation "com.goterl.lazycode:lazysodium-java:VERSION_NUMBER"
-}
-```
-
-##### Maven
-
-```xml
-<dependency>
-  <groupId>com.goterl.lazycode</groupId>
-  <artifactId>lazysodium-java</artifactId>
-  <version>VERSION_NUMBER</version>
-  <type>pom</type>
-</dependency>
-```
-
-##### Ivy
-
-```
-<dependency org='com.goterl.lazycode' name='lazysodium-java' rev=VERSION_NUMBER'>
-  <artifact name='lazysodium-java' ext='pom' ></artifact>
-</dependency>
-```
-
-
-##### SBT
-
-```sbt
-libraryDependencies += "com.goterl.lazycode" % "lazysodium-java" % "VERSION_NUMBER"
-```
-
-## Documentation
-For **documentation, roadmap, compiling, usage, etc** we invite you to head over to the [official documentation](https://docs.lazycode.co/lazysodium).
+See our [official documentation](https://docs.lazycode.co/lazysodium) to get started.
 
 
 <br>
