@@ -12,7 +12,7 @@ package com.goterl.lazycode.lazysodium.interfaces;
 public interface Helpers {
 
     interface Native {
-
+        int sodiumInit();
     }
 
     interface Lazy {

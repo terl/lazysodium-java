@@ -11,11 +11,17 @@ package com.goterl.lazycode.lazysodium;
 import com.goterl.lazycode.lazysodium.interfaces.AEAD;
 import com.goterl.lazycode.lazysodium.interfaces.Hash;
 import com.goterl.lazycode.lazysodium.interfaces.SecretStream;
+import com.sun.jna.Pointer;
 
 public class Sodium {
 
-    public Sodium() {
+    protected Sodium() {
+    }
 
+    protected void onRegistered() {
+        if (sodium_init() == -1) {
+            throw new IllegalStateException("Sodium library could not be initialised properly.");
+        }
     }
 
 
@@ -23,6 +29,8 @@ public class Sodium {
     //// HELPERS
     //// -------------------------------------------|
 
+
+    public native int sodium_init();
     public native void sodium_increment(byte[] n, int nLen);
     public native void sodium_add(byte[] a, byte[] b, int len);
     public native int sodium_is_zero(byte[] n, int nLen);
@@ -56,6 +64,26 @@ public class Sodium {
                                         int binLen,
                                         byte b64End,
                                         int variant);
+
+
+
+
+    //// -------------------------------------------|
+    //// SECURE MEMORY
+    //// -------------------------------------------|
+
+    public native int sodium_memzero(byte[] pnt, int len);
+    public native int sodium_mlock(byte[] addr, int len);
+    public native int sodium_munlock(byte[] addr, int len);
+    public native Pointer sodium_malloc(int size);
+    public native Pointer sodium_allocarray(int count, int size);
+    public native void sodium_free(Pointer p);
+    public native int sodium_mprotect_noaccess(Pointer ptr);
+    public native int sodium_mprotect_readonly(Pointer ptr);
+    public native int sodium_mprotect_readwrite(Pointer ptr);
+
+
+
 
 
     //// -------------------------------------------|

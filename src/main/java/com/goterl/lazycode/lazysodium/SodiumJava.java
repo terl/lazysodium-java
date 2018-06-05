@@ -19,6 +19,7 @@ public class SodiumJava extends Sodium {
 
     public SodiumJava() {
         registerFromResources();
+        onRegistered();
     }
 
 
@@ -30,6 +31,7 @@ public class SodiumJava extends Sodium {
      */
     public SodiumJava(String path) {
         Native.register(SodiumJava.class, path);
+        onRegistered();
     }
 
 

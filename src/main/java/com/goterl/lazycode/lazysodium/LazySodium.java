@@ -14,6 +14,7 @@ import com.goterl.lazycode.lazysodium.utils.DetachedDecrypt;
 import com.goterl.lazycode.lazysodium.utils.DetachedEncrypt;
 import com.goterl.lazycode.lazysodium.utils.KeyPair;
 import com.goterl.lazycode.lazysodium.utils.SessionPair;
+import com.sun.jna.Pointer;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -24,6 +25,7 @@ public abstract class LazySodium implements
         AEAD.Native, AEAD.Lazy,
         GenericHash.Native, GenericHash.Lazy,
         ShortHash.Native, ShortHash.Lazy,
+        SecureMemory.Native, SecureMemory.Lazy,
         Auth.Native, Auth.Lazy,
         SecretStream.Native, SecretStream.Lazy,
         Padding.Native, Padding.Lazy,
@@ -40,7 +42,6 @@ public abstract class LazySodium implements
 
 
     public LazySodium() {
-
     }
 
     public LazySodium(Charset charset) {
@@ -66,6 +67,11 @@ public abstract class LazySodium implements
     //// -------------------------------------------|
 
     @Override
+    public int sodiumInit() {
+        return getSodium().sodium_init();
+    }
+
+    @Override
     public String sodiumBin2Hex(byte[] bin) {
         return bytesToHex(bin);
     }
@@ -76,7 +82,7 @@ public abstract class LazySodium implements
     }
 
     /**
-     * Equivalent to {@link #sodiumBin2Hex(byte[])}.
+     * Bytes to hexadecimal. Equivalent to {@link #sodiumBin2Hex(byte[])} but static.
      * @param bin Byte array.
      * @return Hexadecimal string.
      */
@@ -86,9 +92,9 @@ public abstract class LazySodium implements
 
 
     /**
-     * Binary to hexadecimal.
-     * @param hex Hexadecimal string to convert to binary.
-     * @return Binary bytes.
+     * Hexadecimal string to bytes. Equivalent to {@link #sodiumHex2Bin(String)}} but static.
+     * @param hex Hexadecimal string to convert to bytes.
+     * @return Byte array.
      */
     public static byte[] toBin(String hex) {
         return hexToBytes(hex);
@@ -118,7 +124,6 @@ public abstract class LazySodium implements
         }
         return data;
     }
-
 
 
 
@@ -171,6 +176,56 @@ public abstract class LazySodium implements
         return boolify(getSodium().sodium_unpad(unPaddedBuffLen, buf, paddedBufLen, blockSize));
     }
 
+
+
+    //// -------------------------------------------|
+    //// SECURE MEMORY
+    //// -------------------------------------------|
+
+    @Override
+    public boolean sodiumMemZero(byte[] pnt, int len) {
+        return boolify(getSodium().sodium_memzero(pnt, len));
+    }
+
+    @Override
+    public boolean sodiumMLock(byte[] array, int len) {
+        return boolify(getSodium().sodium_mlock(array, len));
+    }
+
+    @Override
+    public boolean sodiumMUnlock(byte[] array, int len) {
+        return boolify(getSodium().sodium_munlock(array, len));
+    }
+
+    @Override
+    public Pointer sodiumMalloc(int size) {
+        return getSodium().sodium_malloc(size);
+    }
+
+    @Override
+    public Pointer sodiumAllocArray(int count, int size) {
+        return getSodium().sodium_allocarray(count, size);
+    }
+
+    @Override
+    public void sodiumFree(Pointer p) {
+        getSodium().sodium_free(p);
+    }
+
+    @Override
+    public boolean sodiumMProtectNoAccess(Pointer ptr) {
+        return boolify(getSodium().sodium_mprotect_noaccess(ptr));
+    }
+
+    @Override
+    public boolean sodiumMProtectReadOnly(Pointer ptr) {
+        return boolify(getSodium().sodium_mprotect_readonly(ptr));
+    }
+
+    @Override
+    public boolean sodiumMProtectReadWrite(Pointer ptr) {
+        return boolify(getSodium().sodium_mprotect_readwrite(ptr));
+    }
 
 
 

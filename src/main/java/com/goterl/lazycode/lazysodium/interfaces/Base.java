@@ -24,10 +24,10 @@ public interface Base {
 
     /**
      * Converts a byte array to a string
-     * using a charset. Warning
-     * this will produce null bytes and unexpected
+     * using a charset. This may not be what you want to use if you're storing this string
+     * in a database for example. This function will produce null bytes and unexpected
      * carriage returns. Please use {@link Helpers.Lazy#sodiumBin2Hex(byte[])}
-     * to ensure no nulls or carriage breaks.
+     * to convert your byte array to a hexadecimal string that ensures no nulls or carriage breaks.
      * @param bs The byte array.
      * @return The string.
      */
@@ -35,11 +35,11 @@ public interface Base {
 
 
     /**
-     * Convert a byte array to a string
-     * with a charset. Warning
-     * this will produce null bytes and unexpected
+     * Convert a byte array to a string with a charset.
+     * This may not be what you want to use if you're storing this string
+     * in a database for example. This function will produce null bytes and unexpected
      * carriage returns. Please use {@link Helpers.Lazy#sodiumBin2Hex(byte[])}
-     * to ensure no nulls or carriage breaks.
+     * to convert your byte array to a hexadecimal string that ensures no nulls or carriage breaks.
      * @param bs Byte array.
      * @param charset The charset.
      * @return The byte array as a string.
@@ -48,7 +48,7 @@ public interface Base {
 
 
     /**
-     * Convert a string to bytes.
+     * Convert a string to directly bytes.
      * @param s The String to convert to a byte array.
      * @return A byte array from {@code s}.
      */
