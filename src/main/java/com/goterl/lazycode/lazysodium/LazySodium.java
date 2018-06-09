@@ -168,12 +168,12 @@ public abstract class LazySodium implements
 
     @Override
     public boolean sodiumPad(int paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize, int maxBufLen) {
-        return boolify(getSodium().sodium_pad(paddedBuffLen, buf, unpaddedBufLen, blockSize, maxBufLen));
+        return successful(getSodium().sodium_pad(paddedBuffLen, buf, unpaddedBufLen, blockSize, maxBufLen));
     }
 
     @Override
     public boolean sodiumUnpad(int unPaddedBuffLen, char[] buf, int paddedBufLen, int blockSize) {
-        return boolify(getSodium().sodium_unpad(unPaddedBuffLen, buf, paddedBufLen, blockSize));
+        return successful(getSodium().sodium_unpad(unPaddedBuffLen, buf, paddedBufLen, blockSize));
     }
 
 
@@ -184,17 +184,17 @@ public abstract class LazySodium implements
 
     @Override
     public boolean sodiumMemZero(byte[] pnt, int len) {
-        return boolify(getSodium().sodium_memzero(pnt, len));
+        return successful(getSodium().sodium_memzero(pnt, len));
     }
 
     @Override
     public boolean sodiumMLock(byte[] array, int len) {
-        return boolify(getSodium().sodium_mlock(array, len));
+        return successful(getSodium().sodium_mlock(array, len));
     }
 
     @Override
     public boolean sodiumMUnlock(byte[] array, int len) {
-        return boolify(getSodium().sodium_munlock(array, len));
+        return successful(getSodium().sodium_munlock(array, len));
     }
 
     @Override
@@ -214,17 +214,17 @@ public abstract class LazySodium implements
 
     @Override
     public boolean sodiumMProtectNoAccess(Pointer ptr) {
-        return boolify(getSodium().sodium_mprotect_noaccess(ptr));
+        return successful(getSodium().sodium_mprotect_noaccess(ptr));
     }
 
     @Override
     public boolean sodiumMProtectReadOnly(Pointer ptr) {
-        return boolify(getSodium().sodium_mprotect_readonly(ptr));
+        return successful(getSodium().sodium_mprotect_readonly(ptr));
     }
 
     @Override
     public boolean sodiumMProtectReadWrite(Pointer ptr) {
-        return boolify(getSodium().sodium_mprotect_readwrite(ptr));
+        return successful(getSodium().sodium_mprotect_readwrite(ptr));
     }
 
 
@@ -296,22 +296,22 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoKxKeypair(byte[] publicKey, byte[] secretKey) {
-        return boolify(getSodium().crypto_kx_keypair(publicKey, secretKey));
+        return successful(getSodium().crypto_kx_keypair(publicKey, secretKey));
     }
 
     @Override
     public boolean cryptoKxSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed) {
-        return boolify(getSodium().crypto_kx_seed_keypair(publicKey, secretKey, seed));
+        return successful(getSodium().crypto_kx_seed_keypair(publicKey, secretKey, seed));
     }
 
     @Override
     public boolean cryptoKxClientSessionKeys(byte[] rx, byte[] tx, byte[] clientPk, byte[] clientSk, byte[] serverPk) {
-        return boolify(getSodium().crypto_kx_client_session_keys(rx, tx, clientPk, clientSk, serverPk));
+        return successful(getSodium().crypto_kx_client_session_keys(rx, tx, clientPk, clientSk, serverPk));
     }
 
     @Override
     public boolean cryptoKxServerSessionKeys(byte[] rx, byte[] tx, byte[] serverPk, byte[] serverSk, byte[] clientPk) {
-        return boolify(getSodium().crypto_kx_server_session_keys(rx, tx, serverPk, serverSk, clientPk));
+        return successful(getSodium().crypto_kx_server_session_keys(rx, tx, serverPk, serverSk, clientPk));
     }
 
 
@@ -393,7 +393,7 @@ public abstract class LazySodium implements
                 opsLimit,
                 memLimit,
                 alg.getValue());
-        return boolify(res);
+        return successful(res);
     }
 
     @Override
@@ -403,17 +403,17 @@ public abstract class LazySodium implements
                                    long opsLimit,
                                    long memLimit) {
         int res = getSodium().crypto_pwhash_str(outputStr, password, passwordLen, opsLimit, memLimit);
-        return boolify(res);
+        return successful(res);
     }
 
     @Override
     public boolean cryptoPwHashStrVerify(byte[] hash, byte[] password, long passwordLen) {
-        return boolify(getSodium().crypto_pwhash_str_verify(hash, password, passwordLen));
+        return successful(getSodium().crypto_pwhash_str_verify(hash, password, passwordLen));
     }
 
     @Override
     public boolean cryptoPwHashStrNeedsRehash(byte[] hash, long opsLimit, long memLimit) {
-        return boolify(getSodium().crypto_pwhash_str_needs_rehash(hash, opsLimit, memLimit));
+        return successful(getSodium().crypto_pwhash_str_needs_rehash(hash, opsLimit, memLimit));
     }
 
 
@@ -482,42 +482,42 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoHashSha256(byte[] out, byte[] in, long inLen) {
-        return boolify(getSodium().crypto_hash_sha256(out, in, inLen));
+        return successful(getSodium().crypto_hash_sha256(out, in, inLen));
     }
 
     @Override
     public boolean cryptoHashSha256Init(Hash.State256 state) {
-        return boolify(getSodium().crypto_hash_sha256_init(state));
+        return successful(getSodium().crypto_hash_sha256_init(state));
     }
 
     @Override
     public boolean cryptoHashSha256Update(Hash.State256 state, byte[] in, long inLen) {
-        return boolify(getSodium().crypto_hash_sha256_update(state, in, inLen));
+        return successful(getSodium().crypto_hash_sha256_update(state, in, inLen));
     }
 
     @Override
     public boolean cryptoHashSha256Final(Hash.State256 state, byte[] out) {
-        return boolify(getSodium().crypto_hash_sha256_final(state, out));
+        return successful(getSodium().crypto_hash_sha256_final(state, out));
     }
 
     @Override
     public boolean cryptoHashSha512(byte[] out, byte[] in, long inLen) {
-        return boolify(getSodium().crypto_hash_sha512(out, in, inLen));
+        return successful(getSodium().crypto_hash_sha512(out, in, inLen));
     }
 
     @Override
     public boolean cryptoHashSha512Init(Hash.State512 state) {
-        return boolify(getSodium().crypto_hash_sha512_init(state));
+        return successful(getSodium().crypto_hash_sha512_init(state));
     }
 
     @Override
     public boolean cryptoHashSha512Update(Hash.State512 state, byte[] in, long inLen) {
-        return boolify(getSodium().crypto_hash_sha512_update(state, in, inLen));
+        return successful(getSodium().crypto_hash_sha512_update(state, in, inLen));
     }
 
     @Override
     public boolean cryptoHashSha512Final(Hash.State512 state, byte[] out) {
-        return boolify(getSodium().crypto_hash_sha512_final(state, out));
+        return successful(getSodium().crypto_hash_sha512_final(state, out));
     }
 
     // -- lazy
@@ -590,22 +590,22 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoSecretBoxEasy(byte[] cipherText, byte[] message, long messageLen, byte[] nonce, byte[] key) {
-        return boolify(getSodium().crypto_secretbox_easy(cipherText, message, messageLen, nonce, key));
+        return successful(getSodium().crypto_secretbox_easy(cipherText, message, messageLen, nonce, key));
     }
 
     @Override
     public boolean cryptoSecretBoxOpenEasy(byte[] message, byte[] cipherText, long cipherTextLen, byte[] nonce, byte[] key) {
-        return boolify(getSodium().crypto_secretbox_open_easy(message, cipherText, cipherTextLen, nonce, key));
+        return successful(getSodium().crypto_secretbox_open_easy(message, cipherText, cipherTextLen, nonce, key));
     }
 
     @Override
     public boolean cryptoSecretBoxDetached(byte[] cipherText, byte[] mac, byte[] message, long messageLen, byte[] nonce, byte[] key) {
-        return boolify(getSodium().crypto_secretbox_detached(cipherText, mac, message, messageLen, nonce, key));
+        return successful(getSodium().crypto_secretbox_detached(cipherText, mac, message, messageLen, nonce, key));
     }
 
     @Override
     public boolean cryptoSecretBoxOpenDetached(byte[] message, byte[] cipherText, byte[] mac, long cipherTextLen, byte[] nonce, byte[] key) {
-        return boolify(getSodium().crypto_secretbox_open_detached(message, cipherText, mac, cipherTextLen, nonce, key));
+        return successful(getSodium().crypto_secretbox_open_detached(message, cipherText, mac, cipherTextLen, nonce, key));
     }
 
 
@@ -683,72 +683,72 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoBoxKeypair(byte[] publicKey, byte[] secretKey) {
-        return boolify(getSodium().crypto_box_keypair(publicKey, secretKey));
+        return successful(getSodium().crypto_box_keypair(publicKey, secretKey));
     }
 
     @Override
     public boolean cryptoBoxSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed) {
-        return boolify(getSodium().crypto_box_seed_keypair(publicKey, secretKey, seed));
+        return successful(getSodium().crypto_box_seed_keypair(publicKey, secretKey, seed));
     }
 
     @Override
     public boolean cryptoScalarMultBase(byte[] publicKey, byte[] secretKey) {
-        return boolify(getSodium().crypto_scalarmult_base(publicKey, secretKey));
+        return successful(getSodium().crypto_scalarmult_base(publicKey, secretKey));
     }
 
     @Override
     public boolean cryptoBoxEasy(byte[] cipherText, byte[] message, long messageLen, byte[] nonce, byte[] publicKey, byte[] secretKey) {
-        return boolify(getSodium().crypto_box_easy(cipherText, message, messageLen, nonce, publicKey, secretKey));
+        return successful(getSodium().crypto_box_easy(cipherText, message, messageLen, nonce, publicKey, secretKey));
     }
 
     @Override
     public boolean cryptoBoxOpenEasy(byte[] message, byte[] cipherText, long cipherTextLen, byte[] nonce, byte[] publicKey, byte[] secretKey) {
-        return boolify(getSodium().crypto_box_open_easy(message, cipherText, cipherTextLen, nonce, publicKey, secretKey));
+        return successful(getSodium().crypto_box_open_easy(message, cipherText, cipherTextLen, nonce, publicKey, secretKey));
     }
 
     @Override
     public boolean cryptoBoxDetached(byte[] cipherText, byte[] mac, byte[] message, long messageLen, byte[] nonce, byte[] publicKey, byte[] secretKey) {
-        return boolify(getSodium().crypto_box_detached(cipherText, mac, message, messageLen, nonce, publicKey, secretKey));
+        return successful(getSodium().crypto_box_detached(cipherText, mac, message, messageLen, nonce, publicKey, secretKey));
     }
 
     @Override
     public boolean cryptoBoxOpenDetached(byte[] message, byte[] cipherText, byte[] mac, byte[] cipherTextLen, byte[] nonce, byte[] publicKey, byte[] secretKey) {
-        return boolify(getSodium().crypto_box_open_detached(message, cipherText, mac, cipherTextLen, nonce, publicKey, secretKey));
+        return successful(getSodium().crypto_box_open_detached(message, cipherText, mac, cipherTextLen, nonce, publicKey, secretKey));
     }
 
     @Override
     public boolean cryptoBoxBeforeNm(byte[] k, byte[] publicKey, byte[] secretKey) {
-        return boolify(getSodium().crypto_box_beforenm(k, publicKey, secretKey));
+        return successful(getSodium().crypto_box_beforenm(k, publicKey, secretKey));
     }
 
     @Override
     public boolean cryptoBoxEasyAfterNm(byte[] cipherText, byte[] message, long messageLen, byte[] nonce, byte[] key) {
-        return boolify(getSodium().crypto_box_easy_afternm(cipherText, message, messageLen, nonce, key));
+        return successful(getSodium().crypto_box_easy_afternm(cipherText, message, messageLen, nonce, key));
     }
 
     @Override
     public boolean cryptoBoxOpenEasyAfterNm(byte[] message, byte[] cipher, long cLen, byte[] nonce, byte[] key) {
-        return boolify(getSodium().crypto_box_open_easy_afternm(message, cipher, cLen, nonce, key));
+        return successful(getSodium().crypto_box_open_easy_afternm(message, cipher, cLen, nonce, key));
     }
 
     @Override
     public boolean cryptoBoxDetachedAfterNm(byte[] cipherText, byte[] mac, byte[] message, long messageLen, byte[] nonce, byte[] key) {
-        return boolify(getSodium().crypto_box_detached_afternm(cipherText, mac, message, messageLen, nonce, key));
+        return successful(getSodium().crypto_box_detached_afternm(cipherText, mac, message, messageLen, nonce, key));
     }
 
     @Override
     public boolean cryptoBoxOpenDetachedAfterNm(byte[] message, byte[] cipherText, byte[] mac, long cipherTextLen, byte[] nonce, byte[] key) {
-        return boolify(getSodium().crypto_box_open_detached_afternm(message, cipherText, mac, cipherTextLen, nonce, key));
+        return successful(getSodium().crypto_box_open_detached_afternm(message, cipherText, mac, cipherTextLen, nonce, key));
     }
 
     @Override
     public boolean cryptoBoxSeal(byte[] cipher, byte[] message, long messageLen, byte[] publicKey) {
-        return boolify(getSodium().crypto_box_seal(cipher, message, messageLen, publicKey));
+        return successful(getSodium().crypto_box_seal(cipher, message, messageLen, publicKey));
     }
 
     @Override
     public boolean cryptoBoxSealOpen(byte[] m, byte[] cipher, long cipherLen, byte[] publicKey, byte[] secretKey) {
-        return boolify(getSodium().crypto_box_seal_open(m, cipher, cipherLen, publicKey, secretKey));
+        return successful(getSodium().crypto_box_seal_open(m, cipher, cipherLen, publicKey, secretKey));
     }
 
     // -- lazy
@@ -946,43 +946,43 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoSignKeypair(byte[] publicKey, byte[] secretKey) {
-        return boolify(getSodium().crypto_sign_keypair(publicKey, secretKey));
+        return successful(getSodium().crypto_sign_keypair(publicKey, secretKey));
     }
 
 
     @Override
     public boolean cryptoSignSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed) {
-        return boolify(getSodium().crypto_sign_seed_keypair(publicKey, secretKey, seed));
+        return successful(getSodium().crypto_sign_seed_keypair(publicKey, secretKey, seed));
     }
 
     @Override
     public boolean cryptoSign(byte[] signedMessage, long[] signedMessageLen, byte[] message, long messageLen, byte[] secretKey) {
-        return boolify(getSodium().crypto_sign(signedMessage, signedMessageLen, message, messageLen, secretKey));
+        return successful(getSodium().crypto_sign(signedMessage, signedMessageLen, message, messageLen, secretKey));
     }
 
     @Override
     public boolean cryptoSignOpen(byte[] message, long[] messageLen, byte[] signedMessage, long signedMessageLen, byte[] publicKey) {
-        return boolify(getSodium().crypto_sign_open(message, messageLen, signedMessage, signedMessageLen, publicKey));
+        return successful(getSodium().crypto_sign_open(message, messageLen, signedMessage, signedMessageLen, publicKey));
     }
 
     @Override
     public boolean cryptoSignDetached(byte[] signature, long[] sigLength, byte[] message, long messageLen, byte[] secretKey) {
-        return boolify(getSodium().crypto_sign_detached(signature, sigLength, message, messageLen, secretKey));
+        return successful(getSodium().crypto_sign_detached(signature, sigLength, message, messageLen, secretKey));
     }
 
     @Override
     public boolean cryptoSignVerifyDetached(byte[] signature, byte[] message, long messageLen, byte[] publicKey) {
-        return boolify(getSodium().crypto_sign_verify_detached(signature, message, messageLen, publicKey));
+        return successful(getSodium().crypto_sign_verify_detached(signature, message, messageLen, publicKey));
     }
 
     @Override
     public boolean convertPublicKeyEd25519ToCurve25519(byte[] curve, byte[] ed) {
-        return boolify(getSodium().crypto_sign_ed25519_pk_to_curve25519(curve, ed));
+        return successful(getSodium().crypto_sign_ed25519_pk_to_curve25519(curve, ed));
     }
 
     @Override
     public boolean convertSecretKeyEd25519ToCurve25519(byte[] curve, byte[] ed) {
-        return boolify(getSodium().crypto_sign_ed25519_sk_to_curve25519(curve, ed));
+        return successful(getSodium().crypto_sign_ed25519_sk_to_curve25519(curve, ed));
     }
 
     // -- lazy
@@ -1095,12 +1095,12 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoSecretStreamInitPush(SecretStream.State state, byte[] header, byte[] key) {
-        return boolify(getSodium().crypto_secretstream_xchacha20poly1305_init_push(state, header, key));
+        return successful(getSodium().crypto_secretstream_xchacha20poly1305_init_push(state, header, key));
     }
 
     @Override
     public boolean cryptoSecretStreamPush(SecretStream.State state, byte[] cipher, long[] cipherAddr, byte[] message, long messageLen, byte tag) {
-        return boolify(getSodium().crypto_secretstream_xchacha20poly1305_push(
+        return successful(getSodium().crypto_secretstream_xchacha20poly1305_push(
                 state,
                 cipher,
                 cipherAddr,
@@ -1118,7 +1118,7 @@ public abstract class LazySodium implements
                                           byte[] message,
                                           long messageLen,
                                           byte tag) {
-        return boolify(getSodium().crypto_secretstream_xchacha20poly1305_push(
+        return successful(getSodium().crypto_secretstream_xchacha20poly1305_push(
                 state,
                 cipher,
                 null,
@@ -1139,7 +1139,7 @@ public abstract class LazySodium implements
                                           byte[] additionalData,
                                           long additionalDataLen,
                                           byte tag) {
-        return boolify(getSodium().crypto_secretstream_xchacha20poly1305_push(
+        return successful(getSodium().crypto_secretstream_xchacha20poly1305_push(
                 state,
                 cipher,
                 cipherAddr,
@@ -1153,7 +1153,7 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoSecretStreamInitPull(SecretStream.State state, byte[] header, byte[] key) {
-        return boolify(getSodium().crypto_secretstream_xchacha20poly1305_init_pull(state, header, key));
+        return successful(getSodium().crypto_secretstream_xchacha20poly1305_init_pull(state, header, key));
     }
 
     @Override
@@ -1165,14 +1165,14 @@ public abstract class LazySodium implements
                                           long cipherLen,
                                           byte[] additionalData,
                                           long additionalDataLen) {
-        return boolify(getSodium().crypto_secretstream_xchacha20poly1305_pull(
+        return successful(getSodium().crypto_secretstream_xchacha20poly1305_pull(
                 state, message, messageAddress, tag, cipher, cipherLen, additionalData, additionalDataLen
         ));
     }
 
     @Override
     public boolean cryptoSecretStreamPull(SecretStream.State state, byte[] message, byte[] tag, byte[] cipher, long cipherLen) {
-        return boolify(getSodium().crypto_secretstream_xchacha20poly1305_pull(
+        return successful(getSodium().crypto_secretstream_xchacha20poly1305_pull(
                 state,
                 message,
                 new long[1],
@@ -1276,12 +1276,12 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoAuth(byte[] tag, byte[] in, long inLen, byte[] key) {
-        return boolify(getSodium().crypto_auth(tag, in, inLen, key));
+        return successful(getSodium().crypto_auth(tag, in, inLen, key));
     }
 
     @Override
     public boolean cryptoAuthVerify(byte[] tag, byte[] in, long inLen, byte[] key) {
-        return boolify(getSodium().crypto_auth_verify(tag, in, inLen, key));
+        return successful(getSodium().crypto_auth_verify(tag, in, inLen, key));
     }
 
     @Override
@@ -1320,14 +1320,192 @@ public abstract class LazySodium implements
     }
 
 
+    @Override
+    public void cryptoAuthHMACSha256Keygen(byte[] key) {
+        getSodium().crypto_auth_hmacsha256_keygen(key);
+    }
 
+    @Override
+    public boolean cryptoAuthHMACSha256(byte[] out, byte[] in, int inLen, byte[] k) {
+        return successful(getSodium().crypto_auth_hmacsha256(out, in, inLen, k));
+    }
+
+    @Override
+    public boolean cryptoAuthHMACSha256Verify(byte[] h, byte[] in, int inLen, byte[] k) {
+        return successful(getSodium().crypto_auth_hmacsha256_verify(h, in, inLen, k));
+    }
+
+    @Override
+    public boolean cryptoAuthHMACSha256Init(Auth.StateHMAC256 state, byte[] key, int keyLen) {
+        return successful(getSodium().crypto_auth_hmacsha256_init(state, key, keyLen));
+    }
+
+    @Override
+    public boolean cryptoAuthHMACSha256Update(Auth.StateHMAC256 state, byte[] in, long inLen) {
+        return successful(getSodium().crypto_auth_hmacsha256_update(state, in, inLen));
+    }
+
+    @Override
+    public boolean cryptoAuthHMACSha256Final(Auth.StateHMAC256 state, byte[] out) {
+        return successful(getSodium().crypto_auth_hmacsha256_final(state, out));
+    }
+
+
+    @Override
+    public void cryptoAuthHMACSha512Keygen(byte[] key) {
+        getSodium().crypto_auth_hmacsha512_keygen(key);
+    }
+
+    @Override
+    public boolean cryptoAuthHMACSha512(byte[] out, byte[] in, int inLen, byte[] k) {
+        return successful(getSodium().crypto_auth_hmacsha512(out, in, inLen, k));
+    }
+
+    @Override
+    public boolean cryptoAuthHMACSha512Verify(byte[] h, byte[] in, int inLen, byte[] k) {
+        return successful(getSodium().crypto_auth_hmacsha512_verify(h, in, inLen, k));
+    }
+
+    @Override
+    public boolean cryptoAuthHMACSha512Init(Auth.StateHMAC512 state, byte[] key, int keyLen) {
+        return successful(getSodium().crypto_auth_hmacsha512_init(state, key, keyLen));
+    }
+
+    @Override
+    public boolean cryptoAuthHMACSha512Update(Auth.StateHMAC512 state, byte[] in, long inLen) {
+        return successful(getSodium().crypto_auth_hmacsha512_update(state, in, inLen));
+    }
+
+    @Override
+    public boolean cryptoAuthHMACSha512Final(Auth.StateHMAC512 state, byte[] out) {
+        return successful(getSodium().crypto_auth_hmacsha512_final(state, out));
+    }
+
+    @Override
+    public void cryptoAuthHMACSha512256Keygen(byte[] key) {
+        getSodium().crypto_auth_hmacsha512256_keygen(key);
+    }
+
+    @Override
+    public boolean cryptoAuthHMACSha512256(byte[] out, byte[] in, int inLen, byte[] k) {
+        return successful(getSodium().crypto_auth_hmacsha512256(out, in, inLen, k));
+    }
+
+    @Override
+    public boolean cryptoAuthHMACSha512256Verify(byte[] h, byte[] in, int inLen, byte[] k) {
+        return successful(getSodium().crypto_auth_hmacsha512256_verify(h, in, inLen, k));
+    }
+
+    @Override
+    public boolean cryptoAuthHMACSha512256Init(Auth.StateHMAC512256 state, byte[] key, int keyLen) {
+        return successful(getSodium().crypto_auth_hmacsha512256_init(state, key, keyLen));
+    }
+
+    @Override
+    public boolean cryptoAuthHMACSha512256Update(Auth.StateHMAC512256 state, byte[] in, long inLen) {
+        return successful(getSodium().crypto_auth_hmacsha512256_update(state, in, inLen));
+    }
+
+    @Override
+    public boolean cryptoAuthHMACSha512256Final(Auth.StateHMAC512256 state, byte[] out) {
+        return successful(getSodium().crypto_auth_hmacsha512256_final(state, out));
+    }
+
+
+
+    @Override
+    public String cryptoAuthHMACShaKeygen(Auth.Type type) {
+        if (type.equals(Auth.Type.SHA256)) {
+            byte[] k = new byte[Auth.HMACSHA256_KEYBYTES];
+            cryptoAuthHMACSha256Keygen(k);
+            return toHex(k);
+        } else if (type.equals(Auth.Type.SHA512)) {
+            byte[] k = new byte[Auth.HMACSHA512_KEYBYTES];
+            cryptoAuthHMACSha512Keygen(k);
+            return toHex(k);
+        } else {
+            byte[] k = new byte[Auth.HMACSHA512256_KEYBYTES];
+            cryptoAuthHMACSha512256Keygen(k);
+            return toHex(k);
+        }
+    }
+
+    @Override
+    public String cryptoAuthHMACSha(Auth.Type type, String in, String key) {
+        byte[] inBytes = bytes(in);
+        byte[] keyBytes = bytes(key);
+        if (type.equals(Auth.Type.SHA256)) {
+            byte[] out = new byte[Auth.HMACSHA256_BYTES];
+            cryptoAuthHMACSha256(out, inBytes, inBytes.length, keyBytes);
+            return toHex(out);
+        } else if (type.equals(Auth.Type.SHA512)) {
+            byte[] out = new byte[Auth.HMACSHA512_BYTES];
+            cryptoAuthHMACSha512(out, inBytes, inBytes.length, keyBytes);
+            return toHex(out);
+        } else {
+            byte[] out = new byte[Auth.HMACSHA512256_BYTES];
+            cryptoAuthHMACSha512(out, inBytes, inBytes.length, keyBytes);
+            return toHex(out);
+        }
+    }
+
+    @Override
+    public String cryptoAuthHMACShaVerify(Auth.Type type, String authenticator, String message, String key) {
+        return null;
+    }
+
+    @Override
+    public boolean cryptoAuthHMACShaInit(Auth.StateHMAC256 state, String key) {
+        return false;
+    }
+
+    @Override
+    public boolean cryptoAuthHMACShaUpdate(Auth.StateHMAC256 state, String in) {
+        return false;
+    }
+
+    @Override
+    public String cryptoAuthHMACShaFinal(Auth.StateHMAC256 state) {
+        return null;
+    }
+
+    @Override
+    public boolean cryptoAuthHMACShaInit(Auth.StateHMAC512 state, String key) {
+        return false;
+    }
+
+    @Override
+    public boolean cryptoAuthHMACShaUpdate(Auth.StateHMAC512 state, String in) {
+        return false;
+    }
+
+    @Override
+    public String cryptoAuthHMACShaFinal(Auth.StateHMAC512 state) {
+        return null;
+    }
+
+    @Override
+    public boolean cryptoAuthHMACShaInit(Auth.StateHMAC512256 state, String key) {
+        return false;
+    }
+
+    @Override
+    public boolean cryptoAuthHMACShaUpdate(Auth.StateHMAC512256 state, String in) {
+        return false;
+    }
+
+    @Override
+    public String cryptoAuthHMACShaFinal(Auth.StateHMAC512256 state) {
+        return null;
+    }
 
     //// -------------------------------------------|
     //// SHORT HASH
     //// -------------------------------------------|
+
     @Override
     public boolean cryptoShortHash(byte[] out, byte[] in, long inLen, byte[] key) {
-        return boolify(getSodium().crypto_shorthash(out, in, inLen, key));
+        return successful(getSodium().crypto_shorthash(out, in, inLen, key));
     }
 
     @Override
@@ -1362,32 +1540,32 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoGenericHash(byte[] out, int outLen, byte[] in, long inLen, byte[] key, int keyLen) {
-        return boolify(getSodium().crypto_generichash(out, outLen, in, inLen, key, keyLen));
+        return successful(getSodium().crypto_generichash(out, outLen, in, inLen, key, keyLen));
     }
 
     @Override
     public boolean cryptoGenericHash(byte[] out, int outLen, byte[] in, long inLen) {
-        return boolify(getSodium().crypto_generichash(out, outLen, in, inLen, null, 0));
+        return successful(getSodium().crypto_generichash(out, outLen, in, inLen, null, 0));
     }
 
     @Override
     public boolean cryptoGenericHashInit(byte[] state, byte[] key, int keyLength, int outLen) {
-        return boolify(getSodium().crypto_generichash_init(state, key, keyLength, outLen));
+        return successful(getSodium().crypto_generichash_init(state, key, keyLength, outLen));
     }
 
     @Override
     public boolean cryptoGenericHashInit(byte[] state, int outLen) {
-        return boolify(getSodium().crypto_generichash_init(state, null, 0, outLen));
+        return successful(getSodium().crypto_generichash_init(state, null, 0, outLen));
     }
 
     @Override
     public boolean cryptoGenericHashUpdate(byte[] state, byte[] in, long inLen) {
-        return boolify(getSodium().crypto_generichash_update(state, in, inLen));
+        return successful(getSodium().crypto_generichash_update(state, in, inLen));
     }
 
     @Override
     public boolean cryptoGenericHashFinal(byte[] state, byte[] out, int outLen) {
-        return boolify(getSodium().crypto_generichash_final(state, out, outLen));
+        return successful(getSodium().crypto_generichash_final(state, out, outLen));
     }
 
     @Override
@@ -1482,22 +1660,22 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoAeadChaCha20Poly1305Encrypt(byte[] c, long[] cLen, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
-        return boolify(getSodium().crypto_aead_chacha20poly1305_encrypt(c, cLen, m, mLen, ad, adLen, nSec, nPub, k));
+        return successful(getSodium().crypto_aead_chacha20poly1305_encrypt(c, cLen, m, mLen, ad, adLen, nSec, nPub, k));
     }
 
     @Override
     public boolean cryptoAeadChaCha20Poly1305Decrypt(byte[] m, long[] mLen, byte[] nSec, byte[] c, long cLen, byte[] ad, long adLen, byte[] nPub, byte[] k) {
-        return boolify(getSodium().crypto_aead_chacha20poly1305_decrypt(m, mLen, nSec, c, cLen, ad, adLen, nPub, k));
+        return successful(getSodium().crypto_aead_chacha20poly1305_decrypt(m, mLen, nSec, c, cLen, ad, adLen, nPub, k));
     }
 
     @Override
     public boolean cryptoAeadChaCha20Poly1305EncryptDetached(byte[] c, byte[] mac, long[] macLenAddress, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
-        return boolify(getSodium().crypto_aead_chacha20poly1305_encrypt_detached(c, mac, macLenAddress, m, mLen, ad, adLen, nSec, nPub, k));
+        return successful(getSodium().crypto_aead_chacha20poly1305_encrypt_detached(c, mac, macLenAddress, m, mLen, ad, adLen, nSec, nPub, k));
     }
 
     @Override
     public boolean cryptoAeadChaCha20Poly1305DecryptDetached(byte[] m, byte[] nSec, byte[] c, long cLen, byte[] mac, byte[] ad, long adLen, byte[] nPub, byte[] k) {
-        return boolify(getSodium().crypto_aead_chacha20poly1305_decrypt_detached(m, nSec, c, cLen, mac, ad, adLen, nPub, k));
+        return successful(getSodium().crypto_aead_chacha20poly1305_decrypt_detached(m, nSec, c, cLen, mac, ad, adLen, nPub, k));
     }
 
     @Override
@@ -1507,22 +1685,22 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoAeadChaCha20Poly1305IetfEncrypt(byte[] c, long[] cLen, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
-        return boolify(getSodium().crypto_aead_chacha20poly1305_ietf_encrypt(c, cLen, m, mLen, ad, adLen, nSec, nPub, k));
+        return successful(getSodium().crypto_aead_chacha20poly1305_ietf_encrypt(c, cLen, m, mLen, ad, adLen, nSec, nPub, k));
     }
 
     @Override
     public boolean cryptoAeadChaCha20Poly1305IetfDecrypt(byte[] m, long[] mLen, byte[] nSec, byte[] c, long cLen, byte[] ad, long adLen, byte[] nPub, byte[] k) {
-        return boolify(getSodium().crypto_aead_chacha20poly1305_ietf_decrypt(m, mLen, nSec, c, cLen, ad, adLen, nPub, k));
+        return successful(getSodium().crypto_aead_chacha20poly1305_ietf_decrypt(m, mLen, nSec, c, cLen, ad, adLen, nPub, k));
     }
 
     @Override
     public boolean cryptoAeadChaCha20Poly1305IetfEncryptDetached(byte[] c, byte[] mac, long[] macLenAddress, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
-        return boolify(getSodium().crypto_aead_chacha20poly1305_ietf_encrypt_detached(c, mac, macLenAddress, m, mLen, ad, adLen, nSec, nPub, k));
+        return successful(getSodium().crypto_aead_chacha20poly1305_ietf_encrypt_detached(c, mac, macLenAddress, m, mLen, ad, adLen, nSec, nPub, k));
     }
 
     @Override
     public boolean cryptoAeadChaCha20Poly1305IetfDecryptDetached(byte[] m, byte[] nSec, byte[] c, long cLen, byte[] mac, byte[] ad, long adLen, byte[] nPub, byte[] k) {
-        return boolify(getSodium().crypto_aead_chacha20poly1305_ietf_decrypt_detached(m, nSec, c, cLen, mac, ad, adLen, nPub, k));
+        return successful(getSodium().crypto_aead_chacha20poly1305_ietf_decrypt_detached(m, nSec, c, cLen, mac, ad, adLen, nPub, k));
     }
 
     @Override
@@ -1532,22 +1710,22 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoAeadXChaCha20Poly1305IetfEncrypt(byte[] c, long[] cLen, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
-        return boolify(getSodium().crypto_aead_xchacha20poly1305_ietf_encrypt(c, cLen, m, mLen, ad, adLen, nSec, nPub, k));
+        return successful(getSodium().crypto_aead_xchacha20poly1305_ietf_encrypt(c, cLen, m, mLen, ad, adLen, nSec, nPub, k));
     }
 
     @Override
     public boolean cryptoAeadXChaCha20Poly1305IetfDecrypt(byte[] m, long[] mLen, byte[] nSec, byte[] c, long cLen, byte[] ad, long adLen, byte[] nPub, byte[] k) {
-        return boolify(getSodium().crypto_aead_xchacha20poly1305_ietf_decrypt(m, mLen, nSec, c, cLen, ad, adLen, nPub, k));
+        return successful(getSodium().crypto_aead_xchacha20poly1305_ietf_decrypt(m, mLen, nSec, c, cLen, ad, adLen, nPub, k));
     }
 
     @Override
     public boolean cryptoAeadXChaCha20Poly1305IetfEncryptDetached(byte[] c, byte[] mac, long[] macLenAddress, byte[] m, long mLen, byte[] ad, long adLen, byte[] nSec, byte[] nPub, byte[] k) {
-        return boolify(getSodium().crypto_aead_xchacha20poly1305_ietf_encrypt_detached(c, mac, macLenAddress, m, mLen, ad, adLen, nSec, nPub, k));
+        return successful(getSodium().crypto_aead_xchacha20poly1305_ietf_encrypt_detached(c, mac, macLenAddress, m, mLen, ad, adLen, nSec, nPub, k));
     }
 
     @Override
     public boolean cryptoAeadXChaCha20Poly1305IetfDecryptDetached(byte[] m, byte[] nSec, byte[] c, long cLen, byte[] mac, byte[] ad, long adLen, byte[] nPub, byte[] k) {
-        return boolify(getSodium().crypto_aead_xchacha20poly1305_ietf_decrypt_detached(m, nSec, c, cLen, mac, ad, adLen, nPub, k));
+        return successful(getSodium().crypto_aead_xchacha20poly1305_ietf_decrypt_detached(m, nSec, c, cLen, mac, ad, adLen, nPub, k));
     }
 
     @Override
@@ -1557,22 +1735,22 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoAeadAES256GCMEncrypt(byte[] cipher, long[] cipherLen, byte[] message, long messageLen, byte[] additionalData, long additionalDataLen, byte[] nSec, byte[] nPub, byte[] key) {
-        return boolify(getSodium().crypto_aead_aes256gcm_encrypt(cipher, cipherLen, message, messageLen, additionalData, additionalDataLen, nSec, nPub, key));
+        return successful(getSodium().crypto_aead_aes256gcm_encrypt(cipher, cipherLen, message, messageLen, additionalData, additionalDataLen, nSec, nPub, key));
     }
 
     @Override
     public boolean cryptoAeadAES256GCMDecrypt(byte[] message, long[] messageLen, byte[] nSec, byte[] cipher, long cipherLen, byte[] additionalData, long additionalDataLen, byte[] nPub, byte[] key) {
-        return boolify(getSodium().crypto_aead_aes256gcm_decrypt(message, messageLen, nSec, cipher, cipherLen, additionalData, additionalDataLen, nPub, key));
+        return successful(getSodium().crypto_aead_aes256gcm_decrypt(message, messageLen, nSec, cipher, cipherLen, additionalData, additionalDataLen, nPub, key));
     }
 
     @Override
     public boolean cryptoAeadAES256GCMEncryptDetached(byte[] cipher, byte[] mac, long[] macLenAddress, byte[] message, long messageLen, byte[] additionalData, long additionalDataLen, byte[] nSec, byte[] nPub, byte[] key) {
-        return boolify(getSodium().crypto_aead_aes256gcm_encrypt_detached(cipher, mac, macLenAddress, message, messageLen, additionalData, additionalDataLen, nSec, nPub, key));
+        return successful(getSodium().crypto_aead_aes256gcm_encrypt_detached(cipher, mac, macLenAddress, message, messageLen, additionalData, additionalDataLen, nSec, nPub, key));
     }
 
     @Override
     public boolean cryptoAeadAES256GCMDecryptDetached(byte[] message, byte[] nSec, byte[] cipher, long cipherLen, byte[] mac, byte[] additionalData, long additionalDataLen, byte[] nPub, byte[] key) {
-        return boolify(getSodium().crypto_aead_aes256gcm_decrypt_detached(message, nSec, cipher, cipherLen, mac, additionalData, additionalDataLen, nPub, key));
+        return successful(getSodium().crypto_aead_aes256gcm_decrypt_detached(message, nSec, cipher, cipherLen, mac, additionalData, additionalDataLen, nPub, key));
     }
 
 
@@ -1891,7 +2069,7 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean boolify(int res) {
+    public boolean successful(int res) {
         return (res == 0);
     }
 

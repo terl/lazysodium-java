@@ -15,7 +15,7 @@ public interface Base {
 
     // --- Result handling
 
-    boolean boolify(int res);
+    boolean successful(int res);
     <T> T res(int res, T object);
 
 

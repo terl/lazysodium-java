@@ -11,6 +11,7 @@
  */
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
+import com.goterl.lazycode.lazysodium.interfaces.Auth;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -20,7 +21,7 @@ public class AuthTest extends BaseTest {
 
 
     @Test
-    public void authKeygen() throws SodiumException {
+    public void authKeygenAndVerify() throws SodiumException {
         String m = "A simple message.";
 
         String key = lazySodium.cryptoAuthKeygen();
@@ -32,5 +33,16 @@ public class AuthTest extends BaseTest {
     }
 
 
+    @Test
+    public void auth256KeygenAndVerify() throws SodiumException {
+        String m = "A simple message.";
+
+        byte[] k = new byte[Auth.HMACSHA256_KEYBYTES];
+        lazySodium.cryptoAuthHMACSha256Keygen(k);
+
+        //boolean verification = lazySodium.cryptoAuthVerify(tag, m, key);
+
+        assertTrue(k.length > 0);
+    }
 
 }

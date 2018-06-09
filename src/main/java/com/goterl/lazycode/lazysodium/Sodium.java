@@ -9,6 +9,7 @@
 package com.goterl.lazycode.lazysodium;
 
 import com.goterl.lazycode.lazysodium.interfaces.AEAD;
+import com.goterl.lazycode.lazysodium.interfaces.Auth;
 import com.goterl.lazycode.lazysodium.interfaces.Hash;
 import com.goterl.lazycode.lazysodium.interfaces.SecretStream;
 import com.sun.jna.Pointer;
@@ -439,8 +440,107 @@ public class Sodium {
     public native void crypto_auth_keygen(byte[] k);
 
 
+    public native void crypto_auth_hmacsha256_keygen(byte[] key);
+
+    public native int crypto_auth_hmacsha256(
+            byte[] out,
+            byte[] in,
+            int inLen,
+            byte[] k
+    );
+
+    public native int crypto_auth_hmacsha256_verify(
+            byte[] h,
+            byte[] in,
+            int inLen,
+            byte[] k
+    );
+
+    public native int crypto_auth_hmacsha256_init(
+            Auth.StateHMAC256 state,
+            byte[] key,
+            int keyLen
+    );
+
+    public native int crypto_auth_hmacsha256_update(
+            Auth.StateHMAC256 state,
+            byte[] in,
+            long inLen
+    );
+
+    public native int crypto_auth_hmacsha256_final(
+            Auth.StateHMAC256 state,
+            byte[] out
+    );
 
 
+
+    public native void crypto_auth_hmacsha512256_keygen(byte[] key);
+
+    public native int crypto_auth_hmacsha512256(
+            byte[] out,
+            byte[] in,
+            int inLen,
+            byte[] k
+    );
+
+    public native int crypto_auth_hmacsha512256_verify(
+            byte[] h,
+            byte[] in,
+            int inLen,
+            byte[] k
+    );
+
+    public native int crypto_auth_hmacsha512256_init(
+            Auth.StateHMAC512256 state,
+            byte[] key,
+            int keyLen
+    );
+
+    public native int crypto_auth_hmacsha512256_update(
+            Auth.StateHMAC512256 state,
+            byte[] in,
+            long inLen
+    );
+
+    public native int crypto_auth_hmacsha512256_final(
+            Auth.StateHMAC512256 state,
+            byte[] out
+    );
+
+
+    public native void crypto_auth_hmacsha512_keygen(byte[] key);
+
+    public native int crypto_auth_hmacsha512(
+            byte[] out,
+            byte[] in,
+            int inLen,
+            byte[] k
+    );
+
+    public native int crypto_auth_hmacsha512_verify(
+            byte[] h,
+            byte[] in,
+            int inLen,
+            byte[] k
+    );
+
+    public native int crypto_auth_hmacsha512_init(
+            Auth.StateHMAC512 state,
+            byte[] key,
+            int keyLen
+    );
+
+    public native int crypto_auth_hmacsha512_update(
+            Auth.StateHMAC512 state,
+            byte[] in,
+            long inLen
+    );
+
+    public native int crypto_auth_hmacsha512_final(
+            Auth.StateHMAC512 state,
+            byte[] out
+    );
 
     //// -------------------------------------------|
     //// SHORT HASH

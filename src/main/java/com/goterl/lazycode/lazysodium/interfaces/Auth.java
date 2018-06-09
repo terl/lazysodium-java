@@ -11,11 +11,19 @@ package com.goterl.lazycode.lazysodium.interfaces;
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.utils.BaseChecker;
+import com.sun.jna.Structure;
+
+import java.util.Arrays;
+import java.util.List;
 
 public interface Auth {
 
     int HMACSHA512256_BYTES = 32,
         HMACSHA512256_KEYBYTES = 32,
+        HMACSHA256_BYTES = 32,
+        HMACSHA256_KEYBYTES = 32,
+        HMACSHA512_BYTES = 64,
+        HMACSHA512_KEYBYTES = 32,
 
         BYTES = HMACSHA512256_BYTES,
         KEYBYTES = HMACSHA512256_KEYBYTES;
@@ -54,6 +62,110 @@ public interface Auth {
          * @return True if successful verification.
          */
         boolean cryptoAuthVerify(byte[] tag, byte[] in, long inLen, byte[] key);
+
+
+        void cryptoAuthHMACSha256Keygen(byte[] key);
+
+        boolean cryptoAuthHMACSha256(
+                byte[] out,
+                byte[] in,
+                int inLen,
+                byte[] k
+        );
+
+        boolean cryptoAuthHMACSha256Verify(
+                byte[] h,
+                byte[] in,
+                int inLen,
+                byte[] k
+        );
+
+        boolean cryptoAuthHMACSha256Init(
+                Auth.StateHMAC256 state,
+                byte[] key,
+                int keyLen
+        );
+
+        boolean cryptoAuthHMACSha256Update(
+                Auth.StateHMAC256 state,
+                byte[] in,
+                long inLen
+        );
+
+        boolean cryptoAuthHMACSha256Final(
+                Auth.StateHMAC256 state,
+                byte[] out
+        );
+
+
+        void cryptoAuthHMACSha512Keygen(byte[] key);
+
+        boolean cryptoAuthHMACSha512(
+                byte[] out,
+                byte[] in,
+                int inLen,
+                byte[] k
+        );
+
+        boolean cryptoAuthHMACSha512Verify(
+                byte[] h,
+                byte[] in,
+                int inLen,
+                byte[] k
+        );
+
+        boolean cryptoAuthHMACSha512Init(
+                Auth.StateHMAC512 state,
+                byte[] key,
+                int keyLen
+        );
+
+        boolean cryptoAuthHMACSha512Update(
+                Auth.StateHMAC512 state,
+                byte[] in,
+                long inLen
+        );
+
+        boolean cryptoAuthHMACSha512Final(
+                Auth.StateHMAC512 state,
+                byte[] out
+        );
+
+
+
+        void cryptoAuthHMACSha512256Keygen(byte[] key);
+
+        boolean cryptoAuthHMACSha512256(
+                byte[] out,
+                byte[] in,
+                int inLen,
+                byte[] k
+        );
+
+        boolean cryptoAuthHMACSha512256Verify(
+                byte[] h,
+                byte[] in,
+                int inLen,
+                byte[] k
+        );
+
+        boolean cryptoAuthHMACSha512256Init(
+                Auth.StateHMAC512256 state,
+                byte[] key,
+                int keyLen
+        );
+
+        boolean cryptoAuthHMACSha512256Update(
+                Auth.StateHMAC512256 state,
+                byte[] in,
+                long inLen
+        );
+
+        boolean cryptoAuthHMACSha512256Final(
+                Auth.StateHMAC512256 state,
+                byte[] out
+        );
+
     }
 
     interface Lazy {
@@ -82,6 +194,106 @@ public interface Auth {
          */
         boolean cryptoAuthVerify(String tag, String message, String key) throws SodiumException;
 
+
+        String cryptoAuthHMACShaKeygen(Type type);
+
+        String cryptoAuthHMACSha(Type type, String in, String key);
+
+        String cryptoAuthHMACShaVerify(
+                Type type,
+                String authenticator,
+                String message,
+                String key
+        );
+
+        boolean cryptoAuthHMACShaInit(
+                Auth.StateHMAC256 state,
+                String key
+        );
+
+        boolean cryptoAuthHMACShaUpdate(
+                Auth.StateHMAC256 state,
+                String in
+        );
+
+        String cryptoAuthHMACShaFinal(
+                Auth.StateHMAC256 state
+        );
+
+        boolean cryptoAuthHMACShaInit(
+                Auth.StateHMAC512 state,
+                String key
+        );
+
+        boolean cryptoAuthHMACShaUpdate(
+                Auth.StateHMAC512 state,
+                String in
+        );
+
+        String cryptoAuthHMACShaFinal(
+                Auth.StateHMAC512 state
+        );
+
+
+
+        boolean cryptoAuthHMACShaInit(
+                Auth.StateHMAC512256 state,
+                String key
+        );
+
+        boolean cryptoAuthHMACShaUpdate(
+                Auth.StateHMAC512256 state,
+                String in
+        );
+
+        String cryptoAuthHMACShaFinal(
+                Auth.StateHMAC512256 state
+        );
+
+
+
+    }
+
+    enum Type {
+        SHA256,
+        SHA512,
+        SHA512256
+    }
+
+    class StateHMAC256 extends Structure {
+        Hash.State256 ictx;
+        Hash.State256 octx;
+
+        public static class ByReference extends StateHMAC256 implements Structure.ByReference { }
+
+        @Override
+        protected List<String> getFieldOrder() {
+            return Arrays.asList("ictx", "octx");
+        }
+    }
+
+    class StateHMAC512 extends Structure {
+        Hash.State512 ictx;
+        Hash.State512 octx;
+
+        public static class ByReference extends StateHMAC512 implements Structure.ByReference { }
+
+        @Override
+        protected List<String> getFieldOrder() {
+            return Arrays.asList("ictx", "octx");
+        }
+    }
+
+    class StateHMAC512256 extends Structure {
+        Hash.State512 ictx;
+        Hash.State512 octx;
+
+        public static class ByReference extends StateHMAC512256 implements Structure.ByReference { }
+
+        @Override
+        protected List<String> getFieldOrder() {
+            return Arrays.asList("ictx", "octx");
+        }
     }
 
 
