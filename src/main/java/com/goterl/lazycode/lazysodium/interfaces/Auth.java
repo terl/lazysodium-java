@@ -199,7 +199,7 @@ public interface Auth {
 
         String cryptoAuthHMACSha(Type type, String in, String key);
 
-        String cryptoAuthHMACShaVerify(
+        boolean cryptoAuthHMACShaVerify(
                 Type type,
                 String authenticator,
                 String message,

@@ -37,12 +37,10 @@ public class AuthTest extends BaseTest {
     public void auth256KeygenAndVerify() throws SodiumException {
         String m = "A simple message.";
 
-        byte[] k = new byte[Auth.HMACSHA256_KEYBYTES];
-        lazySodium.cryptoAuthHMACSha256Keygen(k);
-
-        //boolean verification = lazySodium.cryptoAuthVerify(tag, m, key);
-
-        assertTrue(k.length > 0);
+        String k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA256);
+        String shaResult = lazySodium.cryptoAuthHMACSha(Auth.Type.SHA256, m, k);
+        boolean isTrue = lazySodium.cryptoAuthHMACShaVerify(Auth.Type.SHA256, shaResult, m, k);
+        assertTrue(isTrue);
     }
 
 }

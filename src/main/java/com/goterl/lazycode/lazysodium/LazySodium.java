@@ -1433,7 +1433,7 @@ public abstract class LazySodium implements
     @Override
     public String cryptoAuthHMACSha(Auth.Type type, String in, String key) {
         byte[] inBytes = bytes(in);
-        byte[] keyBytes = bytes(key);
+        byte[] keyBytes = toBin(key);
         if (type.equals(Auth.Type.SHA256)) {
             byte[] out = new byte[Auth.HMACSHA256_BYTES];
             cryptoAuthHMACSha256(out, inBytes, inBytes.length, keyBytes);
@@ -1450,53 +1450,74 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public String cryptoAuthHMACShaVerify(Auth.Type type, String authenticator, String message, String key) {
-        return null;
+    public boolean cryptoAuthHMACShaVerify(Auth.Type type, String h, String in, String key) {
+        byte[] authBytes = toBin(h);
+        byte[] inBytes = bytes(in);
+        byte[] keyBytes = toBin(key);
+        if (type.equals(Auth.Type.SHA256)) {
+            return cryptoAuthHMACSha256Verify(authBytes, inBytes, inBytes.length, keyBytes);
+        } else if (type.equals(Auth.Type.SHA512)) {
+            return cryptoAuthHMACSha512Verify(authBytes, inBytes, inBytes.length, keyBytes);
+        } else {
+            return cryptoAuthHMACSha512256Verify(authBytes, inBytes, inBytes.length, keyBytes);
+        }
     }
 
     @Override
     public boolean cryptoAuthHMACShaInit(Auth.StateHMAC256 state, String key) {
-        return false;
+        byte[] keyBytes = toBin(key);
+        return cryptoAuthHMACSha256Init(state, keyBytes, keyBytes.length);
     }
 
     @Override
     public boolean cryptoAuthHMACShaUpdate(Auth.StateHMAC256 state, String in) {
-        return false;
+        byte[] inBytes = toBin(in);
+        return cryptoAuthHMACSha256Update(state, inBytes, inBytes.length);
     }
 
     @Override
     public String cryptoAuthHMACShaFinal(Auth.StateHMAC256 state) {
-        return null;
+        byte[] out = new byte[Auth.HMACSHA256_BYTES];
+        cryptoAuthHMACSha256Final(state, out);
+        return toHex(out);
     }
 
     @Override
     public boolean cryptoAuthHMACShaInit(Auth.StateHMAC512 state, String key) {
-        return false;
+        byte[] keyBytes = toBin(key);
+        return cryptoAuthHMACSha512Init(state, keyBytes, keyBytes.length);
     }
 
     @Override
     public boolean cryptoAuthHMACShaUpdate(Auth.StateHMAC512 state, String in) {
-        return false;
+        byte[] inBytes = toBin(in);
+        return cryptoAuthHMACSha512Update(state, inBytes, inBytes.length);
     }
 
     @Override
     public String cryptoAuthHMACShaFinal(Auth.StateHMAC512 state) {
-        return null;
+        byte[] out = new byte[Auth.HMACSHA512_BYTES];
+        cryptoAuthHMACSha512Final(state, out);
+        return toHex(out);
     }
 
     @Override
     public boolean cryptoAuthHMACShaInit(Auth.StateHMAC512256 state, String key) {
-        return false;
+        byte[] keyBytes = toBin(key);
+        return cryptoAuthHMACSha512256Init(state, keyBytes, keyBytes.length);
     }
 
     @Override
     public boolean cryptoAuthHMACShaUpdate(Auth.StateHMAC512256 state, String in) {
-        return false;
+        byte[] inBytes = toBin(in);
+        return cryptoAuthHMACSha512256Update(state, inBytes, inBytes.length);
     }
 
     @Override
     public String cryptoAuthHMACShaFinal(Auth.StateHMAC512256 state) {
-        return null;
+        byte[] out = new byte[Auth.HMACSHA512256_BYTES];
+        cryptoAuthHMACSha512256Final(state, out);
+        return toHex(out);
     }
 
     //// -------------------------------------------|
