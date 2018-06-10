@@ -1444,7 +1444,7 @@ public abstract class LazySodium implements
             return toHex(out);
         } else {
             byte[] out = new byte[Auth.HMACSHA512256_BYTES];
-            cryptoAuthHMACSha512(out, inBytes, inBytes.length, keyBytes);
+            cryptoAuthHMACSha512256(out, inBytes, inBytes.length, keyBytes);
             return toHex(out);
         }
     }
@@ -1471,14 +1471,17 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoAuthHMACShaUpdate(Auth.StateHMAC256 state, String in) {
-        byte[] inBytes = toBin(in);
+        byte[] inBytes = bytes(in);
         return cryptoAuthHMACSha256Update(state, inBytes, inBytes.length);
     }
 
     @Override
-    public String cryptoAuthHMACShaFinal(Auth.StateHMAC256 state) {
+    public String cryptoAuthHMACShaFinal(Auth.StateHMAC256 state) throws SodiumException {
         byte[] out = new byte[Auth.HMACSHA256_BYTES];
-        cryptoAuthHMACSha256Final(state, out);
+        boolean res = cryptoAuthHMACSha256Final(state, out);
+        if (!res) {
+            throw new SodiumException("Could not finalise SHA Hash.");
+        }
         return toHex(out);
     }
 
@@ -1490,14 +1493,17 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoAuthHMACShaUpdate(Auth.StateHMAC512 state, String in) {
-        byte[] inBytes = toBin(in);
+        byte[] inBytes = bytes(in);
         return cryptoAuthHMACSha512Update(state, inBytes, inBytes.length);
     }
 
     @Override
-    public String cryptoAuthHMACShaFinal(Auth.StateHMAC512 state) {
+    public String cryptoAuthHMACShaFinal(Auth.StateHMAC512 state) throws SodiumException {
         byte[] out = new byte[Auth.HMACSHA512_BYTES];
-        cryptoAuthHMACSha512Final(state, out);
+        boolean res = cryptoAuthHMACSha512Final(state, out);
+        if (!res) {
+            throw new SodiumException("Could not finalise HMAC Sha 512.");
+        }
         return toHex(out);
     }
 
@@ -1509,14 +1515,17 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoAuthHMACShaUpdate(Auth.StateHMAC512256 state, String in) {
-        byte[] inBytes = toBin(in);
+        byte[] inBytes = bytes(in);
         return cryptoAuthHMACSha512256Update(state, inBytes, inBytes.length);
     }
 
     @Override
-    public String cryptoAuthHMACShaFinal(Auth.StateHMAC512256 state) {
+    public String cryptoAuthHMACShaFinal(Auth.StateHMAC512256 state) throws SodiumException {
         byte[] out = new byte[Auth.HMACSHA512256_BYTES];
-        cryptoAuthHMACSha512256Final(state, out);
+        boolean res = cryptoAuthHMACSha512256Final(state, out);
+        if (!res) {
+            throw new SodiumException("Could not finalise HMAC Sha 512256.");
+        }
         return toHex(out);
     }
 

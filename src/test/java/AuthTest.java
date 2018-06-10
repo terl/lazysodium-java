@@ -12,6 +12,7 @@
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.Auth;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -34,7 +35,7 @@ public class AuthTest extends BaseTest {
 
 
     @Test
-    public void auth256KeygenAndVerify() throws SodiumException {
+    public void auth256KeygenAndVerify() {
         String m = "A simple message.";
 
         String k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA256);
@@ -43,4 +44,112 @@ public class AuthTest extends BaseTest {
         assertTrue(isTrue);
     }
 
+    @Test
+    public void auth512KeygenAndVerify() {
+        String m = "A simple message.";
+
+        String k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA512);
+        String shaResult = lazySodium.cryptoAuthHMACSha(Auth.Type.SHA512, m, k);
+        boolean isTrue = lazySodium.cryptoAuthHMACShaVerify(Auth.Type.SHA512, shaResult, m, k);
+        assertTrue(isTrue);
+    }
+
+    @Test
+    public void auth512256KeygenAndVerify() {
+        String m = "Follow us on twitter @terlacious";
+
+        String k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA512256);
+        String shaResult = lazySodium.cryptoAuthHMACSha(Auth.Type.SHA512256, m, k);
+        boolean isTrue = lazySodium.cryptoAuthHMACShaVerify(Auth.Type.SHA512256, shaResult, m, k);
+        assertTrue(isTrue);
+    }
+
+    @Test
+    public void auth256StreamKeygenAndVerify() throws SodiumException {
+        String m = "Terl is ";
+        String m2 = "the best";
+
+        String k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA256);
+        Auth.StateHMAC256 state = new Auth.StateHMAC256.ByReference();
+
+
+        boolean res = lazySodium.cryptoAuthHMACShaInit(state, k);
+        if (!res) {
+            TestCase.fail("Could not initialise HMAC Sha.");
+            return;
+        }
+
+        boolean res2 = lazySodium.cryptoAuthHMACShaUpdate(state, m);
+        if (!res2) {
+            TestCase.fail("Could not update HMAC Sha.");
+            return;
+        }
+
+        boolean res3 = lazySodium.cryptoAuthHMACShaUpdate(state, m2);
+        if (!res3) {
+            TestCase.fail("Could not update HMAC Sha (part 2).");
+            return;
+        }
+
+        String sha = lazySodium.cryptoAuthHMACShaFinal(state);
+
+        boolean isTrue = lazySodium.cryptoAuthHMACShaVerify(Auth.Type.SHA256, sha, m + m2, k);
+        assertTrue(isTrue);
+    }
+
+
+    @Test
+    public void auth512StreamKeygenAndVerify() throws SodiumException {
+        String m = "Lazysodium makes devs lazy";
+        String m2 = " but don't tell your manager that!";
+
+        String k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA512);
+        Auth.StateHMAC512 state = new Auth.StateHMAC512.ByReference();
+
+
+        boolean res = lazySodium.cryptoAuthHMACShaInit(state, k);
+        if (!res) {
+            TestCase.fail("Could not initialise HMAC Sha.");
+            return;
+        }
+
+        boolean res2 = lazySodium.cryptoAuthHMACShaUpdate(state, m);
+        if (!res2) {
+            TestCase.fail("Could not update HMAC Sha.");
+            return;
+        }
+
+        boolean res3 = lazySodium.cryptoAuthHMACShaUpdate(state, m2);
+        if (!res3) {
+            TestCase.fail("Could not update HMAC Sha (part 2).");
+            return;
+        }
+
+        String sha = lazySodium.cryptoAuthHMACShaFinal(state);
+
+        boolean isTrue = lazySodium.cryptoAuthHMACShaVerify(Auth.Type.SHA512, sha, m + m2, k);
+        assertTrue(isTrue);
+    }
+
+
+    @Test
+    public void auth512256StreamKeygenAndVerify() throws SodiumException {
+        String m = "A string that ";
+        String m2 = "is sha512256 sha mac'd ";
+        String m3 = "is super secure.";
+
+        String k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA512256);
+        Auth.StateHMAC512256 state = new Auth.StateHMAC512256.ByReference();
+
+
+        boolean res = lazySodium.cryptoAuthHMACShaInit(state, k);
+        boolean res2 = lazySodium.cryptoAuthHMACShaUpdate(state, m);
+        boolean res3 = lazySodium.cryptoAuthHMACShaUpdate(state, m2);
+        boolean res4 = lazySodium.cryptoAuthHMACShaUpdate(state, m3);
+
+        String sha = lazySodium.cryptoAuthHMACShaFinal(state);
+
+        boolean isTrue = lazySodium.cryptoAuthHMACShaVerify(Auth.Type.SHA512256, sha, m + m2 + m3, k);
+        assertTrue(isTrue);
+    }
 }

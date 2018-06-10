@@ -218,7 +218,7 @@ public interface Auth {
 
         String cryptoAuthHMACShaFinal(
                 Auth.StateHMAC256 state
-        );
+        ) throws SodiumException;
 
         boolean cryptoAuthHMACShaInit(
                 Auth.StateHMAC512 state,
@@ -232,7 +232,7 @@ public interface Auth {
 
         String cryptoAuthHMACShaFinal(
                 Auth.StateHMAC512 state
-        );
+        ) throws SodiumException;
 
 
 
@@ -248,7 +248,7 @@ public interface Auth {
 
         String cryptoAuthHMACShaFinal(
                 Auth.StateHMAC512256 state
-        );
+        ) throws SodiumException;
 
 
 
@@ -261,8 +261,8 @@ public interface Auth {
     }
 
     class StateHMAC256 extends Structure {
-        Hash.State256 ictx;
-        Hash.State256 octx;
+        public Hash.State256 ictx;
+        public Hash.State256 octx;
 
         public static class ByReference extends StateHMAC256 implements Structure.ByReference { }
 
@@ -273,8 +273,8 @@ public interface Auth {
     }
 
     class StateHMAC512 extends Structure {
-        Hash.State512 ictx;
-        Hash.State512 octx;
+        public Hash.State512 ictx;
+        public Hash.State512 octx;
 
         public static class ByReference extends StateHMAC512 implements Structure.ByReference { }
 
@@ -285,8 +285,8 @@ public interface Auth {
     }
 
     class StateHMAC512256 extends Structure {
-        Hash.State512 ictx;
-        Hash.State512 octx;
+        public Hash.State512 ictx;
+        public Hash.State512 octx;
 
         public static class ByReference extends StateHMAC512256 implements Structure.ByReference { }
 
