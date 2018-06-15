@@ -26,8 +26,6 @@ Lazysodium needs your support for it to continue being maintained and improved. 
 
 Patreon only has recurring subscriptions and rewards. Liberapay is another route you could take for subscription. We're also setting up our own system that allows one-off support amongst other things.
 
-<br> 
-
 ## Why Lazysodium
 We created Lazysodium because we really wanted a solid cryptography library that would just work without fuss.
 
@@ -35,7 +33,10 @@ We were exasperated and annoyed with current Libsodium implementations as some o
 
 Thus, Lazysodium was born with the blessings of *Lazycode*, a part of [Terl](https://terl.co) that specialises in giving developers easy-to-use software and tools that just work. Read more about us below.
 
-### Using the native functions
+## The difference in code
+We believe the code speaks for itself. Compare the two ways you could use Lazysodium:
+
+### 1. Using native functions
 
 ```java
 byte[] subkey = subkey[32];
@@ -50,7 +51,7 @@ if (res == 0) {
 }
 ```
 
-#### Or use Lazysodium's lazy functions
+### 2. Or use Lazysodium's lazy functions
 You could use the above native functions **or** you could use the "Lazy" functions 😄
  
 ```java
@@ -62,8 +63,9 @@ String subkeyString = lazySodium.cryptoKdfDeriveFromKey(1L, context, masterKey);
 
 As you can see Lazysodium's lazy functions **save you a lot of pain**!
 
+## Features
+You can find an up-to-date feature list [here](https://docs.lazycode.co/lazysodium/features).
 
-<br>
 
 ## Quick start
 
@@ -133,8 +135,7 @@ See our [official documentation](https://docs.lazycode.co/lazysodium) to get sta
 ## Lazysodium for Android
 We also have an Android implementation available at [Lazysodium for Android](https://github.com/terl/lazysodium-android). It has the same API as this library so you can share code easily!
 
-<br>
-<br>
+## Who are we?
 
 <a href="https://terl.co"><img width="100" style="float: left: display: inline;" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/terl_slant.png" /></a>
 
