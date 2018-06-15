@@ -122,6 +122,9 @@ Every interface you can cast to is helpfully all in one directory so you can eas
 See our [official documentation](https://docs.lazycode.co/lazysodium) to get started.
 
 
+## Lazysodium for Android
+We also have an Android implementation available at [Lazysodium for Android](https://github.com/terl/lazysodium-android). It has the same API as this library so you can share code easily!
+
 <br>
 <br>
 
