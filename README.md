@@ -12,6 +12,7 @@ Lazysodium is a **complete** Java (JNA) wrapper over the [Libsodium](https://git
 ## Help us grow
 Lazysodium needs your support for it to continue being maintained and improved. Even if you put forward £1/$1/€1 it still means a lot for us. Your money would go into improving our open-source projects first and foremost. If you want to find out more, use your preffered donation platform. 
 
+
 |  |Patreon       | Liberapay      | Terl Supporters |
 |----|--------------|---------------------|---|
 |    | <a href="https://www.patreon.com/terlacious"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/patron_button.png" width="100" /></a> | <a href="https://liberapay.com/terlacious/"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/liberapay.png" width="40" /></a> | <a href="https://terl.co/support-us"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/terl_slant_square.png" width="40" /></a> |
@@ -22,7 +23,8 @@ Lazysodium needs your support for it to continue being maintained and improved. 
 |  Rewards  | ✓ | ✗ | ✓ |
 |  Currencies  | USD | USD, EUR | Over 100|
 
-Patreon only has recurring subscriptions and rewards. Liberapay is another route you could take for subscription. We're also setting up our own system super powered system that allows one-off support amongst other things.
+
+Patreon only has recurring subscriptions and rewards. Liberapay is another route you could take for subscription. We're also setting up our own system that allows one-off support amongst other things.
 
 <br> 
 
@@ -113,6 +115,8 @@ String key = secretBoxLazy.cryptoSecretBoxKeygen();
 ```
 
 In the above code there are two ways you can use Lazysodium. The first way is through the Native interface. The second is through the Lazy interface. 
+
+### 3. You decide
 
 Every project is different, you may need to use lower-level APIs to achieve the control you need so you use the Native interface. Or alternatively you just don't want to deal with the details so you stick to the Lazy interface.
 
