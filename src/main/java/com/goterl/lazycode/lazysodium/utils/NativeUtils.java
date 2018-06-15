@@ -62,9 +62,7 @@ public class NativeUtils {
             throw new IOException("Path cannot be null.");
         }
 
-        Path p = Paths.get(path);
-        String fileName = p.getFileName().toString();
-
+        String fileName = new File(path).getName();
         if (fileName.length() <= MIN_PREFIX_LENGTH) {
             throw new IOException(
                     "The filename of your native library (" + fileName +
@@ -80,15 +78,25 @@ public class NativeUtils {
         }
 
         File temp = new File(temporaryDir, fileName);
-
-        try (InputStream is = NativeUtils.class.getResourceAsStream(path)) {
-            Files.copy(is, temp.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        InputStream is = NativeUtils.class.getResourceAsStream(path);
+        FileOutputStream out = new FileOutputStream(temp, false);
+        try {
+            byte [] dest = new byte[4096];
+            int amt = is.read(dest);
+            while(amt != -1) {
+                out.write(dest, 0, amt);
+                amt = is.read(dest);
+            }
         } catch (IOException e) {
             temp.delete();
             throw e;
         } catch (NullPointerException e) {
             temp.delete();
             throw new FileNotFoundException("File " + path + " was not found inside JAR.");
+        }
+        finally {
+            is.close();
+            out.close();
         }
 
         // Modified to work with JNA

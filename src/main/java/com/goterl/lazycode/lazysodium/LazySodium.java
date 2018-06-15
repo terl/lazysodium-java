@@ -38,7 +38,7 @@ public abstract class LazySodium implements
         KeyExchange.Native, KeyExchange.Lazy,
         KeyDerivation.Native, KeyDerivation.Lazy  {
 
-    protected Charset charset = StandardCharsets.UTF_8;
+    protected Charset charset = Charset.forName("UTF-8");
 
 
     public LazySodium() {
