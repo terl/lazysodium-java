@@ -141,6 +141,22 @@ public interface Sign {
          */
         boolean convertSecretKeyEd25519ToCurve25519(byte[] curve, byte[] ed);
 
+        /**
+         * Extracts the seed value from a secret ed25519 key.
+         * @param seed The array in which the seed value will be placed. Must be Sign.ED25519_SEEDBYTES bytes long.
+         * @param ed The secret key in ed25519.
+         * @return Return true if the seed is extracted.
+         */
+        boolean cryptoSignEd25519SkToSeed(byte[] seed, byte[] ed);
+
+        /**
+         * Extracts the ed25519 public key from a secret ed25519 key.
+         * @param publicKey The array in which the public key will be placed. Must be Sign.PUBLICKEYBYTES bytes long.
+         * @param ed The secret key in ed25519.
+         * @return Return true if the public key is extracted.
+         */
+        boolean cryptoSignEd25519SkToPk(byte[] publicKey, byte[] ed);
+
     }
 
     interface Lazy {
@@ -157,6 +173,13 @@ public interface Sign {
          * @return Public and private keypair.
          */
         KeyPair cryptoSignSeedKeypair(byte[] seed) throws SodiumException;
+
+        /**
+         * Generate a signing keypair (ed25519), given a secret ed25519 key.
+         * @param secret The ed25519 secret key.
+         * @return The private and public ed25519 keys.
+         */
+        KeyPair cryptoSignSecretKeyPair(byte[] secret) throws SodiumException;
 
         /**
          * Sign a message.

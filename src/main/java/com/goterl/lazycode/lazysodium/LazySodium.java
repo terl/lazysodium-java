@@ -985,6 +985,16 @@ public abstract class LazySodium implements
         return successful(getSodium().crypto_sign_ed25519_sk_to_curve25519(curve, ed));
     }
 
+    @Override
+    public boolean cryptoSignEd25519SkToSeed(byte[] seed, byte[] ed) {
+        return successful(getSodium().crypto_sign_ed25519_sk_to_seed(seed, ed));
+    }
+
+    @Override
+    public boolean cryptoSignEd25519SkToPk(byte[] publicKey, byte[] ed) {
+        return successful(getSodium().crypto_sign_ed25519_sk_to_pk(publicKey, ed));
+    }
+
     // -- lazy
 
     @Override
@@ -1005,6 +1015,16 @@ public abstract class LazySodium implements
             throw new SodiumException("Could not generate a signing keypair with a seed.");
         }
         return new KeyPair(publicKey, secretKey);
+    }
+
+    @Override
+    public KeyPair cryptoSignSecretKeyPair(byte[] secret) throws SodiumException {
+        byte[] publicKey = new byte[Sign.PUBLICKEYBYTES];
+        if(! cryptoSignEd25519SkToPk(publicKey, secret)) {
+            throw new SodiumException("Could not extract public key.");
+        }
+
+        return new KeyPair(publicKey, secret);
     }
 
     @Override
