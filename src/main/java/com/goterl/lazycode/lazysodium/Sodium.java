@@ -384,6 +384,10 @@ public class Sodium {
             byte[] ed25519SecretKey
     );
 
+    public native int crypto_sign_ed25519_sk_to_seed(byte[] seed, byte[] ed25519SecretKey);
+
+    public native int crypto_sign_ed25519_sk_to_pk(byte[] ed25519PublicKey, byte[] ed25519SecretKey);
+
     //// -------------------------------------------|
     //// SECRET STREAM
     //// -------------------------------------------|
