@@ -66,7 +66,7 @@ This is by no means a comprehensive introduction to Lazysodium. Please view the 
 ### 1. Install
 Install by adding the bintray repository and the dependency.
 
-```
+```groovy
 // Top level build file
 repositories {
     maven {
@@ -88,7 +88,7 @@ Substitute `VERSION_NUMBER` for the version in this box:
 
 You can now initialise and start encrypting! **Please note** that this library follows the official [libsodium docs](https://download.libsodium.org/doc/) closely. You need to use those docs to help you find the functions you need.
 
-```
+```java
 // Let's initialise LazySodium
 LazySodiumJava lazySodium = new LazySodiumJava(new SodiumJava());
 
