@@ -12,11 +12,13 @@ Lazysodium is a **complete** Java (JNA) wrapper over the [Libsodium](https://git
 ## Help us grow
 Lazysodium needs your support for it to continue being maintained and improved. Even if you put forward £1/$1/€1 it still means a lot for us. Your money would go into improving our open-source projects first and foremost. If you want to find out more, use your preffered donation platform. 
 
-Patreon only has recurring donations and rewards. Liberapay has one-off donations and recurring donations but does not have rewards.
+Patreon only has recurring subscriptions and rewards. Liberapay is another route you could take for subscription. We're also setting up our own system that allows one-off support.
 
 <a href="https://www.patreon.com/terlacious"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/patron_button.png" width="140" /></a>
 <br>
 <a href="https://liberapay.com/terlacious/"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/liberapay.png" width="68" /></a>
+
+[Or, use our system for one time support payments. Supports over 100 currencies.](https://terl.co/support-us)
 
 <br> 
 
@@ -57,7 +59,65 @@ As you can see Lazysodium's lazy functions **save you a lot of pain**!
 
 <br>
 
-## Installation, documentation, FAQ and everything else
+## Quick start
+
+This is by no means a comprehensive introduction to Lazysodium. Please view the [official documentation](https://docs.lazycode.co/lazysodium/installation) for a more comprehensive guide.
+
+### 1. Install
+Install by adding the bintray repository and the dependency.
+
+```
+// Top level build file
+repositories {
+    maven {
+        url  "https://dl.bintray.com/terl/lazysodium-maven"
+    }
+}
+
+// Add to dependencies section
+dependencies {
+    implementation "com.goterl.lazycode:lazysodium-java:VERSION_NUMBER"
+}
+```
+
+Substitute `VERSION_NUMBER` for the version in this box:
+
+[![Download](https://api.bintray.com/packages/terl/lazysodium-maven/lazysodium-java/images/download.svg) ](https://bintray.com/terl/lazysodium-maven/lazysodium-java/_latestVersion)
+
+### 2. Let's go!
+
+You can now initialise and start encrypting! **Please note** that this library follows the official [libsodium docs](https://download.libsodium.org/doc/) closely. You need to use those docs to help you find the functions you need.
+
+```
+// Let's initialise LazySodium
+LazySodiumJava lazySodium = new LazySodiumJava(new SodiumJava());
+
+// Now you can cast to an interface so that our
+// IDE picks up and intelligently loads up the correct methods. 
+SecretBox.Native secretBoxNative = (SecretBox.Native) lazySodium;
+SecretBox.Lazy secretBoxLazy = (SecretBox.Lazy) lazySodium;
+
+// The first one is Lazysodium's Native implementation which
+// is just like libsodium's native C function but with tiny enhancements
+// to make your life easier.
+secretBoxNative.cryptoSecretBoxKeygen(key);
+// Convert key to string and save to DB
+
+// This one is Lazysodium's Lazy implementation which makes
+// your work with cryptography super easy.
+String key = secretBoxLazy.cryptoSecretBoxKeygen();
+```
+
+In the above code there are two ways you can use Lazysodium. The first way is through the Native interface. The second is through the Lazy interface. 
+
+Every project is different, you may need to use lower-level APIs to achieve the control you need so you use the Native interface. Or alternatively you just don't want to deal with the details so you stick to the Lazy interface.
+
+Every interface you can cast to is helpfully all in one directory so you can easily pick the functions you need. This isolates your code and prevents you from making mistakes.
+
+**Important:** If possible, please stick to using either the Native *or* the Lazy interface. The reason for this is that the Lazy interface normally converts everything to hexadecimal whereas the Native interface assumes everything is non-hexadecimal. If you don't know what you're doing, you could end up making mistakes.
+
+
+## Documentation
 
 See our [official documentation](https://docs.lazycode.co/lazysodium) to get started.
 
