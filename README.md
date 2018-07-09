@@ -9,23 +9,6 @@ Lazysodium is a **complete** Java (JNA) wrapper over the [Libsodium](https://git
 [![Build Status](https://semaphoreci.com/api/v1/terl/lazysodium-java/branches/master/badge.svg)](https://semaphoreci.com/terl/lazysodium-java)
 [![Download](https://api.bintray.com/packages/terl/lazysodium-maven/lazysodium-java/images/download.svg) ](https://bintray.com/terl/lazysodium-maven/lazysodium-java/_latestVersion)
 
-## Help us grow
-Lazysodium needs your support for it to continue being maintained and improved. Even if you put forward £1/$1/€1 it still means a lot for us. Your money would go into improving our open-source projects first and foremost. If you want to find out more, use your preffered donation platform. 
-
-
-|  |Patreon       | Liberapay      | Terl Supporters |
-|----|--------------|---------------------|---|
-|    | <a href="https://www.patreon.com/terlacious"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/patron_button.png" width="100" /></a> | <a href="https://liberapay.com/terlacious/"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/liberapay.png" width="40" /></a> | <a href="https://terl.co/support-us"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/terl_slant_square.png" width="40" /></a> |
-|  One-time  | ✗ | ✗ | ✓ |
-|  Weekly  | ✗ | ✓ | ✓ |
-|  Monthly  | ✓ | ✓ | ✓ |
-|  Yearly  | ✗ | ✓ | ✓ |
-|  Rewards  | ✓ | ✗ | ✓ |
-|  Currencies  | USD | USD, EUR | Over 100|
-
-
-Patreon only has recurring subscriptions and rewards. Liberapay is another route you could take for subscription. We're also setting up our own system that allows one-off support amongst other things.
-
 ## Why Lazysodium
 We created Lazysodium because we really wanted a solid cryptography library that would just work without fuss.
 
@@ -33,10 +16,11 @@ We were exasperated and annoyed with current Libsodium implementations as some o
 
 Thus, Lazysodium was born with the blessings of *Lazycode*, a part of [Terl](https://terl.co) that specialises in giving developers easy-to-use software and tools that just work. Read more about us below.
 
-## The difference in code
+### The difference in code
+
 We believe the code speaks for itself. Compare the two ways you could use Lazysodium:
 
-### 1. Using native functions
+#### 1. Using native functions
 
 ```java
 byte[] subkey = subkey[32];
@@ -51,7 +35,7 @@ if (res == 0) {
 }
 ```
 
-### 2. Or use Lazysodium's lazy functions
+#### 2. Or use Lazysodium's lazy functions
 You could use the above native functions **or** you could use the "Lazy" functions 😄
  
 ```java
@@ -68,8 +52,7 @@ You can find an up-to-date feature list [here](https://docs.lazycode.co/lazysodi
 
 
 ## Quick start
-
-This is by no means a comprehensive introduction to Lazysodium. Please view the [official documentation](https://docs.lazycode.co/lazysodium/installation) for a more comprehensive guide.
+Please view the [official documentation](https://docs.lazycode.co/lazysodium/installation) for a more comprehensive guide.
 
 ### 1. Install
 Install by adding the bintray repository and the dependency.
@@ -137,6 +120,25 @@ See our [official documentation](https://docs.lazycode.co/lazysodium) to get sta
 
 ## Lazysodium for Android
 We also have an Android implementation available at [Lazysodium for Android](https://github.com/terl/lazysodium-android). It has the same API as this library so you can share code easily!
+
+
+## Help us grow
+Lazysodium needs your support for it to continue being maintained and improved. Even if you put forward £1/$1/€1 it still means a lot for us. Your money would go into improving our open-source projects first and foremost. If you want to find out more, use your preffered donation platform. 
+
+
+|  |Patreon       | Liberapay      | Terl Supporters |
+|----|--------------|---------------------|---|
+|    | <a href="https://www.patreon.com/terlacious"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/patron_button.png" width="100" /></a> | <a href="https://liberapay.com/terlacious/"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/liberapay.png" width="40" /></a> | <a href="https://terl.co/support-us"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/terl_slant_square.png" width="40" /></a> |
+|  One-time  | ✗ | ✗ | ✓ |
+|  Weekly  | ✗ | ✓ | ✓ |
+|  Monthly  | ✓ | ✓ | ✓ |
+|  Yearly  | ✗ | ✓ | ✓ |
+|  Rewards  | ✓ | ✗ | ✓ |
+|  Currencies  | USD | USD, EUR | 100+ currencies |
+
+
+Patreon only has recurring subscriptions and rewards. Liberapay is another route you could take for subscription. We're also setting up our own system that allows one-off support amongst other things.
+
 
 ## Who are we?
 
