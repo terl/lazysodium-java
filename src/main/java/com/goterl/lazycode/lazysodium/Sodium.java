@@ -445,6 +445,49 @@ public class Sodium {
             byte[] key
     );
 
+    public native int crypto_stream_chacha20_xor(
+            byte[] cipher,
+            byte[] message,
+            long messageLen,
+            byte[] nonce,
+            byte[] key
+    );
+
+    public native int crypto_stream_chacha20_xor_ic(
+            byte[] cipher,
+            byte[] message,
+            long messageLen,
+            byte[] nonce,
+            long ic,
+            byte[] key
+    );
+
+    // IETF Chacha
+
+    public native int crypto_stream_chacha20_ietf(
+            byte[] c,
+            long cLen,
+            byte[] nonce,
+            byte[] key
+    );
+
+    public native int crypto_stream_chacha20_ietf_xor(
+            byte[] cipher,
+            byte[] message,
+            long messageLen,
+            byte[] nonce,
+            byte[] key
+    );
+
+    public native int crypto_stream_chacha20_ietf_xor_ic(
+            byte[] cipher,
+            byte[] message,
+            long messageLen,
+            byte[] nonce,
+            long ic,
+            byte[] key
+    );
+
 
 
 

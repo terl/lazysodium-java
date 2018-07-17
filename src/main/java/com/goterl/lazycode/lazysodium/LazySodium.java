@@ -28,6 +28,7 @@ public abstract class LazySodium implements
         SecureMemory.Native, SecureMemory.Lazy,
         Auth.Native, Auth.Lazy,
         SecretStream.Native, SecretStream.Lazy,
+        Stream.Native, Stream.Lazy,
         Padding.Native, Padding.Lazy,
         Helpers.Native, Helpers.Lazy,
         PwHash.Native, PwHash.Lazy,
@@ -1288,6 +1289,39 @@ public abstract class LazySodium implements
     }
 
 
+    //// -------------------------------------------|
+    //// STREAM
+    //// -------------------------------------------|
+
+    @Override
+    public boolean cryptoStreamChaCha20(byte[] c, long cLen, byte[] nonce, byte[] key) {
+        return successful(getSodium().crypto_stream_chacha20(c, cLen, nonce, key));
+    }
+
+    @Override
+    public boolean cryptoStreamChaCha20Xor(byte[] cipher, byte[] message, long messageLen, byte[] nonce, byte[] key) {
+        return successful(getSodium().crypto_stream_chacha20_xor(cipher, message, messageLen, nonce, key));
+    }
+
+    @Override
+    public boolean cryptoStreamChacha20XorIc(byte[] cipher, byte[] message, long messageLen, byte[] nonce, long ic, byte[] key) {
+        return successful(getSodium().crypto_stream_chacha20_xor_ic(cipher, message, messageLen, nonce, ic, key));
+    }
+
+    @Override
+    public boolean cryptoStreamChaCha20Ietf(byte[] c, long cLen, byte[] nonce, byte[] key) {
+        return successful(getSodium().crypto_stream_chacha20_ietf(c, cLen, nonce, key));
+    }
+
+    @Override
+    public boolean cryptoStreamChaCha20IetfXor(byte[] cipher, byte[] message, long messageLen, byte[] nonce, byte[] key) {
+        return successful(getSodium().crypto_stream_chacha20_ietf_xor(cipher, message, messageLen, nonce, key));
+    }
+
+    @Override
+    public boolean cryptoStreamChacha20IetfXorIc(byte[] cipher, byte[] message, long messageLen, byte[] nonce, long ic, byte[] key) {
+        return successful(getSodium().crypto_stream_chacha20_ietf_xor_ic(cipher, message, messageLen, nonce, ic, key));
+    }
 
 
     //// -------------------------------------------|

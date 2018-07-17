@@ -44,13 +44,55 @@ public interface Stream {
                 byte[] key
         );
 
+        boolean cryptoStreamChaCha20Xor(
+                byte[] cipher,
+                byte[] message,
+                long messageLen,
+                byte[] nonce,
+                byte[] key
+        );
+
+        boolean cryptoStreamChacha20XorIc(
+                byte[] cipher,
+                byte[] message,
+                long messageLen,
+                byte[] nonce,
+                long ic,
+                byte[] key
+        );
+
+        // IETF CHACHA
+
+        boolean cryptoStreamChaCha20Ietf(
+                byte[] c,
+                long cLen,
+                byte[] nonce,
+                byte[] key
+        );
+
+        boolean cryptoStreamChaCha20IetfXor(
+                byte[] cipher,
+                byte[] message,
+                long messageLen,
+                byte[] nonce,
+                byte[] key
+        );
+
+        boolean cryptoStreamChacha20IetfXorIc(
+                byte[] cipher,
+                byte[] message,
+                long messageLen,
+                byte[] nonce,
+                long ic,
+                byte[] key
+        );
+
     }
 
 
 
     interface Lazy {
 
-        String initialise(Method method);
 
 
     }
