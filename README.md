@@ -106,9 +106,9 @@ In the above code there are two ways you can use Lazysodium. The first way is th
 
 ### 3. You decide
 
-Every project is different, you may need to use lower-level APIs to achieve the control you need so you use the Native interface. Or alternatively you just don't want to deal with the details so you stick to the Lazy interface.
+Every project is different, you may need to use lower-level APIs to achieve the control you need so you use the `Native` interface. Or alternatively you just don't want to deal with the details so you stick to the `Lazy` interface.
 
-Every interface you can cast to is helpfully all in [one directory](https://github.com/terl/lazysodium-java/tree/20c9a43aac6be5f23209b15870a8cbf73e26ab22/src/main/java/com/goterl/lazycode/lazysodium/interfaces) so you can easily pick the functions you need. This isolates your code and prevents you from making mistakes.
+Every interface you can cast to is helpfully all in [one directory](https://github.com/terl/lazysodium-java/tree/master/src/main/java/com/goterl/lazycode/lazysodium/interfaces) so you can easily pick the functions you need. This isolates your code and prevents you from making mistakes.
 
 **Important:** If possible, please stick to using either the Native *or* the Lazy interface. The reason for this is that the Lazy interface normally converts everything to hexadecimal whereas the Native interface assumes everything is non-hexadecimal. If you don't know what you're doing, you could end up making mistakes.
 
