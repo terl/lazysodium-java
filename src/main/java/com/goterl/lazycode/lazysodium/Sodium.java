@@ -388,6 +388,8 @@ public class Sodium {
 
     public native int crypto_sign_ed25519_sk_to_pk(byte[] ed25519PublicKey, byte[] ed25519SecretKey);
 
+
+
     //// -------------------------------------------|
     //// SECRET STREAM
     //// -------------------------------------------|
@@ -429,6 +431,19 @@ public class Sodium {
     );
 
     public native void crypto_secretstream_xchacha20poly1305_rekey(SecretStream.State state);
+
+
+
+    //// -------------------------------------------|
+    //// STREAM
+    //// -------------------------------------------|
+
+    public native int crypto_stream_chacha20(
+            byte[] c,
+            long cLen,
+            byte[] nonce,
+            byte[] key
+    );
 
 
 

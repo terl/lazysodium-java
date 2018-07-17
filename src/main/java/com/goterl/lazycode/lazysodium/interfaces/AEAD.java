@@ -62,7 +62,7 @@ public interface AEAD {
 
     interface Native {
 
-        void cryptoAeadChaCha20Poly1305Keygen(byte[] keyey);
+        void cryptoAeadChaCha20Poly1305Keygen(byte[] key);
 
         boolean cryptoAeadChaCha20Poly1305Encrypt(
                 byte[] cipher,
