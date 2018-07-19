@@ -12,6 +12,7 @@ import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.Scrypt;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public class LazySodiumJava extends LazySodium implements
     Scrypt.Native, Scrypt.Lazy {

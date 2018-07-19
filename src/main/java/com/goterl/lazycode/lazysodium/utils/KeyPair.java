@@ -8,35 +8,21 @@
 
 package com.goterl.lazycode.lazysodium.utils;
 
-import com.goterl.lazycode.lazysodium.LazySodium;
 
 public class KeyPair {
-    private byte[] secretKey;
-    private byte[] publicKey;
+    private Key secretKey;
+    private Key publicKey;
 
-    public KeyPair(byte[] publicKey, byte[] secretKey) {
-        this.secretKey = secretKey;
+    public KeyPair(Key publicKey, Key secretKey) {
         this.publicKey = publicKey;
+        this.secretKey = secretKey;
     }
 
-    public KeyPair(String publicKey, String secretKey) {
-        this.secretKey = LazySodium.toBin(secretKey);
-        this.publicKey = LazySodium.toBin(publicKey);
-    }
-
-    public byte[] getSecretKey() {
+    public Key getSecretKey() {
         return secretKey;
     }
 
-    public byte[] getPublicKey() {
+    public Key getPublicKey() {
         return publicKey;
-    }
-
-    public String getSecretKeyString() {
-        return LazySodium.toHex(secretKey);
-    }
-
-    public String getPublicKeyString() {
-        return LazySodium.toHex(publicKey);
     }
 }

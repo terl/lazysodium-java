@@ -10,10 +10,7 @@ package com.goterl.lazycode.lazysodium;
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.*;
-import com.goterl.lazycode.lazysodium.utils.DetachedDecrypt;
-import com.goterl.lazycode.lazysodium.utils.DetachedEncrypt;
-import com.goterl.lazycode.lazysodium.utils.KeyPair;
-import com.goterl.lazycode.lazysodium.utils.SessionPair;
+import com.goterl.lazycode.lazysodium.utils.*;
 import com.sun.jna.Pointer;
 
 import java.nio.charset.Charset;
@@ -240,54 +237,49 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public String cryptoKdfKeygen(Charset charset) {
-        byte[] masterKeyInBytes = new byte[KeyDerivation.MASTER_KEY_BYTES];
-        getSodium().crypto_kdf_keygen(masterKeyInBytes);
-        return sodiumBin2Hex(masterKeyInBytes);
+    public int cryptoKdfDeriveFromKey(byte[] subKey, int subKeyLen, long subKeyId, byte[] context, byte[] masterKey) {
+        return getSodium().crypto_kdf_derive_from_key(subKey, subKeyLen, subKeyId, context, masterKey);
     }
 
     @Override
-    public String cryptoKdfKeygen() {
+    public Key cryptoKdfKeygen() {
         byte[] masterKey = new byte[KeyDerivation.MASTER_KEY_BYTES];
         getSodium().crypto_kdf_keygen(masterKey);
-        return sodiumBin2Hex(masterKey);
+        return Key.fromBytes(masterKey);
     }
 
     @Override
-    public String cryptoKdfDeriveFromKey(int lengthOfSubkey, long subKeyId, String context, byte[] masterKey)
+    public Key cryptoKdfDeriveFromKey(int lengthOfSubKey, long subKeyId, String context, Key masterKey)
             throws SodiumException {
-        return cryptoKdfDeriveFromKey(lengthOfSubkey, subKeyId, context, sodiumBin2Hex(masterKey));
-    }
-
-    @Override
-    public String cryptoKdfDeriveFromKey(int lengthOfSubkey, long subKeyId, String context, String masterKey)
-            throws SodiumException {
-        if (!KeyDerivation.Checker.subKeyIsCorrect(lengthOfSubkey)) {
+        if (!KeyDerivation.Checker.subKeyIsCorrect(lengthOfSubKey)) {
             throw new SodiumException("Subkey is not between the correct lengths.");
         }
-        if (!KeyDerivation.Checker.masterKeyIsCorrect(sodiumHex2Bin(masterKey).length)) {
+        if (!KeyDerivation.Checker.masterKeyIsCorrect(masterKey.getAsBytes().length)) {
             throw new SodiumException("Master key is not the correct length.");
         }
         if (!KeyDerivation.Checker.contextIsCorrect(bytes(context).length)) {
             throw new SodiumException("Context is not the correct length.");
         }
-        byte[] subKey = new byte[lengthOfSubkey];
+
+        byte[] subKey = new byte[lengthOfSubKey];
         byte[] contextAsBytes = bytes(context);
-        byte[] masterKeyAsBytes = sodiumHex2Bin(masterKey);
+        byte[] masterKeyAsBytes = masterKey.getAsBytes();
         int res = getSodium().crypto_kdf_derive_from_key(
                 subKey,
-                lengthOfSubkey,
+                lengthOfSubKey,
                 subKeyId,
                 contextAsBytes,
                 masterKeyAsBytes
         );
-        return res(res, sodiumBin2Hex(subKey));
+
+        if (!successful(res)) {
+            throw new SodiumException("Failed kdfDeriveFromKey.");
+        }
+        return Key.fromBytes(subKey);
     }
 
-    @Override
-    public int cryptoKdfDeriveFromKey(byte[] subKey, int subKeyLen, long subKeyId, byte[] context, byte[] masterKey) {
-        return getSodium().crypto_kdf_derive_from_key(subKey, subKeyLen, subKeyId, context, masterKey);
-    }
+
+
 
 
 
@@ -325,7 +317,7 @@ public abstract class LazySodium implements
 
         getSodium().crypto_kx_keypair(publicKey, secretKey);
 
-        return new KeyPair(toHex(publicKey), toHex(secretKey));
+        return new KeyPair(Key.fromBytes(publicKey), Key.fromBytes(secretKey));
     }
 
     @Override
@@ -335,20 +327,9 @@ public abstract class LazySodium implements
 
         getSodium().crypto_kx_seed_keypair(publicKey, secretKey, seed);
 
-        return new KeyPair(toHex(publicKey), toHex(secretKey));
+        return new KeyPair(Key.fromBytes(publicKey), Key.fromBytes(secretKey));
     }
 
-    @Override
-    public SessionPair cryptoKxClientSessionKeys(byte[] clientPk, byte[] clientSk, byte[] serverPk) throws SodiumException {
-        byte[] rx = new byte[KeyExchange.SESSIONKEYBYTES];
-        byte[] tx = new byte[KeyExchange.SESSIONKEYBYTES];
-
-        if (!cryptoKxClientSessionKeys(rx, tx, clientPk, clientSk, serverPk)) {
-            throw new SodiumException("Failure in creating client session keys.");
-        }
-
-        return new SessionPair(rx, tx);
-    }
 
     @Override
     public SessionPair cryptoKxClientSessionKeys(KeyPair clientKeyPair, KeyPair serverKeyPair) throws SodiumException {
@@ -356,12 +337,24 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public SessionPair cryptoKxServerSessionKeys(byte[] serverPk, byte[] serverSk, byte[] clientPk) throws SodiumException {
+    public SessionPair cryptoKxServerSessionKeys(Key serverPk, Key serverSk, Key clientPk) throws SodiumException {
         byte[] rx = new byte[KeyExchange.SESSIONKEYBYTES];
         byte[] tx = new byte[KeyExchange.SESSIONKEYBYTES];
 
-        if (!cryptoKxServerSessionKeys(rx, tx, serverPk,  serverSk, clientPk)) {
-            throw new SodiumException("Failure in creating server session keys.");
+        if (!cryptoKxServerSessionKeys(rx, tx, serverPk.getAsBytes(), serverSk.getAsBytes(), clientPk.getAsBytes())) {
+            throw new SodiumException("Failed creating server session keys.");
+        }
+
+        return new SessionPair(rx, tx);
+    }
+
+    @Override
+    public SessionPair cryptoKxClientSessionKeys(Key clientPk, Key clientSk, Key serverPk) throws SodiumException {
+        byte[] rx = new byte[KeyExchange.SESSIONKEYBYTES];
+        byte[] tx = new byte[KeyExchange.SESSIONKEYBYTES];
+
+        if (!cryptoKxClientSessionKeys(rx, tx, clientPk.getAsBytes(), clientSk.getAsBytes(), serverPk.getAsBytes())) {
+            throw new SodiumException("Failed creating client session keys.");
         }
 
         return new SessionPair(rx, tx);
@@ -761,7 +754,7 @@ public abstract class LazySodium implements
         if (!cryptoBoxKeypair(publicKey, secretKey)) {
             throw new SodiumException("Unable to create a public and private key.");
         }
-        return new KeyPair(publicKey, secretKey);
+        return new KeyPair(Key.fromBytes(publicKey), Key.fromBytes(secretKey));
     }
 
     @Override
@@ -774,7 +767,7 @@ public abstract class LazySodium implements
         if (!cryptoBoxSeedKeypair(publicKey, secretKey, seed)) {
             throw new SodiumException("Unable to create a public and private key.");
         }
-        return new KeyPair(publicKey, secretKey);
+        return new KeyPair(Key.fromBytes(publicKey), Key.fromBytes(secretKey));
     }
 
     @Override
@@ -784,7 +777,7 @@ public abstract class LazySodium implements
         }
         byte[] publicKey = randomBytesBuf(Box.PUBLICKEYBYTES);
         cryptoScalarMultBase(publicKey, secretKey);
-        return new KeyPair(publicKey, secretKey);
+        return new KeyPair(Key.fromBytes(publicKey), Key.fromBytes(secretKey));
     }
 
     @Override
@@ -802,8 +795,8 @@ public abstract class LazySodium implements
                 messageBytes,
                 messageBytes.length,
                 nonce,
-                keyPair.getPublicKey(),
-                keyPair.getSecretKey()
+                keyPair.getPublicKey().getAsBytes(),
+                keyPair.getSecretKey().getAsBytes()
         );
         if (!res) {
             throw new SodiumException("Could not encrypt your message.");
@@ -816,7 +809,14 @@ public abstract class LazySodium implements
         byte[] cipher = toBin(cipherText);
         byte[] message = new byte[cipher.length - Box.MACBYTES];
         boolean res =
-                cryptoBoxOpenEasy(message, cipher, cipher.length, nonce, keyPair.getPublicKey(), keyPair.getSecretKey());
+                cryptoBoxOpenEasy(
+                        message,
+                        cipher,
+                        cipher.length,
+                        nonce,
+                        keyPair.getPublicKey().getAsBytes(),
+                        keyPair.getSecretKey().getAsBytes()
+                );
 
         if (!res) {
             throw new SodiumException("Could not decrypt your message.");
@@ -843,7 +843,7 @@ public abstract class LazySodium implements
 
     @Override
     public String cryptoBoxBeforeNm(KeyPair keyPair) throws SodiumException {
-        return cryptoBoxBeforeNm(keyPair.getPublicKey(), keyPair.getSecretKey());
+        return cryptoBoxBeforeNm(keyPair.getPublicKey().getAsBytes(), keyPair.getSecretKey().getAsBytes());
     }
 
     @Override
@@ -1005,7 +1005,7 @@ public abstract class LazySodium implements
         if (!cryptoSignKeypair(publicKey, secretKey)) {
             throw new SodiumException("Could not generate a signing keypair.");
         }
-        return new KeyPair(publicKey, secretKey);
+        return new KeyPair(Key.fromBytes(publicKey), Key.fromBytes(secretKey));
     }
 
     @Override
@@ -1015,17 +1015,16 @@ public abstract class LazySodium implements
         if (!cryptoSignSeedKeypair(publicKey, secretKey, seed)) {
             throw new SodiumException("Could not generate a signing keypair with a seed.");
         }
-        return new KeyPair(publicKey, secretKey);
+        return new KeyPair(Key.fromBytes(publicKey), Key.fromBytes(secretKey));
     }
 
     @Override
-    public KeyPair cryptoSignSecretKeyPair(byte[] secret) throws SodiumException {
+    public KeyPair cryptoSignSecretKeyPair(byte[] secretKey) throws SodiumException {
         byte[] publicKey = new byte[Sign.PUBLICKEYBYTES];
-        if(! cryptoSignEd25519SkToPk(publicKey, secret)) {
+        if(! cryptoSignEd25519SkToPk(publicKey, secretKey)) {
             throw new SodiumException("Could not extract public key.");
         }
-
-        return new KeyPair(publicKey, secret);
+        return new KeyPair(Key.fromBytes(publicKey), Key.fromBytes(secretKey));
     }
 
     @Override
@@ -1088,8 +1087,8 @@ public abstract class LazySodium implements
 
     @Override
     public KeyPair convertKeyPairEd25519ToCurve25519(KeyPair ed25519KeyPair) throws SodiumException {
-        byte[] edPkBytes = ed25519KeyPair.getPublicKey();
-        byte[] edSkBytes = ed25519KeyPair.getSecretKey();
+        byte[] edPkBytes = ed25519KeyPair.getPublicKey().getAsBytes();
+        byte[] edSkBytes = ed25519KeyPair.getSecretKey().getAsBytes();
 
         byte[] curvePkBytes = new byte[Sign.CURVE25519_PUBLICKEYBYTES];
         byte[] curveSkBytes = new byte[Sign.CURVE25519_SECRETKEYBYTES];
@@ -1101,7 +1100,7 @@ public abstract class LazySodium implements
             throw new SodiumException("Could not convert this key pair.");
         }
 
-        return new KeyPair(curvePkBytes, curveSkBytes);
+        return new KeyPair(Key.fromBytes(curvePkBytes), Key.fromBytes(curveSkBytes));
     }
 
 

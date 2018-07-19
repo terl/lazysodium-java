@@ -17,9 +17,8 @@ Lazysodium is a **complete** Java (JNA) wrapper over the [Libsodium](https://git
 ## Why Lazysodium
 We created Lazysodium because we really wanted a solid cryptography library that would just work without fuss.
 
-We were exasperated and annoyed with current Libsodium implementations as some of them were just poorly maintained, poorly managed and, plain and simply, poorly architected.
+We were exasperated and annoyed with current Libsodium implementations as some of them were just poorly maintained, poorly managed and, plain and simply, poorly architected. Thus, Lazysodium was born with the blessings of *Lazycode*, a part of [Terl](https://terl.co) that specialises in giving developers easy-to-use software and tools that just work.
 
-Thus, Lazysodium was born with the blessings of *Lazycode*, a part of [Terl](https://terl.co) that specialises in giving developers easy-to-use software and tools that just work. Read more about us below.
 
 ### The difference in code
 

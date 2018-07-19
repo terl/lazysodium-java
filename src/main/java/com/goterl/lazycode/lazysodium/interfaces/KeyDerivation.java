@@ -10,6 +10,7 @@ package com.goterl.lazycode.lazysodium.interfaces;
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.utils.BaseChecker;
+import com.goterl.lazycode.lazysodium.utils.Key;
 
 import java.nio.charset.Charset;
 
@@ -51,16 +52,9 @@ public interface KeyDerivation {
          * it in string format.
          * The reason why this does not return a string via the normal 'masterKey.getBytes()'
          * is because the resulting string is mangled.
-         * @return A {@link Helpers.Lazy#sodiumBin2Hex(byte[])}-ified master key.
+         * @return A master Key.
          */
-        String cryptoKdfKeygen();
-
-        /**
-         * Please see {@link #cryptoKdfKeygen()}.
-         * @param charset Charset to use when generating the master key.
-         * @return Master key.
-         */
-        String cryptoKdfKeygen(Charset charset);
+        Key cryptoKdfKeygen();
 
 
         /**
@@ -69,22 +63,12 @@ public interface KeyDerivation {
          *                       from {@link KeyDerivation#BYTES_MIN} to {@link KeyDerivation#BYTES_MAX}.
          * @param subKeyId The ID of the subkey.
          * @param context The context of the subkey. Must be {@link KeyDerivation#CONTEXT_BYTES}.
-         * @param masterKey The generated master key from {@link #cryptoKdfKeygen()} or {@link #cryptoKdfKeygen(Charset)}.
+         * @param masterKey The generated master key from {@link #cryptoKdfKeygen()}.
          * @return A subkey that's gone through {@link Helpers.Lazy#sodiumBin2Hex(byte[])}.
          * @throws SodiumException If any of the lengths were not correct.
          */
-        String cryptoKdfDeriveFromKey(int lengthOfSubKey, long subKeyId, String context, byte[] masterKey) throws SodiumException;
+        Key cryptoKdfDeriveFromKey(int lengthOfSubKey, long subKeyId, String context, Key masterKey) throws SodiumException;
 
-        /**
-         * Same as {@link #cryptoKdfDeriveFromKey(int, long, String, byte[])}.
-         * @param lengthOfSubKey The length of subkey.
-         * @param subKeyId The ID of the subkey to assign this one.
-         * @param context The context.
-         * @param masterKey The master key.
-         * @return A subkey.
-         * @throws SodiumException If any of the lengths were not correct.
-         */
-        String cryptoKdfDeriveFromKey(int lengthOfSubKey, long subKeyId, String context, String masterKey) throws SodiumException;
     }
 
     class Checker extends BaseChecker {

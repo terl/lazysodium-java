@@ -10,6 +10,7 @@ package com.goterl.lazycode.lazysodium.interfaces;
 
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
+import com.goterl.lazycode.lazysodium.utils.Key;
 import com.goterl.lazycode.lazysodium.utils.KeyPair;
 import com.goterl.lazycode.lazysodium.utils.SessionPair;
 
@@ -118,9 +119,9 @@ public interface KeyExchange {
          * @see KeyExchange.Native#cryptoKxClientSessionKeys(byte[], byte[], byte[], byte[], byte[])
          */
         SessionPair cryptoKxClientSessionKeys(
-                byte[] clientPk,
-                byte[] clientSk,
-                byte[] serverPk
+                Key clientPk,
+                Key clientSk,
+                Key serverPk
         ) throws SodiumException;
 
         /**
@@ -148,9 +149,9 @@ public interface KeyExchange {
          * @return True if successful or false if the client public key is wrong.
          */
         SessionPair cryptoKxServerSessionKeys(
-                byte[] serverPk,
-                byte[] serverSk,
-                byte[] clientPk
+                Key serverPk,
+                Key serverSk,
+                Key clientPk
         ) throws SodiumException;
 
         /**

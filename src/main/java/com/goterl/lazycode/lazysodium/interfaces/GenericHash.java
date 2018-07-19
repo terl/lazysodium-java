@@ -144,6 +144,8 @@ public interface GenericHash {
 
         int cryptoGenericHashStateBytes();
 
+
+
     }
 
     interface Lazy {
