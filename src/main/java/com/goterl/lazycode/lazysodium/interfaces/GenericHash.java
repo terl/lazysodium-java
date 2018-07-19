@@ -11,6 +11,7 @@ package com.goterl.lazycode.lazysodium.interfaces;
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.utils.BaseChecker;
+import com.goterl.lazycode.lazysodium.utils.Key;
 import com.sun.jna.Structure;
 
 import java.util.Arrays;
@@ -154,7 +155,7 @@ public interface GenericHash {
          * Generate a hashing key.
          * @return A hashing key.
          */
-        String cryptoGenericHashKeygen();
+        Key cryptoGenericHashKeygen();
 
         /**
          * Generate a hashing key with a size.
@@ -162,7 +163,7 @@ public interface GenericHash {
          *             {@link #KEYBYTES_MIN} and {@link #KEYBYTES_MAX}.
          * @return A hashing key.
          */
-        String cryptoGenericHashKeygen(int size) throws SodiumException;
+        Key cryptoGenericHashKeygen(int size) throws SodiumException;
 
         /**
          * Hash a string without a key.
@@ -180,7 +181,7 @@ public interface GenericHash {
          * @param key Can be null.
          * @return A hashed string.
          */
-        String cryptoGenericHash(String in, String key) throws SodiumException;
+        String cryptoGenericHash(String in, Key key) throws SodiumException;
 
         /**
          * Initialise a multi-part hashing operation.
@@ -190,12 +191,12 @@ public interface GenericHash {
          * @return True if initialised.
          */
         boolean cryptoGenericHashInit(byte[] state,
-                                      String key,
+                                      Key key,
                                       int outLen);
 
         /**
          * Hash a part of a multi-part hash.
-         * @param state State as put into {@link #cryptoGenericHashInit(byte[], String, int)}.
+         * @param state State as put into {@link #cryptoGenericHashInit(byte[], Key, int)}.
          * @param in A part of a string to hash.
          * @return True if hashed successfully.
          */
@@ -203,7 +204,7 @@ public interface GenericHash {
 
         /**
          * Finalise the hashing operation.
-         * @param state State as put into {@link #cryptoGenericHashInit(byte[], String, int)}.
+         * @param state State as put into {@link #cryptoGenericHashInit(byte[], Key, int)}.
          * @param outLen The size of the final hash.
          * @return The final hash.
          */

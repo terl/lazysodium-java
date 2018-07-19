@@ -11,6 +11,7 @@ package com.goterl.lazycode.lazysodium.interfaces;
 
 import com.goterl.lazycode.lazysodium.utils.DetachedDecrypt;
 import com.goterl.lazycode.lazysodium.utils.DetachedEncrypt;
+import com.goterl.lazycode.lazysodium.utils.Key;
 import com.sun.jna.Structure;
 
 import java.util.Arrays;
@@ -287,12 +288,12 @@ public interface AEAD {
 
     interface Lazy {
 
-        String keygen(Method method);
+        Key keygen(Method method);
 
         String encrypt(String m,
                       String additionalData,
                       byte[] nPub,
-                      String k,
+                      Key k,
                       AEAD.Method method);
 
         String encrypt(
@@ -300,7 +301,7 @@ public interface AEAD {
                 String additionalData,
                 byte[] nSec,
                 byte[] nPub,
-                String k,
+                Key k,
                 Method method
         );
 
@@ -308,7 +309,7 @@ public interface AEAD {
                 String cipher,
                 String additionalData,
                 byte[] nPub,
-                String k,
+                Key k,
                 AEAD.Method method
         );
 
@@ -317,7 +318,7 @@ public interface AEAD {
                 String additionalData,
                 byte[] nSec,
                 byte[] nPub,
-                String k,
+                Key k,
                 Method method
         );
 
@@ -326,7 +327,7 @@ public interface AEAD {
                 String additionalData,
                 byte[] nSec,
                 byte[] nPub,
-                String k,
+                Key k,
                 Method method
         );
 
@@ -335,7 +336,7 @@ public interface AEAD {
                 String additionalData,
                 byte[] nSec,
                 byte[] nPub,
-                String k,
+                Key k,
                 Method method
         );
 

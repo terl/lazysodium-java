@@ -196,20 +196,20 @@ public interface Auth {
         boolean cryptoAuthVerify(String tag, String message, Key key) throws SodiumException;
 
 
-        String cryptoAuthHMACShaKeygen(Type type);
+        Key cryptoAuthHMACShaKeygen(Type type);
 
-        String cryptoAuthHMACSha(Type type, String in, String key);
+        String cryptoAuthHMACSha(Type type, String in, Key key);
 
         boolean cryptoAuthHMACShaVerify(
                 Type type,
                 String authenticator,
                 String message,
-                String key
+                Key key
         );
 
         boolean cryptoAuthHMACShaInit(
                 Auth.StateHMAC256 state,
-                String key
+                Key key
         );
 
         boolean cryptoAuthHMACShaUpdate(
@@ -223,7 +223,7 @@ public interface Auth {
 
         boolean cryptoAuthHMACShaInit(
                 Auth.StateHMAC512 state,
-                String key
+                Key key
         );
 
         boolean cryptoAuthHMACShaUpdate(
@@ -239,7 +239,7 @@ public interface Auth {
 
         boolean cryptoAuthHMACShaInit(
                 Auth.StateHMAC512256 state,
-                String key
+                Key key
         );
 
         boolean cryptoAuthHMACShaUpdate(

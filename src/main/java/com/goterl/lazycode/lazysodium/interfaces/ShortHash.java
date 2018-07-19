@@ -10,6 +10,7 @@ package com.goterl.lazycode.lazysodium.interfaces;
 
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
+import com.goterl.lazycode.lazysodium.utils.Key;
 
 public interface ShortHash {
 
@@ -48,19 +49,19 @@ public interface ShortHash {
     interface Lazy {
 
         /**
+         * Generate a 64-bit key for short-input hashing.
+         * @return Key in string format.
+         */
+        Key cryptoShortHashKeygen();
+
+        /**
          * Hash a short message using a key.
          * @param in The short message to hash.
          * @param key The key generated via {@link #cryptoShortHashKeygen()}.
          * @return Your message hashed of size {@link #BYTES}.
          */
-        String cryptoShortHash(String in, String key) throws SodiumException;
+        String cryptoShortHash(String in, Key key) throws SodiumException;
 
-
-        /**
-         * Generate a 64-bit key for short-input hashing.
-         * @return Key in string format.
-         */
-        String cryptoShortHashKeygen();
 
     }
 

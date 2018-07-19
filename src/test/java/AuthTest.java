@@ -39,7 +39,7 @@ public class AuthTest extends BaseTest {
     public void auth256KeygenAndVerify() {
         String m = "A simple message.";
 
-        String k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA256);
+        Key k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA256);
         String shaResult = lazySodium.cryptoAuthHMACSha(Auth.Type.SHA256, m, k);
         boolean isTrue = lazySodium.cryptoAuthHMACShaVerify(Auth.Type.SHA256, shaResult, m, k);
         assertTrue(isTrue);
@@ -49,7 +49,7 @@ public class AuthTest extends BaseTest {
     public void auth512KeygenAndVerify() {
         String m = "A simple message.";
 
-        String k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA512);
+        Key k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA512);
         String shaResult = lazySodium.cryptoAuthHMACSha(Auth.Type.SHA512, m, k);
         boolean isTrue = lazySodium.cryptoAuthHMACShaVerify(Auth.Type.SHA512, shaResult, m, k);
         assertTrue(isTrue);
@@ -59,7 +59,7 @@ public class AuthTest extends BaseTest {
     public void auth512256KeygenAndVerify() {
         String m = "Follow us on twitter @terlacious";
 
-        String k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA512256);
+        Key k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA512256);
         String shaResult = lazySodium.cryptoAuthHMACSha(Auth.Type.SHA512256, m, k);
         boolean isTrue = lazySodium.cryptoAuthHMACShaVerify(Auth.Type.SHA512256, shaResult, m, k);
         assertTrue(isTrue);
@@ -70,7 +70,7 @@ public class AuthTest extends BaseTest {
         String m = "Terl is ";
         String m2 = "the best";
 
-        String k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA256);
+        Key k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA256);
         Auth.StateHMAC256 state = new Auth.StateHMAC256.ByReference();
 
 
@@ -104,7 +104,7 @@ public class AuthTest extends BaseTest {
         String m = "Lazysodium makes devs lazy";
         String m2 = " but don't tell your manager that!";
 
-        String k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA512);
+        Key k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA512);
         Auth.StateHMAC512 state = new Auth.StateHMAC512.ByReference();
 
 
@@ -139,7 +139,7 @@ public class AuthTest extends BaseTest {
         String m2 = "is sha512256 sha mac'd ";
         String m3 = "is super secure.";
 
-        String k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA512256);
+        Key k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA512256);
         Auth.StateHMAC512256 state = new Auth.StateHMAC512256.ByReference();
 
 

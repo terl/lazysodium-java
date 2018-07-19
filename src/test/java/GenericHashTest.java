@@ -13,6 +13,7 @@
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.GenericHash;
+import com.goterl.lazycode.lazysodium.utils.Key;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -20,14 +21,14 @@ public class GenericHashTest extends BaseTest {
 
     @Test
     public void genKey() {
-        String key = lazySodium.cryptoGenericHashKeygen();
+        Key key = lazySodium.cryptoGenericHashKeygen();
         TestCase.assertNotNull(key);
     }
 
     @Test
     public void hash() throws SodiumException {
         String message = "https://terl.co";
-        String key = lazySodium.cryptoGenericHashKeygen();
+        Key key = lazySodium.cryptoGenericHashKeygen();
         String hash = lazySodium.cryptoGenericHash(message);
         TestCase.assertNotNull(hash);
     }
@@ -95,7 +96,7 @@ public class GenericHashTest extends BaseTest {
 
 
         // Both the key and the resulting hash must be the same size
-        String key = lazySodium.cryptoGenericHashKeygen(keySize);
+        Key key = lazySodium.cryptoGenericHashKeygen(keySize);
         byte[] state = new byte[lazySodium.cryptoGenericHashStateBytes()];
         lazySodium.cryptoGenericHashInit(state, key, hashSize);
 

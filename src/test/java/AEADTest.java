@@ -13,6 +13,7 @@
 import com.goterl.lazycode.lazysodium.interfaces.AEAD;
 import com.goterl.lazycode.lazysodium.utils.DetachedDecrypt;
 import com.goterl.lazycode.lazysodium.utils.DetachedEncrypt;
+import com.goterl.lazycode.lazysodium.utils.Key;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -22,7 +23,7 @@ public class AEADTest extends BaseTest {
     @Test
     public void encryptChacha() {
 
-        String key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305);
+        Key key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305);
 
         byte[] nPub = lazySodium.nonce(AEAD.CHACHA20POLY1305_NPUBBYTES);
 
@@ -35,7 +36,7 @@ public class AEADTest extends BaseTest {
     @Test
     public void encryptChachaIetf() {
 
-        String key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305_IETF);
+        Key key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305_IETF);
 
         byte[] nPub = lazySodium.nonce(AEAD.CHACHA20POLY1305_IETF_NPUBBYTES);
 
@@ -48,7 +49,7 @@ public class AEADTest extends BaseTest {
     @Test
     public void encryptXChacha() {
 
-        String key = lazySodium.keygen(AEAD.Method.XCHACHA20_POLY1305_IETF);
+        Key key = lazySodium.keygen(AEAD.Method.XCHACHA20_POLY1305_IETF);
 
         byte[] nPub = lazySodium.nonce(AEAD.XCHACHA20POLY1305_IETF_NPUBBYTES);
 
@@ -62,7 +63,7 @@ public class AEADTest extends BaseTest {
     @Test
     public void encryptChachaDetached() {
 
-        String key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305);
+        Key key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305);
 
         byte[] nPub = lazySodium.nonce(AEAD.CHACHA20POLY1305_NPUBBYTES);
 
@@ -78,7 +79,7 @@ public class AEADTest extends BaseTest {
     @Test
     public void encryptChachaIetfDetached() {
 
-        String key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305_IETF);
+        Key key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305_IETF);
 
         byte[] nPub = lazySodium.nonce(AEAD.CHACHA20POLY1305_IETF_NPUBBYTES);
 
@@ -93,7 +94,7 @@ public class AEADTest extends BaseTest {
     @Test
     public void encryptXChachaDetached() {
 
-        String key = lazySodium.keygen(AEAD.Method.XCHACHA20_POLY1305_IETF);
+        Key key = lazySodium.keygen(AEAD.Method.XCHACHA20_POLY1305_IETF);
 
         byte[] nPub = lazySodium.nonce(AEAD.XCHACHA20POLY1305_IETF_NPUBBYTES);
 
@@ -109,7 +110,7 @@ public class AEADTest extends BaseTest {
 
     @Test
     public void encryptAES() {
-        String key = lazySodium.keygen(AEAD.Method.AES256GCM);
+        Key key = lazySodium.keygen(AEAD.Method.AES256GCM);
 
         byte[] nPub = lazySodium.nonce(AEAD.AES256GCM_NPUBBYTES);
 
@@ -122,7 +123,7 @@ public class AEADTest extends BaseTest {
     @Test
     public void encryptAESDetached() {
 
-        String key = lazySodium.keygen(AEAD.Method.AES256GCM);
+        Key key = lazySodium.keygen(AEAD.Method.AES256GCM);
 
         byte[] nPub = lazySodium.nonce(AEAD.AES256GCM_NPUBBYTES);
 

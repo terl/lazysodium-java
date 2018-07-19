@@ -1475,26 +1475,26 @@ public abstract class LazySodium implements
 
 
     @Override
-    public String cryptoAuthHMACShaKeygen(Auth.Type type) {
+    public Key cryptoAuthHMACShaKeygen(Auth.Type type) {
         if (type.equals(Auth.Type.SHA256)) {
             byte[] k = new byte[Auth.HMACSHA256_KEYBYTES];
             cryptoAuthHMACSha256Keygen(k);
-            return toHex(k);
+            return Key.fromBytes(k);
         } else if (type.equals(Auth.Type.SHA512)) {
             byte[] k = new byte[Auth.HMACSHA512_KEYBYTES];
             cryptoAuthHMACSha512Keygen(k);
-            return toHex(k);
+            return Key.fromBytes(k);
         } else {
             byte[] k = new byte[Auth.HMACSHA512256_KEYBYTES];
             cryptoAuthHMACSha512256Keygen(k);
-            return toHex(k);
+            return Key.fromBytes(k);
         }
     }
 
     @Override
-    public String cryptoAuthHMACSha(Auth.Type type, String in, String key) {
+    public String cryptoAuthHMACSha(Auth.Type type, String in, Key key) {
         byte[] inBytes = bytes(in);
-        byte[] keyBytes = toBin(key);
+        byte[] keyBytes = key.getAsBytes();
         if (type.equals(Auth.Type.SHA256)) {
             byte[] out = new byte[Auth.HMACSHA256_BYTES];
             cryptoAuthHMACSha256(out, inBytes, inBytes.length, keyBytes);
@@ -1511,10 +1511,10 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAuthHMACShaVerify(Auth.Type type, String h, String in, String key) {
+    public boolean cryptoAuthHMACShaVerify(Auth.Type type, String h, String in, Key key) {
         byte[] authBytes = toBin(h);
         byte[] inBytes = bytes(in);
-        byte[] keyBytes = toBin(key);
+        byte[] keyBytes = key.getAsBytes();
         if (type.equals(Auth.Type.SHA256)) {
             return cryptoAuthHMACSha256Verify(authBytes, inBytes, inBytes.length, keyBytes);
         } else if (type.equals(Auth.Type.SHA512)) {
@@ -1525,8 +1525,8 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAuthHMACShaInit(Auth.StateHMAC256 state, String key) {
-        byte[] keyBytes = toBin(key);
+    public boolean cryptoAuthHMACShaInit(Auth.StateHMAC256 state, Key key) {
+        byte[] keyBytes = key.getAsBytes();
         return cryptoAuthHMACSha256Init(state, keyBytes, keyBytes.length);
     }
 
@@ -1547,8 +1547,8 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAuthHMACShaInit(Auth.StateHMAC512 state, String key) {
-        byte[] keyBytes = toBin(key);
+    public boolean cryptoAuthHMACShaInit(Auth.StateHMAC512 state, Key key) {
+        byte[] keyBytes = key.getAsBytes();
         return cryptoAuthHMACSha512Init(state, keyBytes, keyBytes.length);
     }
 
@@ -1569,8 +1569,8 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAuthHMACShaInit(Auth.StateHMAC512256 state, String key) {
-        byte[] keyBytes = toBin(key);
+    public boolean cryptoAuthHMACShaInit(Auth.StateHMAC512256 state, Key key) {
+        byte[] keyBytes = key.getAsBytes();
         return cryptoAuthHMACSha512256Init(state, keyBytes, keyBytes.length);
     }
 
@@ -1605,9 +1605,9 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public String cryptoShortHash(String in, String key) throws SodiumException {
+    public String cryptoShortHash(String in, Key key) throws SodiumException {
         byte[] inBytes = hexToBytes(in);
-        byte[] keyBytes = hexToBytes(key);
+        byte[] keyBytes = key.getAsBytes();
         byte[] out = randomBytesBuf(ShortHash.BYTES);
         if (getSodium().crypto_shorthash(out, inBytes, inBytes.length, keyBytes) != 0) {
             throw new SodiumException("Failed short-input hashing.");
@@ -1616,10 +1616,10 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public String cryptoShortHashKeygen() {
+    public Key cryptoShortHashKeygen() {
         byte[] key = randomBytesBuf(ShortHash.SIPHASH24_KEYBYTES);
         getSodium().crypto_shorthash_keygen(key);
-        return sodiumBin2Hex(key);
+        return Key.fromBytes(key);
     }
 
 
@@ -1672,26 +1672,25 @@ public abstract class LazySodium implements
     // -- lazy
 
     @Override
-    public String cryptoGenericHashKeygen() {
+    public Key cryptoGenericHashKeygen() {
         byte[] key = randomBytesBuf(GenericHash.KEYBYTES);
         cryptoGenericHashKeygen(key);
-        return toHex(key);
+        return Key.fromBytes(key);
     }
 
     @Override
-    public String cryptoGenericHashKeygen(int size) throws SodiumException {
+    public Key cryptoGenericHashKeygen(int size) throws SodiumException {
         byte[] key = randomBytesBuf(size);
         cryptoGenericHashKeygen(key);
-        return toHex(key);
+        return Key.fromBytes(key);
     }
 
     @Override
-    public String cryptoGenericHash(String in, String key) throws SodiumException {
+    public String cryptoGenericHash(String in, Key key) throws SodiumException {
         byte[] message = bytes(in);
-        byte[] keyBytes = toBin(key);
+        byte[] keyBytes = key.getAsBytes();
 
         byte[] hash = randomBytesBuf(GenericHash.BYTES);
-
         boolean res = cryptoGenericHash(hash, hash.length, message, message.length, keyBytes, keyBytes.length);
 
         if (!res) {
@@ -1715,16 +1714,15 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoGenericHashInit(byte[] state, String key, int outLen)  {
-        byte[] keyBytes = toBin(key);
+    public boolean cryptoGenericHashInit(byte[] state, Key key, int outLen)  {
+        byte[] keyBytes = key.getAsBytes();
         return getSodium().crypto_generichash_init(state, keyBytes, keyBytes.length, outLen) == 0;
     }
 
     @Override
     public boolean cryptoGenericHashUpdate(byte[] state, String in) {
         byte[] inBytes = bytes(in);
-        boolean res = getSodium().crypto_generichash_update(state, inBytes, inBytes.length) == 0;
-        return res;
+        return getSodium().crypto_generichash_update(state, inBytes, inBytes.length) == 0;
     }
 
     @Override
@@ -1848,39 +1846,39 @@ public abstract class LazySodium implements
     // -- lazy
 
     @Override
-    public String keygen(AEAD.Method method) {
+    public Key keygen(AEAD.Method method) {
         switch (method) {
             case CHACHA20_POLY1305:
                 byte[] key = randomBytesBuf(AEAD.CHACHA20POLY1305_KEYBYTES);
                 cryptoAeadChaCha20Poly1305Keygen(key);
-                return toHex(key);
+                return Key.fromBytes(key);
             case CHACHA20_POLY1305_IETF:
                 byte[] key2 = randomBytesBuf(AEAD.CHACHA20POLY1305_IETF_KEYBYTES);
                 cryptoAeadChaCha20Poly1305IetfKeygen(key2);
-                return toHex(key2);
+                return Key.fromBytes(key2);
             case XCHACHA20_POLY1305_IETF:
                 byte[] key3 = randomBytesBuf(AEAD.XCHACHA20POLY1305_IETF_KEYBYTES);
                 cryptoAeadChaCha20Poly1305IetfKeygen(key3);
-                return toHex(key3);
+                return Key.fromBytes(key3);
             case AES256GCM:
                 byte[] key4 = randomBytesBuf(AEAD.AES256GCM_KEYBYTES);
                 cryptoAeadAES256GCMKeygen(key4);
-                return toHex(key4);
+                return Key.fromBytes(key4);
         }
         return null;
     }
 
     @Override
-    public String encrypt(String m, String additionalData, byte[] nPub, String k, AEAD.Method method) {
-        return encrypt(m, additionalData, null, nPub,  k, method);
+    public String encrypt(String m, String additionalData, byte[] nPub, Key k, AEAD.Method method) {
+        return encrypt(m, additionalData, null, nPub, k, method);
     }
 
     @Override
-    public String encrypt(String m, String additionalData, byte[] nSec, byte[] nPub, String k, AEAD.Method method) {
+    public String encrypt(String m, String additionalData, byte[] nSec, byte[] nPub, Key k, AEAD.Method method) {
         byte[] messageBytes = bytes(m);
         byte[] additionalDataBytes = additionalData == null ? new byte[0] : bytes(additionalData);
         long additionalBytesLen = additionalData == null ? 0L : additionalDataBytes.length;
-        byte[] keyBytes = toBin(k);
+        byte[] keyBytes = k.getAsBytes();
 
         if (method.equals(AEAD.Method.CHACHA20_POLY1305)) {
             byte[] cipherBytes = new byte[messageBytes.length + AEAD.CHACHA20POLY1305_ABYTES];
@@ -1943,16 +1941,16 @@ public abstract class LazySodium implements
 
 
     @Override
-    public String decrypt(String cipher, String additionalData, byte[] nPub, String k, AEAD.Method method) {
+    public String decrypt(String cipher, String additionalData, byte[] nPub, Key k, AEAD.Method method) {
         return decrypt(cipher, additionalData, null, nPub, k, method);
     }
 
     @Override
-    public String decrypt(String cipher, String additionalData, byte[] nSec, byte[] nPub, String k, AEAD.Method method) {
+    public String decrypt(String cipher, String additionalData, byte[] nSec, byte[] nPub, Key k, AEAD.Method method) {
         byte[] cipherBytes = toBin(cipher);
         byte[] additionalDataBytes = additionalData == null ? new byte[0] : bytes(additionalData);
         long additionalBytesLen = additionalData == null ? 0L : additionalDataBytes.length;
-        byte[] keyBytes = toBin(k);
+        byte[] keyBytes = k.getAsBytes();
 
         if (method.equals(AEAD.Method.CHACHA20_POLY1305)) {
             byte[] messageBytes = new byte[cipherBytes.length - AEAD.CHACHA20POLY1305_ABYTES];
@@ -2014,11 +2012,11 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public DetachedEncrypt encryptDetached(String m, String additionalData, byte[] nSec, byte[] nPub, String k, AEAD.Method method) {
+    public DetachedEncrypt encryptDetached(String m, String additionalData, byte[] nSec, byte[] nPub, Key k, AEAD.Method method) {
         byte[] messageBytes = bytes(m);
         byte[] additionalDataBytes = additionalData == null ? new byte[0] : bytes(additionalData);
         long additionalBytesLen = additionalData == null ? 0L : additionalDataBytes.length;
-        byte[] keyBytes = toBin(k);
+        byte[] keyBytes = k.getAsBytes();
         byte[] cipherBytes = new byte[messageBytes.length];
 
         if (method.equals(AEAD.Method.CHACHA20_POLY1305)) {
@@ -2086,11 +2084,11 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public DetachedDecrypt decryptDetached(DetachedEncrypt detachedEncrypt, String additionalData, byte[] nSec, byte[] nPub, String k, AEAD.Method method) {
+    public DetachedDecrypt decryptDetached(DetachedEncrypt detachedEncrypt, String additionalData, byte[] nSec, byte[] nPub, Key k, AEAD.Method method) {
         byte[] cipherBytes = detachedEncrypt.getCipher();
         byte[] additionalDataBytes = additionalData == null ? new byte[0] : bytes(additionalData);
         long additionalBytesLen = additionalData == null ? 0L : additionalDataBytes.length;
-        byte[] keyBytes = toBin(k);
+        byte[] keyBytes = k.getAsBytes();
         byte[] messageBytes = new byte[cipherBytes.length];
         byte[] macBytes = detachedEncrypt.getMac();
 
