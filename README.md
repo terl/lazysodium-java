@@ -19,37 +19,8 @@ We created Lazysodium because we really wanted a solid cryptography library that
 
 We were exasperated and annoyed with current Libsodium implementations as some of them were just poorly maintained, poorly managed and, plain and simply, poorly architected. Thus, Lazysodium was born with the blessings of *Lazycode*, a part of [Terl](https://terl.co) that specialises in giving developers easy-to-use software and tools that just work.
 
+You can find more info [here](https://docs.lazycode.co/lazysodium/about).
 
-### The difference in code
-
-We believe the code speaks for itself. Compare the two ways you could use Lazysodium:
-
-#### 1. Using native functions
-
-```java
-byte[] subkey = subkey[32];
-byte[] context = "Examples".getBytes(StandardCharsets.UTF_8);
-byte[] masterKey = "a_master_key".getBytes(StandardCharsets.UTF_8);
-int result = lazySodium.cryptoKdfDeriveFromKey(subkey, subkey.length, 1L, context, masterKey);
-
-// Now check the result
-if (res == 0) {
-    // We have a positive result. Let's store it in a database.
-    String subkeyString = new String(subkey, StandardCharsets.UTF_8);
-}
-```
-
-#### 2. Or use Lazysodium's lazy functions
-You could use the above native functions **or** you could use the "Lazy" functions 😄
- 
-```java
-String context = "Examples";
-String masterKey = "a_master_key";
-String subkeyString = lazySodium.cryptoKdfDeriveFromKey(1L, context, masterKey);
-// Now store in database or something
-```
-
-As you can see Lazysodium's lazy functions **save you a lot of pain**!
 
 ## Features
 You can find an up-to-date feature list [here](https://docs.lazycode.co/lazysodium/features).
@@ -103,7 +74,7 @@ secretBoxNative.cryptoSecretBoxKeygen(key);
 
 // This one is Lazysodium's Lazy implementation which makes
 // your work with cryptography super easy.
-String key = secretBoxLazy.cryptoSecretBoxKeygen();
+Key key = secretBoxLazy.cryptoSecretBoxKeygen();
 ```
 
 In the above code there are two ways you can use Lazysodium. The first way is through the Native interface. The second is through the Lazy interface. 

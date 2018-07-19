@@ -51,7 +51,17 @@ public class Key {
      * @return A new Key.
      */
     public static Key fromPlainString(String str) {
-        return new Key(LazySodium.toBin(str));
+        return new Key(str.getBytes(Charset.forName("UTF-8")));
+    }
+
+    /**
+     * Create a Key from a regular, unmodified, not encoded string.
+     * @param str A plain string.
+     * @param charset The charset to use.
+     * @return A new Key.
+     */
+    public static Key fromPlainString(String str, Charset charset) {
+        return new Key(str.getBytes(charset));
     }
 
     /**
