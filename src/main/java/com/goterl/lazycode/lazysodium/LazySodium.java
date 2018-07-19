@@ -14,7 +14,6 @@ import com.goterl.lazycode.lazysodium.utils.*;
 import com.sun.jna.Pointer;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 public abstract class LazySodium implements
         Base,
@@ -76,6 +75,14 @@ public abstract class LazySodium implements
 
     @Override
     public byte[] sodiumHex2Bin(String hex) {
+        return hexToBytes(hex);
+    }
+
+    public String toHexStr(byte[] bs) {
+        return bytesToHex(bs);
+    }
+
+    public byte[] toBinary(String hex) {
         return hexToBytes(hex);
     }
 

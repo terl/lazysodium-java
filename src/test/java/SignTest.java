@@ -13,6 +13,7 @@
 import com.goterl.lazycode.lazysodium.LazySodium;
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.Sign;
+import com.goterl.lazycode.lazysodium.utils.Key;
 import com.goterl.lazycode.lazysodium.utils.KeyPair;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -35,7 +36,7 @@ public class SignTest extends BaseTest {
         KeyPair keys = cryptoSignLazy.cryptoSignSeedKeypair(seed);
         KeyPair keys2 = cryptoSignLazy.cryptoSignSeedKeypair(seed);
 
-        TestCase.assertEquals(keys.getPublicKeyString(), keys2.getPublicKeyString());
+        TestCase.assertEquals(keys, keys2);
     }
 
     @Test
@@ -44,7 +45,7 @@ public class SignTest extends BaseTest {
         KeyPair keys = cryptoSignLazy.cryptoSignSeedKeypair(seed);
         KeyPair keys2 = cryptoSignLazy.cryptoSignSeedKeypair(seed);
 
-        TestCase.assertEquals(keys.getSecretKeyString(), keys2.getSecretKeyString());
+        TestCase.assertEquals(keys, keys2);
     }
 
 
@@ -53,10 +54,10 @@ public class SignTest extends BaseTest {
         String message = "This should get signed";
 
         KeyPair keyPair = cryptoSignLazy.cryptoSignKeypair();
-        String signed = cryptoSignLazy.cryptoSign(message, keyPair.getSecretKeyString());
+        String signed = cryptoSignLazy.cryptoSign(message, keyPair.getSecretKey().getAsHexString());
 
         // Now we can verify the signed message.
-        String resultingMessage = cryptoSignLazy.cryptoSignOpen(signed, keyPair.getPublicKeyString());
+        String resultingMessage = cryptoSignLazy.cryptoSignOpen(signed, keyPair.getPublicKey().getAsHexString());
 
         TestCase.assertNotNull(resultingMessage);
     }
@@ -67,23 +68,28 @@ public class SignTest extends BaseTest {
         String message = "sign this please";
         KeyPair keyPair = lazySodium.cryptoSignKeypair();
 
-        String signature = lazySodium.cryptoSignDetached(message, keyPair.getSecretKeyString());
-        boolean result = lazySodium.cryptoSignVerifyDetached(signature, message, keyPair.getPublicKeyString());
+        String signature = lazySodium.cryptoSignDetached(message, keyPair.getSecretKey().getAsHexString());
+        boolean result = lazySodium.cryptoSignVerifyDetached(signature, message, keyPair.getPublicKey().getAsHexString());
 
         TestCase.assertTrue(result);
     }
 
     @Test
     public void convertEd25519ToCurve25519() throws SodiumException {
-        KeyPair ed25519KeyPair = new KeyPair(
-                "0ae5c84877c9c534ffbb1f854550895a25a9ded6bd6b8a9035f38b9e03a0dfe2",
-                "0ae5c84877c9c534ffbb1f854550895a25a9ded6bd6b8a9035f38b9e03a0dfe2"
-        );
+        Key key1 = Key.fromHexString("0ae5c84877c9c534ffbb1f854550895a25a9ded6bd6b8a9035f38b9e03a0dfe2");
+        Key key2 = Key.fromHexString("0ae5c84877c9c534ffbb1f854550895a25a9ded6bd6b8a9035f38b9e03a0dfe2");
+        KeyPair ed25519KeyPair = new KeyPair(key1, key2);
 
         KeyPair curve25519KeyPair = lazySodium.convertKeyPairEd25519ToCurve25519(ed25519KeyPair);
 
-        TestCase.assertEquals("4c261ac83d4ffec2fd3f3d3e7082c5c18e2d5e144dae343069f48207edcdc43a", curve25519KeyPair.getPublicKeyString().toLowerCase());
-        TestCase.assertEquals("588c6bcb80ebcbca68c0d039faeac79c0d0abc3f6078f23900760035ff9d0459", curve25519KeyPair.getSecretKeyString().toLowerCase());
+        TestCase.assertEquals(
+                "4c261ac83d4ffec2fd3f3d3e7082c5c18e2d5e144dae343069f48207edcdc43a",
+                curve25519KeyPair.getPublicKey().getAsHexString().toLowerCase()
+        );
+        TestCase.assertEquals(
+                "588c6bcb80ebcbca68c0d039faeac79c0d0abc3f6078f23900760035ff9d0459",
+                curve25519KeyPair.getSecretKey().getAsHexString().toLowerCase()
+        );
     }
 
     @Test
@@ -91,16 +97,16 @@ public class SignTest extends BaseTest {
         byte[] seed = lazySodium.randomBytesBuf(Sign.ED25519_SEEDBYTES);
         KeyPair ed5519KeyPair = lazySodium.cryptoSignSeedKeypair(seed);
         byte[] result = new byte[Sign.ED25519_SEEDBYTES];
-        lazySodium.cryptoSignEd25519SkToSeed(result, ed5519KeyPair.getSecretKey());
+        lazySodium.cryptoSignEd25519SkToSeed(result, ed5519KeyPair.getSecretKey().getAsBytes());
         TestCase.assertEquals(LazySodium.toHex(seed), LazySodium.toHex(result));
     }
 
     @Test
     public void cryptoSignSecretKeyPair() throws SodiumException {
         KeyPair keys = lazySodium.cryptoSignKeypair();
-        KeyPair extracted = lazySodium.cryptoSignSecretKeyPair(keys.getSecretKey());
-        TestCase.assertEquals(LazySodium.toHex(keys.getSecretKey()), LazySodium.toHex(extracted.getSecretKey()));
-        TestCase.assertEquals(LazySodium.toHex(keys.getPublicKey()), LazySodium.toHex(extracted.getPublicKey()));
+        KeyPair extracted = lazySodium.cryptoSignSecretKeyPair(keys.getSecretKey().getAsBytes());
+        TestCase.assertEquals(keys.getSecretKey().getAsHexString(), extracted.getSecretKey().getAsHexString());
+        TestCase.assertEquals(keys.getPublicKey().getAsHexString(), extracted.getPublicKey().getAsHexString());
     }
 
 }

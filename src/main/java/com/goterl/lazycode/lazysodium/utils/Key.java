@@ -77,4 +77,10 @@ public class Key {
         return new Key(ls.randomBytesBuf(size));
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Key)) return false;
+        Key other = (Key) obj;
+        return other.getAsHexString().equalsIgnoreCase(getAsHexString());
+    }
 }

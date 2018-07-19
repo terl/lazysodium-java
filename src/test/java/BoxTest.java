@@ -38,7 +38,7 @@ public class BoxTest extends BaseTest {
         KeyPair keys = cryptoBoxLazy.cryptoBoxSeedKeypair(seed);
         KeyPair keys2 = cryptoBoxLazy.cryptoBoxSeedKeypair(seed);
 
-        TestCase.assertEquals(keys.getPublicKeyString(), keys2.getPublicKeyString());
+        TestCase.assertEquals(keys.getPublicKey().getAsHexString(), keys2.getPublicKey().getAsHexString());
     }
 
     @Test
@@ -47,7 +47,7 @@ public class BoxTest extends BaseTest {
         KeyPair keys = cryptoBoxLazy.cryptoBoxSeedKeypair(seed);
         KeyPair keys2 = cryptoBoxLazy.cryptoBoxSeedKeypair(seed);
 
-        TestCase.assertEquals(keys.getSecretKeyString(), keys2.getSecretKeyString());
+        TestCase.assertEquals(keys.getSecretKey().getAsHexString(), keys2.getSecretKey().getAsHexString());
     }
 
 

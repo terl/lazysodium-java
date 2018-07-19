@@ -12,6 +12,7 @@
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.KeyDerivation;
+import com.goterl.lazycode.lazysodium.utils.Key;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -34,19 +35,18 @@ public class KeyDerivationTest extends BaseTest {
                 context, masterKey
         );
 
-        String skStr = lazySodium.sodiumBin2Hex(subKey);
+        String skStr = lazySodium.toHexStr(subKey);
 
         // Create subkey number 2 exactly the same as
         // subkey number 1.
-        String skStr2 = keyDerivationLazy.cryptoKdfDeriveFromKey(KeyDerivation.BYTES_MAX, 1L, contextStr, masterKey);
+        Key skStr2 = keyDerivationLazy.cryptoKdfDeriveFromKey(
+                KeyDerivation.BYTES_MAX,
+                1L,
+                contextStr,
+                Key.fromBytes(masterKey)
+        );
 
-
-        // Print outs
-//        System.out.println("Master key: " + mkStr);
-//        System.out.println("Subkey: " + skStr);
-//        System.out.println("Subkey2: " + skStr2);
-
-        assertEquals(skStr, skStr2);
+        assertEquals(skStr, skStr2.getAsHexString());
     }
 
 }

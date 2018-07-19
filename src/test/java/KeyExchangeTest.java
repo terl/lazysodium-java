@@ -34,7 +34,7 @@ public class KeyExchangeTest extends BaseTest {
         KeyPair keys = lazySodium.cryptoKxKeypair(seed);
         KeyPair keys2 = lazySodium.cryptoKxKeypair(seed);
 
-        TestCase.assertEquals(keys.getPublicKeyString(), keys2.getPublicKeyString());
+        TestCase.assertEquals(keys.getPublicKey().getAsHexString(), keys2.getPublicKey().getAsHexString());
     }
 
     @Test
@@ -43,7 +43,7 @@ public class KeyExchangeTest extends BaseTest {
         KeyPair keys = lazySodium.cryptoKxKeypair(seed);
         KeyPair keys2 = lazySodium.cryptoKxKeypair(seed);
 
-        TestCase.assertEquals(keys.getSecretKeyString(), keys2.getSecretKeyString());
+        TestCase.assertEquals(keys.getSecretKey().getAsHexString(), keys2.getSecretKey().getAsHexString());
     }
 
 

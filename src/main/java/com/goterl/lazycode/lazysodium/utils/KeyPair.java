@@ -25,4 +25,12 @@ public class KeyPair {
     public Key getPublicKey() {
         return publicKey;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof KeyPair)) return false;
+        KeyPair other = (KeyPair) obj;
+        return other.getSecretKey().equals(getSecretKey())
+                && other.getPublicKey().equals(getPublicKey());
+    }
 }
