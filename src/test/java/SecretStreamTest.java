@@ -11,6 +11,7 @@
  */
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.SecretStream;
+import com.goterl.lazycode.lazysodium.utils.Key;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -22,7 +23,7 @@ public class SecretStreamTest extends BaseTest {
 
     @Test
     public void struct() throws SodiumException {
-        String key = lazySodium.cryptoSecretStreamKeygen();
+        Key key = lazySodium.cryptoSecretStreamKeygen();
 
         byte[] header = lazySodium.randomBytesBuf(SecretStream.HEADERBYTES);
 

@@ -12,6 +12,7 @@
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.Auth;
+import com.goterl.lazycode.lazysodium.utils.Key;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -25,7 +26,7 @@ public class AuthTest extends BaseTest {
     public void authKeygenAndVerify() throws SodiumException {
         String m = "A simple message.";
 
-        String key = lazySodium.cryptoAuthKeygen();
+        Key key = lazySodium.cryptoAuthKeygen();
         String tag = lazySodium.cryptoAuth(m, key);
 
         boolean verification = lazySodium.cryptoAuthVerify(tag, m, key);

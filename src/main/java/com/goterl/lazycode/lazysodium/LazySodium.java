@@ -1213,19 +1213,19 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public String cryptoSecretStreamKeygen() {
+    public Key cryptoSecretStreamKeygen() {
         byte[] key = randomBytesBuf(SecretStream.KEYBYTES);
         getSodium().crypto_secretstream_xchacha20poly1305_keygen(key);
-        return toHex(key);
+        return Key.fromBytes(key);
     }
 
     @Override
-    public SecretStream.State cryptoSecretStreamInitPush(byte[] header, String key) throws SodiumException {
+    public SecretStream.State cryptoSecretStreamInitPush(byte[] header, Key key) throws SodiumException {
         SecretStream.State state = new SecretStream.State.ByReference();
         if (!SecretStream.Checker.headerCheck(header.length)) {
             throw new SodiumException("Header of secret stream incorrect length.");
         }
-        getSodium().crypto_secretstream_xchacha20poly1305_init_push(state, header, toBin(key));
+        getSodium().crypto_secretstream_xchacha20poly1305_init_push(state, header, key.getAsBytes());
         return state;
     }
 
@@ -1252,13 +1252,13 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public SecretStream.State cryptoSecretStreamInitPull(byte[] header, String key) throws SodiumException {
+    public SecretStream.State cryptoSecretStreamInitPull(byte[] header, Key key) throws SodiumException {
         SecretStream.State state = new SecretStream.State.ByReference();
         if (!SecretStream.Checker.headerCheck(header.length)) {
             throw new SodiumException("Header of secret stream incorrect length.");
         }
 
-        int res = getSodium().crypto_secretstream_xchacha20poly1305_init_pull(state, header, toBin(key));
+        int res = getSodium().crypto_secretstream_xchacha20poly1305_init_pull(state, header, key.getAsBytes());
 
         if (res != 0) {
             throw new SodiumException("Could not initialise a decryption state.");
@@ -1352,17 +1352,17 @@ public abstract class LazySodium implements
 
 
     @Override
-    public String cryptoAuthKeygen() {
+    public Key cryptoAuthKeygen() {
         byte[] key = randomBytesBuf(Auth.KEYBYTES);
         cryptoAuthKeygen(key);
-        return toHex(key);
+        return Key.fromBytes(key);
     }
 
     @Override
-    public String cryptoAuth(String message, String key) throws SodiumException {
+    public String cryptoAuth(String message, Key key) throws SodiumException {
         byte[] tag = randomBytesBuf(Auth.BYTES);
         byte[] messageBytes = bytes(message);
-        byte[] keyBytes = toBin(key);
+        byte[] keyBytes = key.getAsBytes();
         boolean res = cryptoAuth(tag, messageBytes, messageBytes.length, keyBytes);
 
         if (!res) {
@@ -1373,10 +1373,10 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAuthVerify(String tag, String message, String key) {
+    public boolean cryptoAuthVerify(String tag, String message, Key key) {
         byte[] tagToBytes = toBin(tag);
         byte[] messageBytes = bytes(message);
-        byte[] keyBytes = toBin(key);
+        byte[] keyBytes = key.getAsBytes();
         return cryptoAuthVerify(tagToBytes, messageBytes, messageBytes.length, keyBytes);
     }
 
