@@ -12,6 +12,7 @@ package com.goterl.lazycode.lazysodium.interfaces;
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.utils.BaseChecker;
 import com.goterl.lazycode.lazysodium.utils.DetachedEncrypt;
+import com.goterl.lazycode.lazysodium.utils.Key;
 
 public interface SecretBox {
 
@@ -129,7 +130,7 @@ public interface SecretBox {
          * @return A secret symmetric key which has been through {@link Helpers.Lazy#sodiumBin2Hex(byte[])}.
          *
          */
-        String cryptoSecretBoxKeygen();
+        Key cryptoSecretBoxKeygen();
 
 
         /**
@@ -139,16 +140,16 @@ public interface SecretBox {
          * @param key The key. A hexadecimal string that's been through {@link Helpers.Lazy#sodiumBin2Hex(byte[])}.
          * @return The cipher byte array that's been {@link Helpers.Lazy#sodiumBin2Hex(byte[])}'ified.
          */
-        String cryptoSecretBoxEasy(String message, byte[] nonce, String key) throws SodiumException;
+        String cryptoSecretBoxEasy(String message, byte[] nonce, Key key) throws SodiumException;
 
         /**
          * Decrypts a message.
          * @param cipher The hexadecimal cipher text. See {@link Helpers.Lazy#sodiumBin2Hex(byte[])}.
-         * @param nonce The nonce that was used when you encrypted with {@link #cryptoSecretBoxEasy(String, byte[], String)}.
+         * @param nonce The nonce that was used when you encrypted with {@link #cryptoSecretBoxEasy(String, byte[], Key)}.
          * @param key The key. A hexadecimal string that's been through {@link Helpers.Lazy#sodiumBin2Hex(byte[])}.
          * @return The decrypted message.
          */
-        String cryptoSecretBoxOpenEasy(String cipher, byte[] nonce, String key) throws SodiumException;
+        String cryptoSecretBoxOpenEasy(String cipher, byte[] nonce, Key key) throws SodiumException;
 
 
         /**
@@ -158,16 +159,16 @@ public interface SecretBox {
          * @param key The key. A hexadecimal string that's been through {@link Helpers.Lazy#sodiumBin2Hex(byte[])}.
          * @return The cipher byte array that's been {@link Helpers.Lazy#sodiumBin2Hex(byte[])}'ified.
          */
-        DetachedEncrypt cryptoSecretBoxDetached(String message, byte[] nonce, String key) throws SodiumException;
+        DetachedEncrypt cryptoSecretBoxDetached(String message, byte[] nonce, Key key) throws SodiumException;
 
         /**
          * Decrypts a message.
          * @param cipherAndMac The hexadecimal cipher text. See {@link Helpers.Lazy#sodiumBin2Hex(byte[])}.
-         * @param nonce The nonce that was used when you encrypted with {@link #cryptoSecretBoxEasy(String, byte[], String)}.
+         * @param nonce The nonce that was used when you encrypted with {@link #cryptoSecretBoxEasy(String, byte[], Key)}.
          * @param key The key. A hexadecimal string that's been through {@link Helpers.Lazy#sodiumBin2Hex(byte[])}.
          * @return The decrypted message.
          */
-        String cryptoSecretBoxOpenDetached(DetachedEncrypt cipherAndMac, byte[] nonce, String key) throws SodiumException;
+        String cryptoSecretBoxOpenDetached(DetachedEncrypt cipherAndMac, byte[] nonce, Key key) throws SodiumException;
 
     }
 

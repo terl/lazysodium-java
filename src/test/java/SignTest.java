@@ -57,7 +57,7 @@ public class SignTest extends BaseTest {
         String signed = cryptoSignLazy.cryptoSign(message, keyPair.getSecretKey().getAsHexString());
 
         // Now we can verify the signed message.
-        String resultingMessage = cryptoSignLazy.cryptoSignOpen(signed, keyPair.getPublicKey().getAsHexString());
+        String resultingMessage = cryptoSignLazy.cryptoSignOpen(signed, keyPair.getPublicKey());
 
         TestCase.assertNotNull(resultingMessage);
     }
@@ -68,8 +68,8 @@ public class SignTest extends BaseTest {
         String message = "sign this please";
         KeyPair keyPair = lazySodium.cryptoSignKeypair();
 
-        String signature = lazySodium.cryptoSignDetached(message, keyPair.getSecretKey().getAsHexString());
-        boolean result = lazySodium.cryptoSignVerifyDetached(signature, message, keyPair.getPublicKey().getAsHexString());
+        String signature = lazySodium.cryptoSignDetached(message, keyPair.getSecretKey());
+        boolean result = lazySodium.cryptoSignVerifyDetached(signature, message, keyPair.getPublicKey());
 
         TestCase.assertTrue(result);
     }
@@ -104,7 +104,7 @@ public class SignTest extends BaseTest {
     @Test
     public void cryptoSignSecretKeyPair() throws SodiumException {
         KeyPair keys = lazySodium.cryptoSignKeypair();
-        KeyPair extracted = lazySodium.cryptoSignSecretKeyPair(keys.getSecretKey().getAsBytes());
+        KeyPair extracted = lazySodium.cryptoSignSecretKeyPair(keys.getSecretKey());
         TestCase.assertEquals(keys.getSecretKey().getAsHexString(), extracted.getSecretKey().getAsHexString());
         TestCase.assertEquals(keys.getPublicKey().getAsHexString(), extracted.getPublicKey().getAsHexString());
     }

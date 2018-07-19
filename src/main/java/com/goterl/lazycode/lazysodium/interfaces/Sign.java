@@ -10,10 +10,7 @@ package com.goterl.lazycode.lazysodium.interfaces;
 
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
-import com.goterl.lazycode.lazysodium.utils.BaseChecker;
-import com.goterl.lazycode.lazysodium.utils.Constants;
-import com.goterl.lazycode.lazysodium.utils.DetachedEncrypt;
-import com.goterl.lazycode.lazysodium.utils.KeyPair;
+import com.goterl.lazycode.lazysodium.utils.*;
 
 public interface Sign {
 
@@ -176,10 +173,10 @@ public interface Sign {
 
         /**
          * Generate a signing keypair (ed25519), given a secret ed25519 key.
-         * @param secret The ed25519 secret key.
+         * @param secretKey The ed25519 secret key.
          * @return The private and public ed25519 keys.
          */
-        KeyPair cryptoSignSecretKeyPair(byte[] secret) throws SodiumException;
+        KeyPair cryptoSignSecretKeyPair(Key secretKey) throws SodiumException;
 
         /**
          * Sign a message.
@@ -196,7 +193,7 @@ public interface Sign {
          * @return Returns the message without a signature. If null, then
          * the message is not validly signed by the publicKey.
          */
-        String cryptoSignOpen(String signedMessage, String publicKey);
+        String cryptoSignOpen(String signedMessage, Key publicKey);
 
         /**
          * Returns a signature for a message. This
@@ -207,7 +204,7 @@ public interface Sign {
          * @throws SodiumException If could not sign.
          * @return The signature for a message.
          */
-        String cryptoSignDetached(String message, String secretKey) throws SodiumException;
+        String cryptoSignDetached(String message, Key secretKey) throws SodiumException;
 
         /**
          * Verifies that {@code signature} is valid for the
@@ -216,9 +213,9 @@ public interface Sign {
          * @param message The message.
          * @param publicKey The public key that signed the message.
          * @return Returns true if the signature is valid for the message.
-         * @see #cryptoSignDetached(String, String)
+         * @see #cryptoSignDetached(String, Key)
          */
-        boolean cryptoSignVerifyDetached(String signature, String message, String publicKey);
+        boolean cryptoSignVerifyDetached(String signature, String message, Key publicKey);
 
         /**
          * Converts a ed25519 keypair to a curve25519 keypair.

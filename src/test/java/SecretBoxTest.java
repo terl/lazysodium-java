@@ -12,6 +12,7 @@
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.SecretBox;
+import com.goterl.lazycode.lazysodium.utils.Key;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -25,7 +26,7 @@ public class SecretBoxTest extends BaseTest {
         String message = "This is a super secret message.";
 
         // Generate a symmetric key to encrypt the message.
-        String key = secretBoxLazy.cryptoSecretBoxKeygen();
+        Key key = secretBoxLazy.cryptoSecretBoxKeygen();
 
         // Generate a random nonce.
         byte[] nonce = lazySodium.nonce(SecretBox.NONCEBYTES);

@@ -613,15 +613,15 @@ public abstract class LazySodium implements
     /// --- Lazy
 
     @Override
-    public String cryptoSecretBoxKeygen() {
+    public Key cryptoSecretBoxKeygen() {
         byte[] key = new byte[SecretBox.KEYBYTES];
         cryptoSecretBoxKeygen(key);
-        return toHex(key);
+        return Key.fromBytes(key);
     }
 
     @Override
-    public String cryptoSecretBoxEasy(String message, byte[] nonce, String key) throws SodiumException {
-        byte[] keyBytes = toBin(key);
+    public String cryptoSecretBoxEasy(String message, byte[] nonce, Key key) throws SodiumException {
+        byte[] keyBytes = key.getAsBytes();
         byte[] messageBytes = bytes(message);
         byte[] cipherTextBytes = new byte[SecretBox.MACBYTES + messageBytes.length];
 
@@ -633,8 +633,8 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public String cryptoSecretBoxOpenEasy(String cipher, byte[] nonce, String key) throws SodiumException {
-        byte[] keyBytes = toBin(key);
+    public String cryptoSecretBoxOpenEasy(String cipher, byte[] nonce, Key key) throws SodiumException {
+        byte[] keyBytes = key.getAsBytes();
         byte[] cipherBytes = toBin(cipher);
         byte[] messageBytes = new byte[cipherBytes.length - SecretBox.MACBYTES];
 
@@ -647,8 +647,8 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public DetachedEncrypt cryptoSecretBoxDetached(String message, byte[] nonce, String key) throws SodiumException {
-        byte[] keyBytes = toBin(key);
+    public DetachedEncrypt cryptoSecretBoxDetached(String message, byte[] nonce, Key key) throws SodiumException {
+        byte[] keyBytes = key.getAsBytes();
         byte[] messageBytes = bytes(message);
         byte[] cipherTextBytes = new byte[messageBytes.length];
         byte[] macBytes = new byte[SecretBox.MACBYTES];
@@ -661,8 +661,8 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public String cryptoSecretBoxOpenDetached(DetachedEncrypt cipherAndMac, byte[] nonce, String key) throws SodiumException {
-        byte[] keyBytes = toBin(key);
+    public String cryptoSecretBoxOpenDetached(DetachedEncrypt cipherAndMac, byte[] nonce, Key key) throws SodiumException {
+        byte[] keyBytes = key.getAsBytes();
         byte[] cipherBytes = cipherAndMac.getCipher();
         byte[] macBytes = cipherAndMac.getMac();
         byte[] messageBytes = new byte[cipherBytes.length];
@@ -1026,18 +1026,19 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public KeyPair cryptoSignSecretKeyPair(byte[] secretKey) throws SodiumException {
+    public KeyPair cryptoSignSecretKeyPair(Key secretKey) throws SodiumException {
         byte[] publicKey = new byte[Sign.PUBLICKEYBYTES];
-        if(! cryptoSignEd25519SkToPk(publicKey, secretKey)) {
+        byte[] secKeyBytes = secretKey.getAsBytes();
+        if (!cryptoSignEd25519SkToPk(publicKey, secKeyBytes)) {
             throw new SodiumException("Could not extract public key.");
         }
-        return new KeyPair(Key.fromBytes(publicKey), Key.fromBytes(secretKey));
+        return new KeyPair(Key.fromBytes(publicKey), Key.fromBytes(secKeyBytes));
     }
 
     @Override
     public String cryptoSign(String message, String secretKey) throws SodiumException {
         byte[] messageBytes = bytes(message);
-        byte[] secretKeyBytes = sodiumHex2Bin(secretKey);
+        byte[] secretKeyBytes = toBin(secretKey);
         byte[] signedMessage = randomBytesBuf(Sign.BYTES + messageBytes.length);
         boolean res = cryptoSign(signedMessage, null, messageBytes, messageBytes.length, secretKeyBytes);
 
@@ -1045,13 +1046,13 @@ public abstract class LazySodium implements
             throw new SodiumException("Could not sign your message.");
         }
 
-        return sodiumBin2Hex(signedMessage);
+        return toHex(signedMessage);
     }
 
     @Override
-    public String cryptoSignOpen(String signedMessage, String publicKey) {
+    public String cryptoSignOpen(String signedMessage, Key publicKey) {
         byte[] signedMessageBytes = toBin(signedMessage);
-        byte[] publicKeyBytes = sodiumHex2Bin(publicKey);
+        byte[] publicKeyBytes = publicKey.getAsBytes();
 
         byte[] messageBytes = randomBytesBuf(signedMessageBytes.length - Sign.BYTES);
 
@@ -1071,9 +1072,9 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public String cryptoSignDetached(String message, String secretKey) throws SodiumException {
+    public String cryptoSignDetached(String message, Key secretKey) throws SodiumException {
         byte[] messageBytes = bytes(message);
-        byte[] skBytes = toBin(secretKey);
+        byte[] skBytes = secretKey.getAsBytes();
         byte[] signatureBytes = new byte[Sign.BYTES];
 
         if (!cryptoSignDetached(signatureBytes, new long[1], messageBytes, messageBytes.length, skBytes)) {
@@ -1084,9 +1085,9 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoSignVerifyDetached(String signature, String message, String publicKey) {
+    public boolean cryptoSignVerifyDetached(String signature, String message, Key publicKey) {
         byte[] messageBytes = bytes(message);
-        byte[] pkBytes = toBin(publicKey);
+        byte[] pkBytes = publicKey.getAsBytes();
         byte[] signatureBytes = toBin(signature);
 
         return cryptoSignVerifyDetached(signatureBytes, messageBytes, messageBytes.length, pkBytes);
