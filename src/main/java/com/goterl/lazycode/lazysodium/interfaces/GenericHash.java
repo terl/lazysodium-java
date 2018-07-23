@@ -27,6 +27,7 @@ public interface GenericHash {
         BLAKE2B_KEYBYTES_MIN = 16,
         BLAKE2B_KEYBYTES_MAX = 64,
         BLAKE2B_SALTBYTES = 16,
+        BLAKE2B_PERSONALBYTES = 16,
 
         BYTES = BLAKE2B_BYTES,
         KEYBYTES = BLAKE2B_KEYBYTES,
@@ -34,12 +35,13 @@ public interface GenericHash {
         BYTES_MAX = BLAKE2B_BYTES_MAX,
         BYTES_MIN = BLAKE2B_BYTES_MIN,
 
-        KEYBYTES_MIN = BLAKE2B_KEYBYTES_MIN,
+        // KEYBYTES_MIN is highly error prone
+        // and fails 1/10 times via our tests. Use
+        // with caution, or just use KEYBYTES or KEYBYTES_MAX
+        // KEYBYTES_MIN = BLAKE2B_KEYBYTES_MIN
+
         KEYBYTES_MAX = BLAKE2B_KEYBYTES_MAX;
 
-    class Checker extends BaseChecker {
-
-    }
 
     interface Native {
 
@@ -47,7 +49,7 @@ public interface GenericHash {
          * Generate a key. Store the key in {@code k}.
          * @param k A place to store the generated key
          *          of size {@link #KEYBYTES}. Though,
-         *          it may be between {@link #KEYBYTES_MIN}
+         *          it may be between {@link #KEYBYTES}
          *          and {@link #KEYBYTES_MAX}.
          */
         void cryptoGenericHashKeygen(byte[] k);
@@ -160,7 +162,7 @@ public interface GenericHash {
         /**
          * Generate a hashing key with a size.
          * @param size The size of the hashing key between
-         *             {@link #KEYBYTES_MIN} and {@link #KEYBYTES_MAX}.
+         *             {@link #KEYBYTES} and {@link #KEYBYTES_MAX}.
          * @return A hashing key.
          */
         Key cryptoGenericHashKeygen(int size) throws SodiumException;
