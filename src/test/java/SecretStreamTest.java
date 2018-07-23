@@ -22,7 +22,7 @@ public class SecretStreamTest extends BaseTest {
     private String message3 = "three messages";
 
     @Test
-    public void struct() throws SodiumException {
+    public void test1() throws SodiumException {
         Key key = lazySodium.cryptoSecretStreamKeygen();
 
         byte[] header = lazySodium.randomBytesBuf(SecretStream.HEADERBYTES);
@@ -33,7 +33,6 @@ public class SecretStreamTest extends BaseTest {
         String c1 = lazySodium.cryptoSecretStreamPush(state, message1, SecretStream.TAG_MESSAGE);
         String c2 = lazySodium.cryptoSecretStreamPush(state, message2, SecretStream.TAG_MESSAGE);
         String c3 = lazySodium.cryptoSecretStreamPush(state, message3, SecretStream.TAG_FINAL);
-
 
         // Start the decryption
         byte[] tag = new byte[1];
@@ -53,6 +52,8 @@ public class SecretStreamTest extends BaseTest {
                     decryptedMessage3.equals(message3)
             );
         }
+
+        System.out.println(String.valueOf(SecretStream.TAG_MESSAGE));
 
     }
 

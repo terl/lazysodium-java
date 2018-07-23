@@ -432,6 +432,16 @@ public class Sodium {
 
     public native void crypto_secretstream_xchacha20poly1305_rekey(SecretStream.State state);
 
+    public native int crypto_secretstream_xchacha20poly1305_abytes();
+    public native int crypto_secretstream_xchacha20poly1305_headerbytes();
+    public native int crypto_secretstream_xchacha20poly1305_keybytes();
+    public native int crypto_secretstream_xchacha20poly1305_messagebytes_max();
+
+    public native byte crypto_secretstream_xchacha20poly1305_tag_message();
+    public native byte crypto_secretstream_xchacha20poly1305_tag_push();
+    public native byte crypto_secretstream_xchacha20poly1305_tag_rekey();
+    public native byte crypto_secretstream_xchacha20poly1305_tag_final();
+
 
 
     //// -------------------------------------------|
