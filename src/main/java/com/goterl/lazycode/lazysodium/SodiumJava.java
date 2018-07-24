@@ -35,6 +35,14 @@ public class SodiumJava extends Sodium {
     }
 
 
+    // AEAD AES
+
+
+
+
+
+    // Scrypt
+
 
     public native int crypto_pwhash_scryptsalsa208sha256(
             byte[] out,

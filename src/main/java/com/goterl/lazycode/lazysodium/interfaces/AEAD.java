@@ -282,6 +282,8 @@ public interface AEAD {
                 byte[] key
         );
 
+        boolean cryptoAeadAES256GCMIsAvailable();
+
     }
 
 

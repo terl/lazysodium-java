@@ -108,7 +108,6 @@ public class AEADAndroidTest extends BaseTest {
     }
 
 
-
     @Test
     public void encryptAES() {
         Key key = lazySodium.keygen(AEAD.Method.AES256GCM);
@@ -117,6 +116,10 @@ public class AEADAndroidTest extends BaseTest {
 
         String cipher = lazySodium.encrypt(PASSWORD, null, nPub, key, AEAD.Method.AES256GCM);
         String decrypted = lazySodium.decrypt(cipher, null, nPub, key, AEAD.Method.AES256GCM);
+
+        System.out.println(PASSWORD);
+        System.out.println(cipher);
+        System.out.println(decrypted);
 
         TestCase.assertEquals(decrypted, PASSWORD);
     }

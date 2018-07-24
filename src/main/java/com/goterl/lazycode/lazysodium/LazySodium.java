@@ -1842,6 +1842,11 @@ public abstract class LazySodium implements
         return successful(getSodium().crypto_aead_aes256gcm_decrypt_detached(message, nSec, cipher, cipherLen, mac, additionalData, additionalDataLen, nPub, key));
     }
 
+    @Override
+    public boolean cryptoAeadAES256GCMIsAvailable() {
+        return successful(getSodium().crypto_aead_aes256gcm_is_available());
+    }
+
 
     // -- lazy
 
