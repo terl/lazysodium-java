@@ -1844,7 +1844,7 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoAeadAES256GCMIsAvailable() {
-        return successful(getSodium().crypto_aead_aes256gcm_is_available());
+        return getSodium().crypto_aead_aes256gcm_is_available() == 1;
     }
 
 

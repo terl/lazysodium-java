@@ -35,12 +35,6 @@ public class SodiumJava extends Sodium {
     }
 
 
-    // AEAD AES
-
-
-
-
-
     // Scrypt
 
 
