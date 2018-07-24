@@ -93,8 +93,17 @@ Every interface you can cast to is helpfully all in [one directory](https://gith
 See our [official documentation](https://docs.lazycode.co/lazysodium) to get started.
 
 
+## Examples
+There are some example projects available [here](https://github.com/terl/lazysodium-examples).
+
+
 ## Lazysodium for Android
 We also have an Android implementation available at [Lazysodium for Android](https://github.com/terl/lazysodium-android). It has the same API as this library so you can share code easily!
+
+You can preview some of the features in our free Lazysodium app available on Google Play:
+
+<a href='https://play.google.com/store/apps/details?id=com.goterl.lazycode.lazysodium.example&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_gb/badges/images/generic/en_badge_web_generic.png' width="140"/></a>
+
 
 
 ## Help us grow
