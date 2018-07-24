@@ -43,8 +43,6 @@ public class SecretStreamTest extends BaseTest {
         String decryptedMessage2 = lazySodium.cryptoSecretStreamPull(state2, c2, tag);
         String decryptedMessage3 = lazySodium.cryptoSecretStreamPull(state2, c3, tag);
 
-
-
         if (tag[0] == SecretStream.XCHACHA20POLY1305_TAG_FINAL) {
             TestCase.assertTrue(
                     decryptedMessage.equals(message1) &&
@@ -52,8 +50,6 @@ public class SecretStreamTest extends BaseTest {
                     decryptedMessage3.equals(message3)
             );
         }
-
-        System.out.println(String.valueOf(SecretStream.TAG_MESSAGE));
 
     }
 

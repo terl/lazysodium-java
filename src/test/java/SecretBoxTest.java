@@ -14,11 +14,18 @@ import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.SecretBox;
 import com.goterl.lazycode.lazysodium.utils.Key;
 import junit.framework.TestCase;
+import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertNotNull;
-
 public class SecretBoxTest extends BaseTest {
+
+
+    private SecretBox.Lazy secretBoxLazy;
+
+    @Before
+    public void before() {
+        secretBoxLazy = (SecretBox.Lazy) lazySodium;
+    }
 
 
     @Test

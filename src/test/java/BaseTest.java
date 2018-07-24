@@ -11,45 +11,10 @@
  */
 import com.goterl.lazycode.lazysodium.LazySodiumJava;
 import com.goterl.lazycode.lazysodium.SodiumJava;
-import com.goterl.lazycode.lazysodium.interfaces.*;
 import org.junit.BeforeClass;
-
-import java.nio.charset.StandardCharsets;
 
 public class BaseTest {
 
-    public static SodiumJava sodium;
-    public final String PASSWORD = "catdog";
-    public final byte[] PASSWORD_BYTES = PASSWORD.getBytes(StandardCharsets.UTF_8);
-    public final int PASSWORD_BYTES_LEN = PASSWORD_BYTES.length;
-
-    public static LazySodiumJava lazySodium;
-
-    public static Random random;
-    public static PwHash.Native pwHash;
-    public static PwHash.Lazy pwHashLazy;
-    public static SecretBox.Lazy secretBoxLazy;
-    public static Box.Lazy cryptoBoxLazy;
-    public static Sign.Lazy cryptoSignLazy;
-
-    public static KeyDerivation.Native keyDerivation;
-    public static KeyDerivation.Lazy keyDerivationLazy;
-
-
-
-    @BeforeClass
-    public static void beforeClass() {
-        sodium = new SodiumJava();
-        lazySodium = new LazySodiumJava(sodium);
-        random = (Random) lazySodium;
-        pwHash = (PwHash.Native) lazySodium;
-        pwHashLazy = (PwHash.Lazy) lazySodium;
-        keyDerivation = (KeyDerivation.Native) lazySodium;
-        keyDerivationLazy = (KeyDerivation.Lazy) lazySodium;
-        secretBoxLazy = (SecretBox.Lazy) lazySodium;
-        cryptoBoxLazy = (Box.Lazy) lazySodium;
-        cryptoSignLazy = (Sign.Lazy) lazySodium;
-    }
-
+    public static LazySodiumJava lazySodium = new LazySodiumJava(new SodiumJava());
 
 }

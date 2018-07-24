@@ -16,12 +16,21 @@ import com.goterl.lazycode.lazysodium.interfaces.Sign;
 import com.goterl.lazycode.lazysodium.utils.Key;
 import com.goterl.lazycode.lazysodium.utils.KeyPair;
 import junit.framework.TestCase;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 
 
 public class SignTest extends BaseTest {
+
+
+    private Sign.Lazy cryptoSignLazy;
+
+    @Before
+    public void before() {
+        cryptoSignLazy = (Sign.Lazy) lazySodium;
+    }
 
 
     @Test

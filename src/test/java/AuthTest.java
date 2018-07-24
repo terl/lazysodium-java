@@ -16,7 +16,6 @@ import com.goterl.lazycode.lazysodium.utils.Key;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class AuthTest extends BaseTest {

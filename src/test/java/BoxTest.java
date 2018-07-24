@@ -16,6 +16,7 @@ import com.goterl.lazycode.lazysodium.utils.DetachedDecrypt;
 import com.goterl.lazycode.lazysodium.utils.DetachedEncrypt;
 import com.goterl.lazycode.lazysodium.utils.KeyPair;
 import junit.framework.TestCase;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -25,6 +26,13 @@ import static org.junit.Assert.assertNotNull;
  */
 public class BoxTest extends BaseTest {
 
+
+    private Box.Lazy cryptoBoxLazy;
+
+    @Before
+    public void before() {
+        cryptoBoxLazy = (Box.Lazy) lazySodium;
+    }
 
     @Test
     public void generateKeyPair() throws SodiumException {

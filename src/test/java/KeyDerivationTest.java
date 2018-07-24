@@ -11,14 +11,26 @@
  */
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
+import com.goterl.lazycode.lazysodium.interfaces.Box;
 import com.goterl.lazycode.lazysodium.interfaces.KeyDerivation;
 import com.goterl.lazycode.lazysodium.utils.Key;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
 
 
 public class KeyDerivationTest extends BaseTest {
+
+    private KeyDerivation.Native keyDerivation;
+    private KeyDerivation.Lazy keyDerivationLazy;
+
+    @Before
+    public void before() {
+        keyDerivation = (KeyDerivation.Native) lazySodium;
+        keyDerivationLazy = (KeyDerivation.Lazy) lazySodium;
+    }
 
     @Test
     public void keygen() throws SodiumException {

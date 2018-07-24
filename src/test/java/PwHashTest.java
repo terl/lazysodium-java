@@ -13,12 +13,23 @@ import com.goterl.lazycode.lazysodium.LazySodium;
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.PwHash;
 import com.goterl.lazycode.lazysodium.interfaces.Scrypt;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class PwHashTest extends BaseTest {
+
+    private final String PASSWORD = "Password123456!!!!@@";
+
+
+    private PwHash.Lazy pwHashLazy;
+
+    @Before
+    public void before() {
+        pwHashLazy = (PwHash.Lazy) lazySodium;
+    }
 
 
     @Test

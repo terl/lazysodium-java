@@ -16,7 +16,7 @@ public class HelperTest extends BaseTest {
         byte[] b1 = new byte[] { 4, 2, 2, 1 };
         byte[] b2 = new byte[] { 4, 2, 2, 1 };
 
-        int r = sodium.sodium_compare(b1, b2, 4);
+        int r = lazySodium.getSodium().sodium_compare(b1, b2, 4);
 
         TestCase.assertEquals(0, r);
     }
