@@ -17,7 +17,7 @@ import com.goterl.lazycode.lazysodium.utils.Key;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-public class GenericHashTest extends BaseTest {
+public class GenericHashAndroidTest extends BaseTest {
 
     @Test
     public void genKey() {

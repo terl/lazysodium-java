@@ -17,7 +17,7 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 
-public class SecretBoxTest extends BaseTest {
+public class SecretBoxAndroidTest extends BaseTest {
 
 
     private SecretBox.Lazy secretBoxLazy;

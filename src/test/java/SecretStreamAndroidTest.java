@@ -15,7 +15,7 @@ import com.goterl.lazycode.lazysodium.utils.Key;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-public class SecretStreamTest extends BaseTest {
+public class SecretStreamAndroidTest extends BaseTest {
 
     private String message1 = "Arbitrary data to encrypt";
     private String message2 = "split into";

@@ -11,7 +11,7 @@ import com.sun.jna.Pointer;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-public class SecureMemoryTest extends BaseTest {
+public class SecureMemoryAndroidTest extends BaseTest {
 
 
     @Test

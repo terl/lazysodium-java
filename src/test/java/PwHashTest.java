@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Terl Tech Ltd • 03/05/18 11:37 • goterl.com
+ * Copyright (c) Terl Tech Ltd • 24/07/18 16:23 • goterl.com
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v2.0. If a copy of the MPL was not distributed with this
@@ -33,39 +33,25 @@ public class PwHashTest extends BaseTest {
 
 
     @Test
-    public void nativeHash() throws SodiumException {
+    public void scryptHash() throws SodiumException {
 
-        String output = pwHashLazy.cryptoPwHash(
+        byte[] salt = new byte[LazySodium.longToInt(Scrypt.SCRYPTSALSA208SHA256_SALT_BYTES)];
+        String scryptHash = lazySodium.cryptoPwHashScryptSalsa208Sha256(
                 PASSWORD,
-                PwHash.BYTES_MIN + 20,
-                lazySodium.randomBytesBuf(PwHash.SALTBYTES),
-                5L,
-                8192L * 2,
-                PwHash.Alg.PWHASH_ALG_ARGON2ID13
+                salt,
+                Scrypt.SCRYPTSALSA208SHA256_OPSLIMIT_MIN,
+                Scrypt.SCRYPTSALSA208SHA256_MEMLIMIT_MIN
         );
 
-        assertNotNull("Native hashing failed.", output);
-    }
-
-
-    @Test
-    public void strMin() throws SodiumException {
-
-        String hash = pwHashLazy.cryptoPwHashStr(
+        String hash = lazySodium.cryptoPwHashScryptSalsa208Sha256Str(
                 PASSWORD,
-                3,
-                PwHash.ARGON2ID_MEMLIMIT_MIN
+                Scrypt.SCRYPTSALSA208SHA256_OPSLIMIT_MIN,
+                Scrypt.SCRYPTSALSA208SHA256_MEMLIMIT_MIN
         );
 
-        boolean isCorrect = pwHashLazy.cryptoPwHashStrVerify(hash, PASSWORD);
+        boolean isCorrect = lazySodium.cryptoPwHashScryptSalsa208Sha256StrVerify(hash, PASSWORD);
 
         assertTrue("Minimum hashing failed.", isCorrect);
     }
-
-
-    // We don't test for this as it's pretty demanding and
-    // will fail on most machines
-    public void cryptoPwHashStrTestSensitive() { }
-
 
 }

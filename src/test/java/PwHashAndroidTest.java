@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Terl Tech Ltd • 24/07/18 16:23 • goterl.com
+ * Copyright (c) Terl Tech Ltd • 03/05/18 11:37 • goterl.com
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v2.0. If a copy of the MPL was not distributed with this
@@ -19,7 +19,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-public class PwHashJavaTest extends BaseTest {
+public class PwHashAndroidTest extends BaseTest {
 
     private final String PASSWORD = "Password123456!!!!@@";
 
@@ -33,25 +33,39 @@ public class PwHashJavaTest extends BaseTest {
 
 
     @Test
-    public void scryptHash() throws SodiumException {
+    public void nativeHash() throws SodiumException {
 
-        byte[] salt = new byte[LazySodium.longToInt(Scrypt.SCRYPTSALSA208SHA256_SALT_BYTES)];
-        String scryptHash = lazySodium.cryptoPwHashScryptSalsa208Sha256(
+        String output = pwHashLazy.cryptoPwHash(
                 PASSWORD,
-                salt,
-                Scrypt.SCRYPTSALSA208SHA256_OPSLIMIT_MIN,
-                Scrypt.SCRYPTSALSA208SHA256_MEMLIMIT_MIN
+                PwHash.BYTES_MIN + 20,
+                lazySodium.randomBytesBuf(PwHash.SALTBYTES),
+                5L,
+                8192L * 2,
+                PwHash.Alg.PWHASH_ALG_ARGON2ID13
         );
 
-        String hash = lazySodium.cryptoPwHashScryptSalsa208Sha256Str(
+        assertNotNull("Native hashing failed.", output);
+    }
+
+
+    @Test
+    public void strMin() throws SodiumException {
+
+        String hash = pwHashLazy.cryptoPwHashStr(
                 PASSWORD,
-                Scrypt.SCRYPTSALSA208SHA256_OPSLIMIT_MIN,
-                Scrypt.SCRYPTSALSA208SHA256_MEMLIMIT_MIN
+                3,
+                PwHash.ARGON2ID_MEMLIMIT_MIN
         );
 
-        boolean isCorrect = lazySodium.cryptoPwHashScryptSalsa208Sha256StrVerify(hash, PASSWORD);
+        boolean isCorrect = pwHashLazy.cryptoPwHashStrVerify(hash, PASSWORD);
 
         assertTrue("Minimum hashing failed.", isCorrect);
     }
+
+
+    // We don't test for this as it's pretty demanding and
+    // will fail on most machines
+    public void cryptoPwHashStrTestSensitive() { }
+
 
 }

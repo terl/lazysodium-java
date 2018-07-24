@@ -17,7 +17,7 @@ import com.goterl.lazycode.lazysodium.utils.Key;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-public class AEADTest extends BaseTest {
+public class AEADAndroidTest extends BaseTest {
 
     private final String PASSWORD = "superSecurePassword";
 

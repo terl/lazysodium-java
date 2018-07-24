@@ -21,7 +21,7 @@ import org.junit.Test;
 import static junit.framework.TestCase.assertEquals;
 
 
-public class KeyDerivationTest extends BaseTest {
+public class KeyDerivationAndroidTest extends BaseTest {
 
     private KeyDerivation.Native keyDerivation;
     private KeyDerivation.Lazy keyDerivationLazy;

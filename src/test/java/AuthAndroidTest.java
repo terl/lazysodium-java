@@ -18,7 +18,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class AuthTest extends BaseTest {
+public class AuthAndroidTest extends BaseTest {
 
 
     @Test

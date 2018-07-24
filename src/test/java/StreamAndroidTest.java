@@ -13,7 +13,7 @@ import com.goterl.lazycode.lazysodium.interfaces.Stream;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-public class StreamTest extends BaseTest {
+public class StreamAndroidTest extends BaseTest {
 
     private String message1 = "A top secret message.";
 

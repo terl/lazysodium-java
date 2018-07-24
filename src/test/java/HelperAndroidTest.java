@@ -9,7 +9,7 @@
 import junit.framework.TestCase;
 import org.junit.Test;
 
-public class HelperTest extends BaseTest {
+public class HelperAndroidTest extends BaseTest {
 
     @Test
     public void compare() {
