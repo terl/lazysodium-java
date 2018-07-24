@@ -110,15 +110,16 @@ You can preview some of the features in our free Lazysodium app available on Goo
 Lazysodium needs your support for it to continue being maintained and improved. Even if you put forward £1/$1/€1 it still means a lot for us. Your money would go into improving our open-source projects first and foremost. If you want to find out more, use your preffered donation platform. 
 
 
-|  |Patreon       | Liberapay      | Terl Supporters |
-|----|--------------|---------------------|---|
-|    | <a href="https://www.patreon.com/terlacious"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/patron_button.png" width="100" /></a> | <a href="https://liberapay.com/terlacious/"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/liberapay.png" width="40" /></a> | <a href="https://terl.co/support-us"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/terl_slant_square.png" width="40" /></a> |
-|  One-time  | ✗ | ✗ | ✓ |
-|  Weekly  | ✗ | ✓ | ✓ |
-|  Monthly  | ✓ | ✓ | ✓ |
-|  Yearly  | ✗ | ✓ | ✓ |
-|  Rewards  | ✓ | ✗ | ✓ |
-|  Currencies  | USD | USD, EUR | 100+ currencies |
+|            | Patreon                                                                                                                                 | Terl Supporters                                                                                                                    |
+|------------|-----------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+|            | <a href="https://www.patreon.com/terlacious"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/patron_button.png" width="100" /></a> | <a href="https://terl.co/support-us"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/terl_slant_square.png" width="40" /></a> |
+| One-time   | ✗                                                                                                                                       | ✓                                                                                                                                  |
+| Weekly     | ✗                                                                                                                                       | ✓                                                                                                                                  |
+| Monthly    | ✓                                                                                                                                       | ✓                                                                                                                                  |
+| Yearly     | ✗                                                                                                                                       | ✓                                                                                                                                  |
+| Rewards    | ✓                                                                                                                                       | ✓                                                                                                                                  |
+| Currencies | USD                                                                                                                                     | 100+ currencies                                                                                                                    |
+
 
 
 Patreon only has recurring subscriptions and rewards. Liberapay is another route you could take for subscription. We're also setting up our own system that allows one-off support amongst other things.
