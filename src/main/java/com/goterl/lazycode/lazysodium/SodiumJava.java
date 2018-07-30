@@ -81,6 +81,24 @@ public class SodiumJava extends Sodium {
     );
 
 
+    public native void crypto_stream_salsa2012_keygen(byte[] key);
+
+    public native int crypto_stream_salsa2012(
+            byte[] c,
+            long cLen,
+            byte[] nonce,
+            byte[] key
+    );
+
+    public native int crypto_stream_salsa2012_xor(
+            byte[] cipher,
+            byte[] message,
+            long messageLen,
+            byte[] nonce,
+            byte[] key
+    );
+
+
     // XChaCha20
 
     public native int crypto_stream_xchacha20(
