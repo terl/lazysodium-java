@@ -533,23 +533,6 @@ public class Sodium {
     );
 
 
-    public native void crypto_stream_salsa208_keygen(byte[] key);
-
-    public native int crypto_stream_salsa208(
-            byte[] c,
-            long cLen,
-            byte[] nonce,
-            byte[] key
-    );
-
-    public native int crypto_stream_salsa208_xor(
-            byte[] cipher,
-            byte[] message,
-            long messageLen,
-            byte[] nonce,
-            byte[] key
-    );
-
 
     // XSalsa20
 

@@ -133,6 +133,24 @@ public class LazySodiumJava extends LazySodium implements
     }
 
 
+    // Salsa20 8 rounds
+
+    @Override
+    public void cryptoStreamSalsa208Keygen(byte[] key) {
+        getSodium().crypto_stream_salsa208_keygen(key);
+    }
+
+    @Override
+    public boolean cryptoStreamSalsa208(byte[] c, long cLen, byte[] nonce, byte[] key) {
+        return successful(getSodium().crypto_stream_salsa208(c, cLen, nonce, key));
+    }
+
+    @Override
+    public boolean cryptoStreamSalsa208Xor(byte[] cipher, byte[] message, long messageLen, byte[] nonce, byte[] key) {
+        return successful(getSodium().crypto_stream_salsa208_xor(cipher, message, messageLen, nonce, key));
+    }
+
+
     public SodiumJava getSodium() {
         return sodium;
     }
