@@ -124,6 +124,40 @@ public interface Stream {
                 byte[] key
         );
 
+        void cryptoStreamSalsa2012Keygen(byte[] key);
+
+        boolean cryptoStreamSalsa2012(
+                byte[] c,
+                long cLen,
+                byte[] nonce,
+                byte[] key
+        );
+
+        boolean cryptoStreamSalsa2012Xor(
+                byte[] cipher,
+                byte[] message,
+                long messageLen,
+                byte[] nonce,
+                byte[] key
+        );
+
+        void cryptoStreamSalsa208Keygen(byte[] key);
+
+        boolean cryptoStreamSalsa208(
+                byte[] c,
+                long cLen,
+                byte[] nonce,
+                byte[] key
+        );
+
+        boolean cryptoStreamSalsa208Xor(
+                byte[] cipher,
+                byte[] message,
+                long messageLen,
+                byte[] nonce,
+                byte[] key
+        );
+
     }
 
 
