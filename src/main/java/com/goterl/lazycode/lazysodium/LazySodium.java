@@ -1394,8 +1394,20 @@ public abstract class LazySodium implements
         return successful(getSodium().crypto_stream_salsa208_xor(cipher, message, messageLen, nonce, key));
     }
 
+    @Override
+    public void cryptoStreamXSalsa20Keygen(byte[] key) {
+        getSodium().crypto_stream_keygen(key);
+    }
 
+    @Override
+    public boolean cryptoStreamXSalsa20(byte[] c, long cLen, byte[] nonce, byte[] key) {
+        return successful(getSodium().crypto_stream(c, cLen, nonce, key));
+    }
 
+    @Override
+    public boolean cryptoStreamXSalsa20Xor(byte[] cipher, byte[] message, long messageLen, byte[] nonce, byte[] key) {
+        return successful(getSodium().crypto_stream_xor(cipher, message, messageLen, nonce, key));
+    }
 
 
     //// -------------------------------------------|
