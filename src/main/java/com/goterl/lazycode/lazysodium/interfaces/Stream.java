@@ -15,18 +15,34 @@ public interface Stream {
 
     // REGULAR CHACHA
 
-    int CHACHA20_NONCEBYTES = 8, CHACHA20_KEYBYTES = 32;
+    int CHACHA20_NONCEBYTES = 8,
+        CHACHA20_KEYBYTES = 32;
     long CHACHA20_MESSAGEBYTES_MAX = Constants.SIZE_MAX;
+
 
     // IETF CHACHA
 
-    int CHACHA20_IETF_NONCEBYTES = 12, CHACHA20_IETF_KEYBYTES = 32;
+    int CHACHA20_IETF_NONCEBYTES = 12,
+        CHACHA20_IETF_KEYBYTES = 32;
     long CHACHA20_IETF_MESSAGEBYTES_MAX = Constants.GB_256;
+
 
     // SALSA20
 
-    int SALSA20_NONCEBYTES = 12, SALSA20_KEYBYTES = 32;
+    int SALSA20_NONCEBYTES = 12,
+        SALSA20_KEYBYTES = 32;
     long SALSA20_MESSAGEBYTES_MAX = Constants.SIZE_MAX;
+
+
+    // XSALSA20
+
+    int XSALSA20_NONCEBYTES = 24,
+        XSALSA20_KEYBYTES = 32;
+    long XSALSA20_MESSAGEBYTES_MAX = Constants.SIZE_MAX;
+
+    int NONCEBYTES = XSALSA20_NONCEBYTES,
+        KEYBYTES = XSALSA20_KEYBYTES;
+    long MESSAGEBYTES_MAX = XSALSA20_MESSAGEBYTES_MAX;
 
 
     enum Method {
@@ -40,7 +56,6 @@ public interface Stream {
 
 
     interface Native {
-
 
         void cryptoStreamChaCha20Keygen(byte[] key);
 
@@ -151,6 +166,26 @@ public interface Stream {
         );
 
         boolean cryptoStreamSalsa208Xor(
+                byte[] cipher,
+                byte[] message,
+                long messageLen,
+                byte[] nonce,
+                byte[] key
+        );
+
+
+        // XSalsa20
+
+        void cryptoStreamXSalsa20Keygen(byte[] key);
+
+        boolean cryptoStreamXSalsa20(
+                byte[] c,
+                long cLen,
+                byte[] nonce,
+                byte[] key
+        );
+
+        boolean cryptoStreamXSalsa20Xor(
                 byte[] cipher,
                 byte[] message,
                 long messageLen,
