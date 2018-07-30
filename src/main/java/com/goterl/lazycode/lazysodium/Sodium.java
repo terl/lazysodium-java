@@ -477,6 +477,8 @@ public class Sodium {
 
     // IETF Chacha
 
+    public native void crypto_stream_chacha20_ietf_keygen(byte[] key);
+
     public native int crypto_stream_chacha20_ietf(
             byte[] c,
             long cLen,
@@ -501,12 +503,33 @@ public class Sodium {
             byte[] key
     );
 
-    public native void crypto_stream_chacha20_ietf_keygen(byte[] key);
+    // Salsa20
 
-    // XChacha20 only available in Java version,
-    // as we have packaged libsodium in minimal mode.
+    public native void crypto_stream_salsa20_keygen(byte[] key);
 
+    public native int crypto_stream_salsa20(
+            byte[] c,
+            long cLen,
+            byte[] nonce,
+            byte[] key
+    );
 
+    public native int crypto_stream_salsa20_xor(
+            byte[] cipher,
+            byte[] message,
+            long messageLen,
+            byte[] nonce,
+            byte[] key
+    );
+
+    public native int crypto_stream_salsa20_xor_ic(
+            byte[] cipher,
+            byte[] message,
+            long messageLen,
+            byte[] nonce,
+            long ic,
+            byte[] key
+    );
 
 
 

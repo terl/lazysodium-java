@@ -1301,6 +1301,11 @@ public abstract class LazySodium implements
     //// -------------------------------------------|
 
     @Override
+    public void cryptoStreamChaCha20Keygen(byte[] key) {
+        getSodium().crypto_stream_chacha20_keygen(key);
+    }
+
+    @Override
     public boolean cryptoStreamChaCha20(byte[] c, long cLen, byte[] nonce, byte[] key) {
         return successful(getSodium().crypto_stream_chacha20(c, cLen, nonce, key));
     }
@@ -1313,6 +1318,13 @@ public abstract class LazySodium implements
     @Override
     public boolean cryptoStreamChacha20XorIc(byte[] cipher, byte[] message, long messageLen, byte[] nonce, long ic, byte[] key) {
         return successful(getSodium().crypto_stream_chacha20_xor_ic(cipher, message, messageLen, nonce, ic, key));
+    }
+
+    // Chacha20 Ietf
+
+    @Override
+    public void cryptoStreamChaCha20IetfKeygen(byte[] key) {
+        getSodium().crypto_stream_chacha20_ietf_keygen(key);
     }
 
     @Override
@@ -1329,6 +1341,29 @@ public abstract class LazySodium implements
     public boolean cryptoStreamChacha20IetfXorIc(byte[] cipher, byte[] message, long messageLen, byte[] nonce, long ic, byte[] key) {
         return successful(getSodium().crypto_stream_chacha20_ietf_xor_ic(cipher, message, messageLen, nonce, ic, key));
     }
+
+    // Salsa20
+
+    @Override
+    public void cryptoStreamSalsa20Keygen(byte[] key) {
+        getSodium().crypto_stream_salsa20_keygen(key);
+    }
+
+    @Override
+    public boolean cryptoStreamSalsa20(byte[] c, long cLen, byte[] nonce, byte[] key) {
+        return successful(getSodium().crypto_stream_salsa20(c, cLen, nonce, key));
+    }
+
+    @Override
+    public boolean cryptoStreamSalsa20Xor(byte[] cipher, byte[] message, long messageLen, byte[] nonce, byte[] key) {
+        return successful(getSodium().crypto_stream_salsa20_xor(cipher, message, messageLen, nonce, key));
+    }
+
+    @Override
+    public boolean cryptoStreamSalsa20XorIc(byte[] cipher, byte[] message, long messageLen, byte[] nonce, long ic, byte[] key) {
+        return successful(getSodium().crypto_stream_salsa20_xor_ic(cipher, message, messageLen, nonce, ic, key));
+    }
+
 
 
     //// -------------------------------------------|
