@@ -73,8 +73,6 @@ public interface Box {
 
         boolean cryptoBoxSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed);
 
-        boolean cryptoScalarMultBase(byte[] publicKey, byte[] secretKey);
-
         boolean cryptoBoxEasy(
                 byte[] cipherText,
                 byte[] message,
@@ -169,20 +167,6 @@ public interface Box {
          */
         KeyPair cryptoBoxSeedKeypair(byte[] seed) throws SodiumException;
 
-        /**
-         * Generate a public key from a private key.
-         * @param secretKey Provide the secret key.
-         * @return The public key and the provided secret key.
-         */
-        KeyPair cryptoScalarMultBase(byte[] secretKey) throws SodiumException;
-
-        /**
-         * Generate a public key from a private key.
-         * @param secretKey Provide the secret key that's been
-         *                  through {@link Helpers.Lazy#sodiumBin2Hex(byte[])}.
-         * @return The public key and the provided secret key.
-         */
-        KeyPair cryptoScalarMultBase(String secretKey) throws SodiumException;
 
         /**
          * Encrypts a message.

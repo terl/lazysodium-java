@@ -33,7 +33,8 @@ public abstract class LazySodium implements
         Box.Native, Box.Lazy,
         SecretBox.Native, SecretBox.Lazy,
         KeyExchange.Native, KeyExchange.Lazy,
-        KeyDerivation.Native, KeyDerivation.Lazy  {
+        KeyDerivation.Native, KeyDerivation.Lazy,
+        DiffieHellman.Native, DiffieHellman.Lazy {
 
     protected Charset charset = Charset.forName("UTF-8");
 
@@ -679,6 +680,36 @@ public abstract class LazySodium implements
 
 
     //// -------------------------------------------|
+    //// DIFFIE HELLMAN
+    //// -------------------------------------------|
+
+    @Override
+    public boolean cryptoScalarMultBase(byte[] publicKey, byte[] secretKey) {
+        return successful(getSodium().crypto_scalarmult_base(publicKey, secretKey));
+    }
+
+    @Override
+    public Key cryptoScalarMultBase(Key secretKey) {
+        byte[] publicKey = new byte[DiffieHellman.SCALARMULT_BYTES];
+        cryptoScalarMultBase(publicKey, secretKey.getAsBytes());
+        return Key.fromBytes(publicKey);
+    }
+
+    @Override
+    public boolean cryptoScalarMult(byte[] shared, byte[] secretKey, byte[] publicKey) {
+        return successful(getSodium().crypto_scalarmult(shared, secretKey, publicKey));
+    }
+
+    @Override
+    public Key cryptoScalarMult(Key secretKey, Key publicKey) {
+        byte[] sharedKey = new byte[DiffieHellman.SCALARMULT_BYTES];
+        cryptoScalarMult(sharedKey, secretKey.getAsBytes(), publicKey.getAsBytes());
+        return Key.fromBytes(sharedKey);
+    }
+
+
+
+    // -------------------------------------------|
     //// CRYPTO BOX
     //// -------------------------------------------|
 
@@ -690,11 +721,6 @@ public abstract class LazySodium implements
     @Override
     public boolean cryptoBoxSeedKeypair(byte[] publicKey, byte[] secretKey, byte[] seed) {
         return successful(getSodium().crypto_box_seed_keypair(publicKey, secretKey, seed));
-    }
-
-    @Override
-    public boolean cryptoScalarMultBase(byte[] publicKey, byte[] secretKey) {
-        return successful(getSodium().crypto_scalarmult_base(publicKey, secretKey));
     }
 
     @Override
@@ -777,21 +803,7 @@ public abstract class LazySodium implements
         return new KeyPair(Key.fromBytes(publicKey), Key.fromBytes(secretKey));
     }
 
-    @Override
-    public KeyPair cryptoScalarMultBase(byte[] secretKey) throws SodiumException {
-        if (!Box.Checker.checkSecretKey(secretKey.length)) {
-            throw new SodiumException("Secret key is incorrect size.");
-        }
-        byte[] publicKey = randomBytesBuf(Box.PUBLICKEYBYTES);
-        cryptoScalarMultBase(publicKey, secretKey);
-        return new KeyPair(Key.fromBytes(publicKey), Key.fromBytes(secretKey));
-    }
 
-    @Override
-    public KeyPair cryptoScalarMultBase(String secretKey) throws SodiumException {
-        byte[] secretKeyBytes = toBin(secretKey);
-        return cryptoScalarMultBase(secretKeyBytes);
-    }
 
     @Override
     public String cryptoBoxEasy(String message, byte[] nonce, KeyPair keyPair) throws SodiumException {

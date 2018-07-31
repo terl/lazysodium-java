@@ -257,7 +257,6 @@ public class Sodium {
 
     public native int crypto_box_seed_keypair(byte[] publicKey, byte[] secretKey, byte[] seed);
 
-    public native int crypto_scalarmult_base(byte[] publicKey, byte[] secretKey);
 
     public native int crypto_box_easy(
         byte[] cipherText,
@@ -555,6 +554,15 @@ public class Sodium {
 
 
 
+
+
+    //// -------------------------------------------|
+    //// DIFFIE HELLMAN
+    //// -------------------------------------------|
+
+    public native int crypto_scalarmult_base(byte[] publicKey, byte[] secretKey);
+
+    public native int crypto_scalarmult(byte[] shared, byte[] secretKey, byte[] publicKey);
 
 
     //// -------------------------------------------|
