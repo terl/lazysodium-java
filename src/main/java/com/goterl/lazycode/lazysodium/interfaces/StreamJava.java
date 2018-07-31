@@ -16,7 +16,7 @@ public interface StreamJava extends Stream {
 
     int SALSA2012_KEYBYTES = 32, SALSA2012_NONCEBYTES = 8,
         SALSA208_KEYBYTES = 32, SALSA208_NONCEBYTES = 8,
-        XCHACHA20_KEYBYTES = 32, XCHACHA20_NONCEBYTES = 8;
+        XCHACHA20_KEYBYTES = 32, XCHACHA20_NONCEBYTES = 24;
 
     long SALSA2012_MESSAGEBYTES_MAX = Constants.SIZE_MAX,
          SALSA208_MESSAGEBYTES_MAX = Constants.SIZE_MAX,
@@ -102,26 +102,26 @@ public interface StreamJava extends Stream {
 
     interface Lazy extends Stream.Lazy {
 
-        Key cryptoStreamKeygen(Method method);
+        Key cryptoStreamKeygen(StreamJava.Method method);
 
         byte[] cryptoStream(
                 byte[] nonce,
                 Key key,
-                Stream.Method method
+                StreamJava.Method method
         );
 
         String cryptoStreamXor(
                 String message,
                 byte[] nonce,
                 Key key,
-                Method method
+                StreamJava.Method method
         );
 
         String cryptoStreamXorDecrypt(
                 String cipher,
                 byte[] nonce,
                 Key key,
-                Method method
+                StreamJava.Method method
         );
 
         String cryptoStreamXorIc(
@@ -129,7 +129,7 @@ public interface StreamJava extends Stream {
                 byte[] nonce,
                 long ic,
                 Key key,
-                Method method
+                StreamJava.Method method
         );
 
         String cryptoStreamXorIcDecrypt(
@@ -137,7 +137,7 @@ public interface StreamJava extends Stream {
                 byte[] nonce,
                 long ic,
                 Key key,
-                Method method
+                StreamJava.Method method
         );
 
     }

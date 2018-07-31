@@ -1403,6 +1403,7 @@ public abstract class LazySodium implements
         }
     }
 
+
     @Override
     public byte[] cryptoStream(byte[] nonce, Key key, Stream.Method method) {
         byte[] c = new byte[20];

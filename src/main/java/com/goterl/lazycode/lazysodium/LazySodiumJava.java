@@ -175,6 +175,8 @@ public class LazySodiumJava extends LazySodium implements
         return successful(getSodium().crypto_stream_xchacha20_xor_ic(cipher, message, messageLen, nonce, ic, key));
     }
 
+    // lazy
+
 
     @Override
     public Key cryptoStreamKeygen(StreamJava.Method method) {
@@ -187,9 +189,23 @@ public class LazySodiumJava extends LazySodium implements
             getSodium().crypto_stream_salsa2012_keygen(k);
         } else {
             k = new byte[StreamJava.XCHACHA20_KEYBYTES];
-            getSodium().crypto_stream_salsa2012_keygen(k);
+            getSodium().crypto_stream_xchacha20_keygen(k);
         }
         return Key.fromBytes(k);
+    }
+
+    @Override
+    public byte[] cryptoStream(byte[] nonce, Key key, StreamJava.Method method) {
+        byte[] c = new byte[20];
+        int cLen = c.length;
+        if (method.equals(StreamJava.Method.SALSA20_8)) {
+            getSodium().crypto_stream_salsa208(c, cLen, nonce, key.getAsBytes());
+        } else if (method.equals(StreamJava.Method.SALSA20_12)) {
+            getSodium().crypto_stream_salsa2012(c, cLen, nonce, key.getAsBytes());
+        } else {
+            getSodium().crypto_stream_xchacha20(c, cLen, nonce, key.getAsBytes());
+        }
+        return c;
     }
 
     @Override
@@ -227,7 +243,7 @@ public class LazySodiumJava extends LazySodium implements
         return cipher;
     }
 
-    protected byte[] cryptoStreamDefaultXorIc(byte[] messageBytes, byte[] nonce, long ic, Key key, StreamJava.Method method) {
+    private byte[] cryptoStreamDefaultXorIc(byte[] messageBytes, byte[] nonce, long ic, Key key, StreamJava.Method method) {
         int mLen = messageBytes.length;
         byte[] cipher = new byte[mLen];
         if (method.equals(StreamJava.Method.SALSA20_8)) {
