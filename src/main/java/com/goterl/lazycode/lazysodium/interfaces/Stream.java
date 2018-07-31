@@ -10,6 +10,7 @@ package com.goterl.lazycode.lazysodium.interfaces;
 
 
 import com.goterl.lazycode.lazysodium.utils.Constants;
+import com.goterl.lazycode.lazysodium.utils.Key;
 
 public interface Stream {
 
@@ -48,7 +49,6 @@ public interface Stream {
     enum Method {
         CHACHA20,
         CHACHA20_IETF,
-        XCHACHA20,
         SALSA20,
         XSALSA20,
     }
@@ -164,7 +164,28 @@ public interface Stream {
 
     interface Lazy {
 
+        Key cryptoStreamKeygen(Method method);
 
+        byte[] cryptoStream(
+                byte[] nonce,
+                Key key,
+                Method method
+        );
+
+        String cryptoStreamXor(
+                String message,
+                byte[] nonce,
+                Key key,
+                Method method
+        );
+
+        String cryptoStreamXorIc(
+                String message,
+                byte[] nonce,
+                long ic,
+                Key key,
+                Method method
+        );
 
     }
 

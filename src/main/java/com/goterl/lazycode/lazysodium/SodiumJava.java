@@ -81,6 +81,8 @@ public class SodiumJava extends Sodium {
     );
 
 
+    // Salsa20 12 rounds
+
     public native void crypto_stream_salsa2012_keygen(byte[] key);
 
     public native int crypto_stream_salsa2012(
