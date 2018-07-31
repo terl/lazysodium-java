@@ -43,28 +43,24 @@ public class StreamAndroidTest extends BaseTest {
     public void lazyChacha20() {
         Stream.Lazy streamLazy = (Stream.Lazy) lazySodium;
 
-        String message = "Hello";
-
         byte[] nonce = lazySodium.nonce(Stream.CHACHA20_NONCEBYTES);
         Key key = streamLazy.cryptoStreamKeygen(Stream.Method.CHACHA20);
-        String cipher = streamLazy.cryptoStreamXor(message, nonce, key, Stream.Method.CHACHA20);
+        String cipher = streamLazy.cryptoStreamXor(message1, nonce, key, Stream.Method.CHACHA20);
         String finalMsg = streamLazy.cryptoStreamXorDecrypt(cipher, nonce, key, Stream.Method.CHACHA20);
 
-        TestCase.assertEquals(message, finalMsg);
+        TestCase.assertEquals(message1, finalMsg);
     }
 
     @Test
     public void lazyChacha20Ietf() {
         Stream.Lazy streamLazy = (Stream.Lazy) lazySodium;
 
-        String message = "Hello";
-
         byte[] nonce = lazySodium.nonce(Stream.CHACHA20_IETF_NONCEBYTES);
         Key key = streamLazy.cryptoStreamKeygen(Stream.Method.CHACHA20_IETF);
-        String cipher = streamLazy.cryptoStreamXor(message, nonce, key, Stream.Method.CHACHA20_IETF);
+        String cipher = streamLazy.cryptoStreamXor(message1, nonce, key, Stream.Method.CHACHA20_IETF);
         String finalMsg = streamLazy.cryptoStreamXorDecrypt(cipher, nonce, key, Stream.Method.CHACHA20_IETF);
 
-        TestCase.assertEquals(message, finalMsg);
+        TestCase.assertEquals(message1, finalMsg);
     }
 
 
@@ -86,14 +82,12 @@ public class StreamAndroidTest extends BaseTest {
     public void lazyXSalsa20() {
         Stream.Lazy streamLazy = (Stream.Lazy) lazySodium;
 
-        String message = "Hello";
-
         byte[] nonce = lazySodium.nonce(Stream.XSALSA20_NONCEBYTES);
         Key key = streamLazy.cryptoStreamKeygen(Stream.Method.XSALSA20);
-        String cipher = streamLazy.cryptoStreamXor(message, nonce, key, Stream.Method.XSALSA20);
+        String cipher = streamLazy.cryptoStreamXor(message1, nonce, key, Stream.Method.XSALSA20);
         String finalMsg = streamLazy.cryptoStreamXorDecrypt(cipher, nonce, key, Stream.Method.XSALSA20);
 
-        TestCase.assertEquals(message, finalMsg);
+        TestCase.assertEquals(message1, finalMsg);
     }
 
 

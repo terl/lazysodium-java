@@ -9,7 +9,25 @@
 package com.goterl.lazycode.lazysodium.interfaces;
 
 
+import com.goterl.lazycode.lazysodium.utils.Constants;
+import com.goterl.lazycode.lazysodium.utils.Key;
+
 public interface StreamJava extends Stream {
+
+    int SALSA2012_KEYBYTES = 32, SALSA2012_NONCEBYTES = 8,
+        SALSA208_KEYBYTES = 32, SALSA208_NONCEBYTES = 8,
+        XCHACHA20_KEYBYTES = 32, XCHACHA20_NONCEBYTES = 8;
+
+    long SALSA2012_MESSAGEBYTES_MAX = Constants.SIZE_MAX,
+         SALSA208_MESSAGEBYTES_MAX = Constants.SIZE_MAX,
+         XCHACHA20_MESSAGEBYTES_MAX = Constants.SIZE_MAX;
+
+
+    enum Method {
+        SALSA20_12,
+        SALSA20_8,
+        XCHACHA20,
+    }
 
 
     interface Native extends Stream.Native {
@@ -49,13 +67,78 @@ public interface StreamJava extends Stream {
         );
 
 
+        // XChaCha20
+
+        void cryptoStreamXChaCha20Keygen(byte[] key);
+
+        boolean cryptoStreamXChaCha20(
+                byte[] c,
+                long cLen,
+                byte[] nonce,
+                byte[] key
+        );
+
+        boolean cryptoStreamXChaCha20Xor(
+                byte[] cipher,
+                byte[] message,
+                long messageLen,
+                byte[] nonce,
+                byte[] key
+        );
+
+        boolean cryptoStreamXChaCha20Ic(
+                byte[] cipher,
+                byte[] message,
+                long messageLen,
+                byte[] nonce,
+                long ic,
+                byte[] key
+        );
+
+
     }
 
 
 
     interface Lazy extends Stream.Lazy {
 
+        Key cryptoStreamKeygen(Method method);
 
+        byte[] cryptoStream(
+                byte[] nonce,
+                Key key,
+                Stream.Method method
+        );
+
+        String cryptoStreamXor(
+                String message,
+                byte[] nonce,
+                Key key,
+                Method method
+        );
+
+        String cryptoStreamXorDecrypt(
+                String cipher,
+                byte[] nonce,
+                Key key,
+                Method method
+        );
+
+        String cryptoStreamXorIc(
+                String message,
+                byte[] nonce,
+                long ic,
+                Key key,
+                Method method
+        );
+
+        String cryptoStreamXorIcDecrypt(
+                String cipher,
+                byte[] nonce,
+                long ic,
+                Key key,
+                Method method
+        );
 
     }
 

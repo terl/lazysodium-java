@@ -10,7 +10,9 @@ package com.goterl.lazycode.lazysodium;
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.Scrypt;
+import com.goterl.lazycode.lazysodium.interfaces.Stream;
 import com.goterl.lazycode.lazysodium.interfaces.StreamJava;
+import com.goterl.lazycode.lazysodium.utils.Key;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -152,9 +154,94 @@ public class LazySodiumJava extends LazySodium implements
         return successful(getSodium().crypto_stream_salsa208_xor(cipher, message, messageLen, nonce, key));
     }
 
+    @Override
+    public void cryptoStreamXChaCha20Keygen(byte[] key) {
+        getSodium().crypto_stream_xchacha20_keygen(key);
+    }
+
+
+    @Override
+    public boolean cryptoStreamXChaCha20(byte[] c, long cLen, byte[] nonce, byte[] key) {
+        return successful(getSodium().crypto_stream_xchacha20(c, cLen, nonce, key));
+    }
+
+    @Override
+    public boolean cryptoStreamXChaCha20Xor(byte[] cipher, byte[] message, long messageLen, byte[] nonce, byte[] key) {
+        return successful(getSodium().crypto_stream_xchacha20_xor(cipher, message, messageLen, nonce, key));
+    }
+
+    @Override
+    public boolean cryptoStreamXChaCha20Ic(byte[] cipher, byte[] message, long messageLen, byte[] nonce, long ic, byte[] key) {
+        return successful(getSodium().crypto_stream_xchacha20_xor_ic(cipher, message, messageLen, nonce, ic, key));
+    }
+
+
+    @Override
+    public Key cryptoStreamKeygen(StreamJava.Method method) {
+        byte[] k;
+        if (method.equals(StreamJava.Method.SALSA20_8)) {
+            k = new byte[StreamJava.SALSA208_KEYBYTES];
+            getSodium().crypto_stream_salsa208_keygen(k);
+        } else if (method.equals(StreamJava.Method.SALSA20_12)) {
+            k = new byte[StreamJava.SALSA2012_KEYBYTES];
+            getSodium().crypto_stream_salsa2012_keygen(k);
+        } else {
+            k = new byte[StreamJava.XCHACHA20_KEYBYTES];
+            getSodium().crypto_stream_salsa2012_keygen(k);
+        }
+        return Key.fromBytes(k);
+    }
+
+    @Override
+    public String cryptoStreamXor(String message, byte[] nonce, Key key, StreamJava.Method method) {
+        byte[] mBytes = bytes(message);
+        return toHex(cryptoStreamDefaultXor(mBytes, nonce, key, method));
+    }
+
+    @Override
+    public String cryptoStreamXorDecrypt(String cipher, byte[] nonce, Key key, StreamJava.Method method) {
+        return str(cryptoStreamDefaultXor(toBin(cipher), nonce, key, method));
+    }
+
+    @Override
+    public String cryptoStreamXorIc(String message, byte[] nonce, long ic, Key key, StreamJava.Method method) {
+        byte[] mBytes = bytes(message);
+        return toHex(cryptoStreamDefaultXorIc(mBytes, nonce, ic, key, method));
+    }
+
+    @Override
+    public String cryptoStreamXorIcDecrypt(String cipher, byte[] nonce, long ic, Key key, StreamJava.Method method) {
+        return str(cryptoStreamDefaultXorIc(toBin(cipher), nonce, ic, key, method));
+    }
+
+    private byte[] cryptoStreamDefaultXor(byte[] messageBytes, byte[] nonce, Key key, StreamJava.Method method) {
+        int mLen = messageBytes.length;
+        byte[] cipher = new byte[mLen];
+        if (method.equals(StreamJava.Method.SALSA20_8)) {
+            cryptoStreamSalsa208Xor(cipher, messageBytes, mLen, nonce, key.getAsBytes());
+        } else if (method.equals(StreamJava.Method.SALSA20_12)) {
+            cryptoStreamSalsa2012Xor(cipher, messageBytes, mLen, nonce, key.getAsBytes());
+        } else {
+            cryptoStreamXChaCha20Xor(cipher, messageBytes, mLen, nonce, key.getAsBytes());
+        }
+        return cipher;
+    }
+
+    protected byte[] cryptoStreamDefaultXorIc(byte[] messageBytes, byte[] nonce, long ic, Key key, StreamJava.Method method) {
+        int mLen = messageBytes.length;
+        byte[] cipher = new byte[mLen];
+        if (method.equals(StreamJava.Method.SALSA20_8)) {
+            cryptoStreamSalsa208Xor(cipher, messageBytes, mLen, nonce, key.getAsBytes());
+        } else if (method.equals(StreamJava.Method.SALSA20_12)) {
+            cryptoStreamSalsa2012Xor(cipher, messageBytes, mLen, nonce, key.getAsBytes());
+        } else {
+            cryptoStreamXChaCha20Ic(cipher, messageBytes, mLen, nonce, ic, key.getAsBytes());
+        }
+        return cipher;
+    }
+
 
     public SodiumJava getSodium() {
         return sodium;
     }
-
 }

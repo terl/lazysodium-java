@@ -1444,7 +1444,7 @@ public abstract class LazySodium implements
     }
 
 
-    protected byte[] cryptoStreamDefaultXor(byte[] messageBytes, byte[] nonce, Key key, Stream.Method method) {
+    private byte[] cryptoStreamDefaultXor(byte[] messageBytes, byte[] nonce, Key key, Stream.Method method) {
         int mLen = messageBytes.length;
         byte[] cipher = new byte[mLen];
         if (method.equals(Stream.Method.CHACHA20)) {
