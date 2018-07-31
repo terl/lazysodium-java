@@ -179,8 +179,23 @@ public interface Stream {
                 Method method
         );
 
+        String cryptoStreamXorDecrypt(
+                String cipher,
+                byte[] nonce,
+                Key key,
+                Method method
+        );
+
         String cryptoStreamXorIc(
                 String message,
+                byte[] nonce,
+                long ic,
+                Key key,
+                Method method
+        );
+
+        String cryptoStreamXorIcDecrypt(
+                String cipher,
                 byte[] nonce,
                 long ic,
                 Key key,

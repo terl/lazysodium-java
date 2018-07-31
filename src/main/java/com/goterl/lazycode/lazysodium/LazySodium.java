@@ -1422,38 +1422,60 @@ public abstract class LazySodium implements
     @Override
     public String cryptoStreamXor(String message, byte[] nonce, Key key, Stream.Method method) {
         byte[] mBytes = bytes(message);
-        int mLen = mBytes.length;
-        byte[] cipher = new byte[mLen];
-        if (method.equals(Stream.Method.CHACHA20)) {
-            cryptoStreamChaCha20Xor(cipher, mBytes, mLen, nonce, key.getAsBytes());
-        } else if (method.equals(Stream.Method.CHACHA20_IETF)) {
-            cryptoStreamChaCha20IetfXor(cipher, mBytes, mLen, nonce, key.getAsBytes());
-        } else if (method.equals(Stream.Method.SALSA20)) {
-            cryptoStreamSalsa20Xor(cipher, mBytes, mLen, nonce, key.getAsBytes());
-        } else {
-            cryptoStreamXSalsa20Xor(cipher, mBytes, mLen, nonce, key.getAsBytes());
-        }
-        return toHex(cipher);
+        return toHex(cryptoStreamDefaultXor(mBytes, nonce, key, method));
     }
+
+    @Override
+    public String cryptoStreamXorDecrypt(String cipher, byte[] nonce, Key key, Stream.Method method) {
+        return str(cryptoStreamDefaultXor(toBin(cipher), nonce, key, method));
+    }
+
 
     @Override
     public String cryptoStreamXorIc(String message, byte[] nonce, long ic, Key key, Stream.Method method) {
         byte[] mBytes = bytes(message);
-        int mLen = mBytes.length;
+        return toHex(cryptoStreamDefaultXorIc(mBytes, nonce, ic, key, method));
+    }
+
+    @Override
+    public String cryptoStreamXorIcDecrypt(String cipher, byte[] nonce, long ic, Key key, Stream.Method method) {
+        byte[] cipherBytes = toBin(cipher);
+        return str(cryptoStreamDefaultXorIc(cipherBytes, nonce, ic, key, method));
+    }
+
+
+    protected byte[] cryptoStreamDefaultXor(byte[] messageBytes, byte[] nonce, Key key, Stream.Method method) {
+        int mLen = messageBytes.length;
         byte[] cipher = new byte[mLen];
         if (method.equals(Stream.Method.CHACHA20)) {
-            cryptoStreamChacha20XorIc(cipher, mBytes, mLen, nonce, ic, key.getAsBytes());
+            cryptoStreamChaCha20Xor(cipher, messageBytes, mLen, nonce, key.getAsBytes());
         } else if (method.equals(Stream.Method.CHACHA20_IETF)) {
-            cryptoStreamChacha20IetfXorIc(cipher, mBytes, mLen, nonce, ic, key.getAsBytes());
+            cryptoStreamChaCha20IetfXor(cipher, messageBytes, mLen, nonce, key.getAsBytes());
         } else if (method.equals(Stream.Method.SALSA20)) {
-            cryptoStreamSalsa20XorIc(cipher, mBytes, mLen, nonce, ic, key.getAsBytes());
+            cryptoStreamSalsa20Xor(cipher, messageBytes, mLen, nonce, key.getAsBytes());
+        } else {
+            cryptoStreamXSalsa20Xor(cipher, messageBytes, mLen, nonce, key.getAsBytes());
+        }
+        return cipher;
+    }
+
+    protected byte[] cryptoStreamDefaultXorIc(byte[] messageBytes, byte[] nonce, long ic, Key key, Stream.Method method) {
+        int mLen = messageBytes.length;
+        byte[] cipher = new byte[mLen];
+        if (method.equals(Stream.Method.CHACHA20)) {
+            cryptoStreamChacha20XorIc(cipher, messageBytes, mLen, nonce, ic, key.getAsBytes());
+        } else if (method.equals(Stream.Method.CHACHA20_IETF)) {
+            cryptoStreamChacha20IetfXorIc(cipher, messageBytes, mLen, nonce, ic, key.getAsBytes());
+        } else if (method.equals(Stream.Method.SALSA20)) {
+            cryptoStreamSalsa20XorIc(cipher, messageBytes, mLen, nonce, ic, key.getAsBytes());
         } else {
             // XSalsa20 has no IC so return the
             // one without the IC
-            cryptoStreamXSalsa20Xor(cipher, mBytes, mLen, nonce, key.getAsBytes());
+            cryptoStreamXSalsa20Xor(cipher, messageBytes, mLen, nonce, key.getAsBytes());
         }
-        return toHex(cipher);
+        return cipher;
     }
+
 
 
 
