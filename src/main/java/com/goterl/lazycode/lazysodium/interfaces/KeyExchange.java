@@ -157,8 +157,8 @@ public interface KeyExchange {
         /**
          * Generate a server's session keys. This should
          * be performed on the server.
-         * @param serverKeyPair Provide the server's public key only.
-         * @param clientKeyPair Provide the client's public and private key.
+         * @param serverKeyPair Provide the server's public and private key.
+         * @param clientKeyPair Provide the client's public key only.
          * @return Session keys.
          * @throws SodiumException Not provided the correct keys, or generation
          * of session keys failed.
