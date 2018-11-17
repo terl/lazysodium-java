@@ -24,14 +24,6 @@ public class PwHashTest extends BaseTest {
     private final String PASSWORD = "Password123456!!!!@@";
 
 
-    private PwHash.Lazy pwHashLazy;
-
-    @Before
-    public void before() {
-        pwHashLazy = (PwHash.Lazy) lazySodium;
-    }
-
-
     @Test
     public void scryptHash() throws SodiumException {
 
@@ -50,6 +42,7 @@ public class PwHashTest extends BaseTest {
         );
 
         boolean isCorrect = lazySodium.cryptoPwHashScryptSalsa208Sha256StrVerify(hash, PASSWORD);
+
 
         assertTrue("Minimum hashing failed.", isCorrect);
     }

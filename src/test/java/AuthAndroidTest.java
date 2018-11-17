@@ -20,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 public class AuthAndroidTest extends BaseTest {
 
+    // TODO: No function apart from the first works on Android. Deprecate this for android.
 
     @Test
     public void authKeygenAndVerify() throws SodiumException {

@@ -421,14 +421,19 @@ public abstract class LazySodium implements
 
     // lazy
 
-
     @Override
     public String cryptoPwHash(String password, long lengthOfHash, byte[] salt, long opsLimit, long memLimit, PwHash.Alg alg)
             throws SodiumException {
         byte[] passwordBytes = bytes(password);
         PwHash.Checker.checkAll(passwordBytes.length, salt.length, opsLimit, memLimit);
         byte[] hash = new byte[longToInt(lengthOfHash)];
-        cryptoPwHash(hash, hash.length, passwordBytes, passwordBytes.length, salt, opsLimit, memLimit, alg);
+        int res = getSodium().crypto_pwhash(hash, hash.length, passwordBytes, passwordBytes.length, salt, opsLimit, memLimit, alg.getValue());
+        if (res != 0) {
+            throw new SodiumException(
+                    "Could not hash your string. This may be due to insufficient " +
+                    "memory or your CPU does not support Argon2's instruction set."
+            );
+        }
         return toHex(hash);
     }
 
