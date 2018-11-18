@@ -29,7 +29,6 @@ public class NativeUtils {
      * The minimum length a prefix for a file has to have according to {@link File#createTempFile(String, String)}}.
      */
     private static final int MIN_PREFIX_LENGTH = 3;
-    public static final String NATIVE_FOLDER_PATH_PREFIX = "nativeutils";
 
     /**
      * Temporary directory which will contain the DLLs.
@@ -73,7 +72,7 @@ public class NativeUtils {
 
         // Prepare temporary file
         if (temporaryDir == null) {
-            temporaryDir = createTempDirectory(NATIVE_FOLDER_PATH_PREFIX);
+            temporaryDir = createTempDirectory();
             temporaryDir.deleteOnExit();
         }
 
@@ -83,7 +82,7 @@ public class NativeUtils {
         try {
             byte [] dest = new byte[4096];
             int amt = is.read(dest);
-            while(amt != -1) {
+            while (amt != -1) {
                 out.write(dest, 0, amt);
                 amt = is.read(dest);
             }
@@ -93,8 +92,7 @@ public class NativeUtils {
         } catch (NullPointerException e) {
             temp.delete();
             throw new FileNotFoundException("File " + path + " was not found inside JAR.");
-        }
-        finally {
+        } finally {
             is.close();
             out.close();
         }
@@ -126,9 +124,9 @@ public class NativeUtils {
         }
     }
 
-    private static File createTempDirectory(String prefix) throws IOException {
+    private static File createTempDirectory() throws IOException {
         String tempDir = System.getProperty("java.io.tmpdir");
-        File generatedDir = new File(tempDir, prefix + System.nanoTime());
+        File generatedDir = new File(tempDir, "libsodium");
 
         if (!generatedDir.mkdir())
             throw new IOException("Failed to create temp directory " + generatedDir.getName());
