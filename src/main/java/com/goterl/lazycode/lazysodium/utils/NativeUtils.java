@@ -82,7 +82,7 @@ public class NativeUtils {
         // This check falls back to loading the .so from editors like
         // IntelliJ and Eclipse
         if (is == null) {
-            is = NativeUtils.class.getClassLoader().getResourceAsStream(path);
+            is = NativeUtils.class.getResourceAsStream(path);
         }
 
         FileOutputStream out = new FileOutputStream(temp, false);
