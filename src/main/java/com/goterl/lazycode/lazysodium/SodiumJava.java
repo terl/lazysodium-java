@@ -165,16 +165,16 @@ public class SodiumJava extends Sodium {
         boolean is64Bit = com.sun.jna.Native.POINTER_SIZE == 8;
         if (Platform.isWindows()) {
             if (is64Bit) {
-                path = getPath("windows", "libsodium64.dll");
+                path = getPath("windows64", "libsodium.dll");
             } else {
-                path = getPath("windows", "libsodium32.dll");
+                path = getPath("windows", "libsodium.dll");
             }
         }
         if (Platform.isLinux()) {
             if (is64Bit) {
-                path = getPath("linux", "libsodium64.so");
+                path = getPath("linux64", "libsodium.so");
             } else {
-                path = getPath("linux", "libsodium32.so");
+                path = getPath("linux", "libsodium.so");
             }
         } else if (Platform.isMac()) {
             path = getPath("mac", "libsodium.dylib");
