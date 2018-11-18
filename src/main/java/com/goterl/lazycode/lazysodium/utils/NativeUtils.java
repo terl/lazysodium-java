@@ -78,6 +78,13 @@ public class NativeUtils {
 
         File temp = new File(temporaryDir, fileName);
         InputStream is = NativeUtils.class.getResourceAsStream(path);
+
+        // This check falls back to loading the .so from editors like
+        // IntelliJ and Eclipse
+        if (is == null) {
+            is = NativeUtils.class.getClassLoader().getResourceAsStream(path);
+        }
+
         FileOutputStream out = new FileOutputStream(temp, false);
         try {
             byte [] dest = new byte[4096];
