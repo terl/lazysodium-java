@@ -174,7 +174,7 @@ public class SodiumJava extends Sodium {
             if (is64Bit) {
                 path = getPath("linux64", "libsodium.so");
             } else {
-                path = getPath("linux", "libsodium.so");
+                path = getPath("linux64", "libsodium.so");
             }
         } else if (Platform.isMac()) {
             path = getPath("mac", "libsodium.dylib");
