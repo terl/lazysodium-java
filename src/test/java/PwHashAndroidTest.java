@@ -42,7 +42,7 @@ public class PwHashAndroidTest extends BaseTest {
                 PwHash.BYTES_MIN,
                 lazySodium.randomBytesBuf(PwHash.SALTBYTES),
                 5L,
-                8192L * 2,
+                8192 * 2,
                 PwHash.Alg.PWHASH_ALG_ARGON2ID13
         );
 

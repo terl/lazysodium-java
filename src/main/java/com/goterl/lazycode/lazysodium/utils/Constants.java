@@ -10,7 +10,7 @@ package com.goterl.lazycode.lazysodium.utils;
 
 public class Constants {
 
-   public static final long UNSIGNED_INT = 4294967295L;
+   public static final int UNSIGNED_INT = Integer.MAX_VALUE;
    public static final long SIZE_MAX = Long.MAX_VALUE;
 
    // 256GB

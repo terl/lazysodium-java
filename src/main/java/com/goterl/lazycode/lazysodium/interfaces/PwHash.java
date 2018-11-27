@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.goterl.lazycode.lazysodium.utils.Constants.SIZE_MAX;
+import static com.goterl.lazycode.lazysodium.utils.Constants.UNSIGNED_INT;
 
 public interface PwHash {
 
@@ -29,38 +30,34 @@ public interface PwHash {
         SALTBYTES = ARGON2ID_SALTBYTES,
         STR_BYTES = ARGON2ID_STR_BYTES;
 
-
-
-    long ARGON2ID_PASSWD_MIN = 0L,
-        ARGON2ID_PASSWD_MAX = Constants.UNSIGNED_INT,
-        ARGON2ID_BYTES_MAX = Constants.UNSIGNED_INT,
-
+    long
         ARGON2ID_OPSLIMIT_MIN = 1L,
         ARGON2ID_OPSLIMIT_MAX = Constants.UNSIGNED_INT,
         ARGON2ID_OPSLIMIT_INTERACTIVE = 2L,
         ARGON2ID_OPSLIMIT_MODERATE = 3L,
         ARGON2ID_OPSLIMIT_SENSITIVE = 4L,
+        OPSLIMIT_MIN = ARGON2ID_OPSLIMIT_MIN,
+        OPSLIMIT_MAX = ARGON2ID_OPSLIMIT_MAX,
+        OPSLIMIT_MODERATE = ARGON2ID_OPSLIMIT_MODERATE,
+        OPSLIMIT_INTERACTIVE = ARGON2ID_OPSLIMIT_INTERACTIVE,
+        OPSLIMIT_SENSITIVE = ARGON2ID_OPSLIMIT_SENSITIVE;
 
-        ARGON2ID_MEMLIMIT_MIN = 8192L,
-        ARGON2ID_MEMLIMIT_MAX = ((SIZE_MAX >= 4398046510080L) ? 4398046510080L : (SIZE_MAX >= 2147483648L) ? 2147483648L : 32768L),
-        ARGON2ID_MEMLIMIT_INTERACTIVE = 67108864L,
-        ARGON2ID_MEMLIMIT_MODERATE = 268435456L,
-        ARGON2ID_MEMLIMIT_SENSITIVE = 1073741824L,
 
+    int
+        ARGON2ID_MEMLIMIT_MIN = 8192,
+        ARGON2ID_MEMLIMIT_MAX = UNSIGNED_INT,
+        ARGON2ID_MEMLIMIT_INTERACTIVE = 67108864, // 67 megabytes
+        ARGON2ID_MEMLIMIT_MODERATE = 268435456, // 268 megabytes
+        ARGON2ID_MEMLIMIT_SENSITIVE = 1073741824, // 1 gigabyte
+        ARGON2ID_PASSWD_MIN = 0,
+        ARGON2ID_PASSWD_MAX = Constants.UNSIGNED_INT,
+        ARGON2ID_BYTES_MAX = Constants.UNSIGNED_INT,
 
-        // Should use these values rather than the above
-        // as the above values are likely to change
         PASSWD_MIN = ARGON2ID_PASSWD_MIN,
         PASSWD_MAX = ARGON2ID_PASSWD_MAX,
 
         BYTES_MIN = ARGON2ID_BYTES_MIN,
         BYTES_MAX = ARGON2ID_BYTES_MAX,
-
-        OPSLIMIT_MIN = ARGON2ID_OPSLIMIT_MIN,
-        OPSLIMIT_MAX = ARGON2ID_OPSLIMIT_MAX,
-        OPSLIMIT_MODERATE = ARGON2ID_OPSLIMIT_MODERATE,
-        OPSLIMIT_INTERACTIVE = ARGON2ID_OPSLIMIT_INTERACTIVE,
-        OPSLIMIT_SENSITIVE = ARGON2ID_OPSLIMIT_SENSITIVE,
 
         MEMLIMIT_MIN = ARGON2ID_MEMLIMIT_MIN,
         MEMLIMIT_INTERACTIVE = ARGON2ID_MEMLIMIT_INTERACTIVE,
@@ -88,7 +85,7 @@ public interface PwHash {
         public static boolean checkAll(long passwordBytesLen,
                                        long saltBytesLen,
                                        long opsLimit,
-                                       long memLimit)
+                                       int memLimit)
                 throws SodiumException {
             if (!PwHash.Checker.saltIsCorrect(saltBytesLen)) {
                 throw new SodiumException("The salt provided is not the correct length.");
@@ -115,7 +112,7 @@ public interface PwHash {
          * Take note that the output of this does NOT output a traditional
          * Argon 2 string as the underlying native implementation calls argon2id_hash_raw
          * instead of argon2id_hash_encoded. If you want an Argon 2 encoded string please refer
-         * to {@link #cryptoPwHashStr(byte[], byte[], long, long, long)} instead.
+         * to {@link #cryptoPwHashStr(byte[], byte[], int, long, int)} instead.
          * @param outputHash Where to store the resulting password hash.
          * @param outputHashLen The password hash's length. Must be at least {@link PwHash#BYTES_MIN}.
          * @param password The password that you want to hash.
@@ -129,12 +126,12 @@ public interface PwHash {
          * @return True if the hash succeeded.
          */
         boolean cryptoPwHash(byte[] outputHash,
-                             long outputHashLen,
+                             int outputHashLen,
                              byte[] password,
-                             long passwordLen,
+                             int passwordLen,
                              byte[] salt,
                              long opsLimit,
-                             long memLimit,
+                             int memLimit,
                              Alg alg);
 
         /**
@@ -148,13 +145,13 @@ public interface PwHash {
          * @param memLimit The amount of memory to use.
          *                 Between {@link PwHash#MEMLIMIT_MIN} and {@link PwHash#MEMLIMIT_MAX}.
          * @return True if the hash succeeded.
-         * @see #cryptoPwHashStrVerify(byte[], byte[], long)
+         * @see #cryptoPwHashStrVerify(byte[], byte[], int)
          */
         boolean cryptoPwHashStr(byte[] outputStr,
                               byte[] password,
-                              long passwordLen,
+                              int passwordLen,
                               long opsLimit,
-                              long memLimit);
+                              int memLimit);
 
         /**
          * Verifies a hashed password. Remember: you must add
@@ -165,7 +162,7 @@ public interface PwHash {
          * @param passwordLen The checking password's length.
          * @return True if the password matches the unhashed hash.
          */
-        boolean cryptoPwHashStrVerify(byte[] hash, byte[] password, long passwordLen);
+        boolean cryptoPwHashStrVerify(byte[] hash, byte[] password, int passwordLen);
 
 
         /**
@@ -175,7 +172,7 @@ public interface PwHash {
          * @param memLimit The memory limit used.
          * @return True if the hash needs to be rehashed.
          */
-        boolean cryptoPwHashStrNeedsRehash(byte[] hash, long opsLimit, long memLimit);
+        boolean cryptoPwHashStrNeedsRehash(byte[] hash, long opsLimit, int memLimit);
 
 
 
@@ -198,10 +195,10 @@ public interface PwHash {
          * @throws SodiumException If the password is too short or the opsLimit is not correct.
          */
         String cryptoPwHash(String password,
-                            long cryptoPwHashLen,
+                            int cryptoPwHashLen,
                             byte[] salt,
                             long opsLimit,
-                            long memLimit,
+                            int memLimit,
                             Alg alg) throws SodiumException;
 
 
@@ -221,7 +218,7 @@ public interface PwHash {
          */
         String cryptoPwHashStr(String password,
                                long opsLimit,
-                               long memLimit) throws SodiumException;
+                               int memLimit) throws SodiumException;
 
         /**
          * Hashes a string and removes all the null bytes. Uses the
@@ -239,7 +236,7 @@ public interface PwHash {
          */
         String cryptoPwHashStrRemoveNulls(String password,
                                            long opsLimit,
-                                           long memLimit) throws SodiumException;
+                                           int memLimit) throws SodiumException;
 
 
         /**
