@@ -19,7 +19,7 @@ plugins {
 ext {
     artifactId = "lazysodium-java"
     groupId = "com.goterl.lazycode"
-    version = '3.3.2'
+    version = '3.3.3'
     description = "Lazysodium (Java) makes it effortless for Java " +
             "developers to get started with Libsodium's cryptography."
 }
@@ -43,7 +43,7 @@ targetCompatibility = 1.8
 // Dependencies
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
-    implementation 'net.java.dev.jna:jna:4.5.1'
+    implementation 'net.java.dev.jna:jna:5.1.0'
     testImplementation 'junit:junit:4.12'
 }
 
