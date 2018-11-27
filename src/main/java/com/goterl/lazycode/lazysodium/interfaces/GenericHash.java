@@ -12,6 +12,7 @@ package com.goterl.lazycode.lazysodium.interfaces;
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.utils.BaseChecker;
 import com.goterl.lazycode.lazysodium.utils.Key;
+import com.sun.jna.NativeLong;
 import com.sun.jna.Structure;
 
 import java.util.Arrays;
@@ -177,7 +178,7 @@ public interface GenericHash {
         /**
          * Hash a string with a key, so later on you
          * can verify the hashed string with the key.
-         * If you're hashing a password please see {@link PwHash.Lazy#cryptoPwHashStr(String, long, int)}
+         * If you're hashing a password please see {@link PwHash.Lazy#cryptoPwHashStr(String, long, NativeLong)}}
          * instead.
          * @param in The string to hash.
          * @param key Can be null.
