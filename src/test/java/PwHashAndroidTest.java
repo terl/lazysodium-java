@@ -13,6 +13,7 @@ import com.goterl.lazycode.lazysodium.LazySodium;
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.PwHash;
 import com.goterl.lazycode.lazysodium.interfaces.Scrypt;
+import com.sun.jna.NativeLong;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,7 +43,7 @@ public class PwHashAndroidTest extends BaseTest {
                 PwHash.BYTES_MIN,
                 lazySodium.randomBytesBuf(PwHash.SALTBYTES),
                 5L,
-                8192 * 2,
+                new NativeLong(8192 * 2),
                 PwHash.Alg.PWHASH_ALG_ARGON2ID13
         );
 
@@ -56,7 +57,7 @@ public class PwHashAndroidTest extends BaseTest {
         String hash = pwHashLazy.cryptoPwHashStr(
                 PASSWORD,
                 3,
-                PwHash.ARGON2ID_MEMLIMIT_MIN
+                PwHash.MEMLIMIT_MIN
         );
 
         boolean isCorrect = pwHashLazy.cryptoPwHashStrVerify(hash, PASSWORD);

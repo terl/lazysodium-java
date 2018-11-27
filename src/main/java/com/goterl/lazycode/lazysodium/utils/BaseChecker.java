@@ -8,10 +8,17 @@
 
 package com.goterl.lazycode.lazysodium.utils;
 
+import com.sun.jna.NativeLong;
+
 public class BaseChecker {
 
     public static boolean isBetween(long num, long min, long max) {
         return min <= num && num <= max;
+    }
+
+    public static boolean isBetween(NativeLong num, NativeLong min, NativeLong max) {
+        long number = num.longValue();
+        return min.longValue() <= number && number <= max.longValue();
     }
 
     public static boolean correctLen(long num, long len) {

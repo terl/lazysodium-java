@@ -12,6 +12,7 @@ import com.goterl.lazycode.lazysodium.interfaces.AEAD;
 import com.goterl.lazycode.lazysodium.interfaces.Auth;
 import com.goterl.lazycode.lazysodium.interfaces.Hash;
 import com.goterl.lazycode.lazysodium.interfaces.SecretStream;
+import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 
 public class Sodium {
@@ -124,18 +125,18 @@ public class Sodium {
                                  long passwordLen,
                                  byte[] salt,
                                  long opsLimit,
-                                 int memLimit,
+                                 NativeLong memLimit,
                                  int alg);
 
     public native int crypto_pwhash_str(byte[] outputStr,
                                      byte[] password,
                                      long passwordLen,
                                      long opsLimit,
-                                     int memLimit);
+                                     NativeLong memLimit);
 
     public native int crypto_pwhash_str_verify(byte[] hash, byte[] password, long passwordLen);
 
-    public native int crypto_pwhash_str_needs_rehash(byte[] hash, long opsLimit, int memLimit);
+    public native int crypto_pwhash_str_needs_rehash(byte[] hash, long opsLimit, NativeLong memLimit);
 
 
 
