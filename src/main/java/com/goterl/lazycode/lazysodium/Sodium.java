@@ -119,23 +119,23 @@ public class Sodium {
     //// -------------------------------------------|
 
     public native int crypto_pwhash(byte[] outputHash,
-                                 long outputHashLen,
+                                 int outputHashLen,
                                  byte[] password,
-                                 long passwordLen,
+                                 int passwordLen,
                                  byte[] salt,
                                  long opsLimit,
-                                 long memLimit,
+                                 int memLimit,
                                  int alg);
 
     public native int crypto_pwhash_str(byte[] outputStr,
                                      byte[] password,
-                                     long passwordLen,
+                                     int passwordLen,
                                      long opsLimit,
-                                     long memLimit);
+                                     int memLimit);
 
-    public native int crypto_pwhash_str_verify(byte[] hash, byte[] password, long passwordLen);
+    public native int crypto_pwhash_str_verify(byte[] hash, byte[] password, int passwordLen);
 
-    public native int crypto_pwhash_str_needs_rehash(byte[] hash, long opsLimit, long memLimit);
+    public native int crypto_pwhash_str_needs_rehash(byte[] hash, long opsLimit, int memLimit);
 
 
 
