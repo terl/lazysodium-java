@@ -177,7 +177,7 @@ public interface GenericHash {
         /**
          * Hash a string with a key, so later on you
          * can verify the hashed string with the key.
-         * If you're hashing a password please see {@link PwHash.Lazy#cryptoPwHashStr(String, long, long)}
+         * If you're hashing a password please see {@link PwHash.Lazy#cryptoPwHashStr(String, long, int)}
          * instead.
          * @param in The string to hash.
          * @param key Can be null.
