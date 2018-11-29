@@ -135,8 +135,13 @@ public class NativeUtils {
         String tempDir = System.getProperty("java.io.tmpdir");
         File generatedDir = new File(tempDir, "libsodium");
 
-        if (!generatedDir.mkdir())
-            throw new IOException("Failed to create temp directory " + generatedDir.getName());
+        if (generatedDir.exists()) {
+            generatedDir.delete();
+        }
+
+        if (!generatedDir.mkdirs()) {
+            throw new IOException("Failed to create temp directory " + generatedDir.getAbsolutePath());
+        }
 
         return generatedDir;
     }
