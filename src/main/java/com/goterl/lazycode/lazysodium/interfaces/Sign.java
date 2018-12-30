@@ -104,9 +104,9 @@ public interface Sign {
          */
         boolean cryptoSignDetached(
                 byte[] signature,
-                long[] sigLength,
+                int[] sigLength,
                 byte[] message,
-                long messageLen,
+                int messageLen,
                 byte[] secretKey
         );
 
@@ -118,9 +118,9 @@ public interface Sign {
          * @param messageLen The message length.
          * @param publicKey The public key that signed the message.
          * @return Returns true if the signature is valid for the message.
-         * @see #cryptoSignDetached(byte[], long[], byte[], long, byte[])
+         * @see #cryptoSignDetached(byte[], int[], byte[], int, byte[])
          */
-        boolean cryptoSignVerifyDetached(byte[] signature, byte[] message, long messageLen, byte[] publicKey);
+        boolean cryptoSignVerifyDetached(byte[] signature, byte[] message, int messageLen, byte[] publicKey);
 
         /**
          * Converts a public ed25519 key to a public curve25519 key.
