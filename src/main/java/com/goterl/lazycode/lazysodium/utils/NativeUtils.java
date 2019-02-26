@@ -131,12 +131,36 @@ public class NativeUtils {
         }
     }
 
+    /**
+     * Deletes a whole directory in java, which is not empty.
+     * Taken from: https://stackoverflow.com/questions/3987921/not-able-to-delete-the-directory-through-java
+     * Shout out to Riduidel.
+     * @param path to delete
+     * @return true if it worked.
+     */
+    
+    private static boolean deleteDirectory(File path) {
+    if (path.exists()) {
+        File[] files = path.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].isDirectory()) {
+                deleteDirectory(files[i]);
+            } else {
+                files[i].delete();
+            }
+        }
+    }
+    return (path.delete());
+}
+    
     private static File createTempDirectory() throws IOException {
         String tempDir = System.getProperty("java.io.tmpdir");
         File generatedDir = new File(tempDir, "libsodium");
 
         if (generatedDir.exists()) {
-            generatedDir.delete();
+            if (!deleteDirectory(generatedDir)) {
+                throw new IOException("Failed to delete already existing temp directory " + generatedDir.getAbsolutePath());
+            }
         }
 
         if (!generatedDir.mkdirs()) {
