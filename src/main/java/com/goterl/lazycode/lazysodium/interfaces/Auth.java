@@ -12,6 +12,7 @@ package com.goterl.lazycode.lazysodium.interfaces;
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.utils.BaseChecker;
 import com.goterl.lazycode.lazysodium.utils.Key;
+import com.sun.jna.NativeLong;
 import com.sun.jna.Structure;
 
 import java.util.Arrays;
@@ -70,14 +71,14 @@ public interface Auth {
         boolean cryptoAuthHMACSha256(
                 byte[] out,
                 byte[] in,
-                int inLen,
+                NativeLong inLen,
                 byte[] k
         );
 
         boolean cryptoAuthHMACSha256Verify(
                 byte[] h,
                 byte[] in,
-                int inLen,
+                NativeLong inLen,
                 byte[] k
         );
 
@@ -90,7 +91,7 @@ public interface Auth {
         boolean cryptoAuthHMACSha256Update(
                 Auth.StateHMAC256 state,
                 byte[] in,
-                long inLen
+                NativeLong inLen
         );
 
         boolean cryptoAuthHMACSha256Final(
@@ -104,14 +105,14 @@ public interface Auth {
         boolean cryptoAuthHMACSha512(
                 byte[] out,
                 byte[] in,
-                int inLen,
+                NativeLong inLen,
                 byte[] k
         );
 
         boolean cryptoAuthHMACSha512Verify(
                 byte[] h,
                 byte[] in,
-                int inLen,
+                NativeLong inLen,
                 byte[] k
         );
 
@@ -124,7 +125,7 @@ public interface Auth {
         boolean cryptoAuthHMACSha512Update(
                 Auth.StateHMAC512 state,
                 byte[] in,
-                long inLen
+                NativeLong inLen
         );
 
         boolean cryptoAuthHMACSha512Final(
@@ -139,14 +140,14 @@ public interface Auth {
         boolean cryptoAuthHMACSha512256(
                 byte[] out,
                 byte[] in,
-                int inLen,
+                NativeLong inLen,
                 byte[] k
         );
 
         boolean cryptoAuthHMACSha512256Verify(
                 byte[] h,
                 byte[] in,
-                int inLen,
+                NativeLong inLen,
                 byte[] k
         );
 
@@ -159,7 +160,7 @@ public interface Auth {
         boolean cryptoAuthHMACSha512256Update(
                 Auth.StateHMAC512256 state,
                 byte[] in,
-                long inLen
+                NativeLong inLen
         );
 
         boolean cryptoAuthHMACSha512256Final(

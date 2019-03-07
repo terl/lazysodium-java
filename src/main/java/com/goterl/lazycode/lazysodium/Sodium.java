@@ -582,14 +582,14 @@ public class Sodium {
     public native int crypto_auth_hmacsha256(
             byte[] out,
             byte[] in,
-            int inLen,
+            NativeLong inLen,
             byte[] k
     );
 
     public native int crypto_auth_hmacsha256_verify(
             byte[] h,
             byte[] in,
-            int inLen,
+            NativeLong inLen,
             byte[] k
     );
 
@@ -602,7 +602,7 @@ public class Sodium {
     public native int crypto_auth_hmacsha256_update(
             Auth.StateHMAC256 state,
             byte[] in,
-            long inLen
+            NativeLong inLen
     );
 
     public native int crypto_auth_hmacsha256_final(
@@ -617,14 +617,14 @@ public class Sodium {
     public native int crypto_auth_hmacsha512256(
             byte[] out,
             byte[] in,
-            int inLen,
+            NativeLong inLen,
             byte[] k
     );
 
     public native int crypto_auth_hmacsha512256_verify(
             byte[] h,
             byte[] in,
-            int inLen,
+            NativeLong inLen,
             byte[] k
     );
 
@@ -637,7 +637,7 @@ public class Sodium {
     public native int crypto_auth_hmacsha512256_update(
             Auth.StateHMAC512256 state,
             byte[] in,
-            long inLen
+            NativeLong inLen
     );
 
     public native int crypto_auth_hmacsha512256_final(
@@ -651,14 +651,14 @@ public class Sodium {
     public native int crypto_auth_hmacsha512(
             byte[] out,
             byte[] in,
-            int inLen,
+            NativeLong inLen,
             byte[] k
     );
 
     public native int crypto_auth_hmacsha512_verify(
             byte[] h,
             byte[] in,
-            int inLen,
+            NativeLong inLen,
             byte[] k
     );
 
@@ -671,7 +671,7 @@ public class Sodium {
     public native int crypto_auth_hmacsha512_update(
             Auth.StateHMAC512 state,
             byte[] in,
-            long inLen
+            NativeLong inLen
     );
 
     public native int crypto_auth_hmacsha512_final(
