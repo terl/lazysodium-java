@@ -367,7 +367,7 @@ public class Sodium {
             byte[] signature,
             int[] sigLength,
             byte[] message,
-            int messageLen,
+            NativeLong messageLen,
             byte[] secretKey
     );
 

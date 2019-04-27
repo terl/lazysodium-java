@@ -15,9 +15,7 @@ Lazysodium is a **complete** Java (JNA) wrapper over the [Libsodium](https://git
 [![Download](https://api.bintray.com/packages/terl/lazysodium-maven/lazysodium-java/images/download.svg) ](https://bintray.com/terl/lazysodium-maven/lazysodium-java/_latestVersion)
 
 ## Why Lazysodium
-We created Lazysodium because we really wanted a solid cryptography library that would just work without fuss.
-
-We were exasperated and annoyed with current Libsodium implementations as some of them were just poorly maintained, poorly managed and, plain and simply, poorly architected. Lazysodium is made by [DrLib](https://drlib.co) (a part of [Terl](https://terl.co)) that specialises in giving developers easy-to-use software and tools that just work.
+We created Lazysodium because we really wanted a solid Libsodium compatible Java/Android library that would just work without fuss. We were exasperated and annoyed with current Libsodium implementations as some of them were just poorly maintained and poorly architected.
 
 You can find more info [here](https://docs.lazycode.co/lazysodium/about).
 
@@ -105,28 +103,8 @@ You can preview some of the features in our free Lazysodium app available on Goo
 <a href='https://play.google.com/store/apps/details?id=com.goterl.lazycode.lazysodium.example&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_gb/badges/images/generic/en_badge_web_generic.png' width="140"/></a>
 
 
-
-## Help us grow
-Lazysodium needs your support for it to continue being maintained and improved. Even if you put forward £1/$1/€1 it still means a lot for us. Your money would go into improving our open-source projects first and foremost. If you want to find out more, use your preffered donation platform. 
-
-
-|            | Patreon                                                                                                                                 | Terl Supporters                                                                                                                    |
-|------------|-----------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
-|            | <a href="https://www.patreon.com/terlacious"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/patron_button.png" width="100" /></a> | <a href="https://terl.co/support-us"><img src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/terl_slant_square.png" width="40" /></a> |
-| One-time   | ✗                                                                                                                                       | ✓                                                                                                                                  |
-| Weekly     | ✗                                                                                                                                       | ✓                                                                                                                                  |
-| Monthly    | ✓                                                                                                                                       | ✓                                                                                                                                  |
-| Yearly     | ✗                                                                                                                                       | ✓                                                                                                                                  |
-| Rewards    | ✓                                                                                                                                       | ✓                                                                                                                                  |
-| Currencies | USD                                                                                                                                     | 100+ currencies                                                                                                                    |
-
-
-
-Patreon only has recurring subscriptions and rewards. Liberapay is another route you could take for subscription. We're also setting up our own system that allows one-off support amongst other things.
-
-
 ## Who are we?
 
-<a href="https://terl.co"><img width="100" style="float: left: display: inline;" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/terl_slant.png" /></a>
+<a href="https://terl.co"><img width="100" style="float: left: display: inline;" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/terl_tm_small.png" /></a>
 
 Created by the wizards at [Terl](https://terl.co).

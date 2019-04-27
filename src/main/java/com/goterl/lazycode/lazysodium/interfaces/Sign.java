@@ -11,6 +11,7 @@ package com.goterl.lazycode.lazysodium.interfaces;
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.utils.*;
+import com.sun.jna.NativeLong;
 
 public interface Sign {
 
@@ -106,7 +107,7 @@ public interface Sign {
                 byte[] signature,
                 int[] sigLength,
                 byte[] message,
-                int messageLen,
+                NativeLong messageLen,
                 byte[] secretKey
         );
 
@@ -118,7 +119,7 @@ public interface Sign {
          * @param messageLen The message length.
          * @param publicKey The public key that signed the message.
          * @return Returns true if the signature is valid for the message.
-         * @see #cryptoSignDetached(byte[], int[], byte[], int, byte[])
+         * @see #cryptoSignDetached(byte[], int[], byte[], NativeLong, byte[])
          */
         boolean cryptoSignVerifyDetached(byte[] signature, byte[] message, int messageLen, byte[] publicKey);
 
