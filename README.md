@@ -38,7 +38,7 @@ You can find an up-to-date feature list [here](https://docs.lazycode.co/lazysodi
 Please view the [official documentation](https://docs.lazycode.co/lazysodium/installation) for a more comprehensive guide.
 
 ### 1. Install
-Install by adding the bintray repository and the dependency.
+Install by adding the bintray repository and the dependency. For Maven users, please see [here](https://docs.lazycode.co/lazysodium/installation).
 
 ```groovy
 // Top level build file
@@ -51,7 +51,6 @@ repositories {
 // Add to dependencies section
 dependencies {
     implementation "com.goterl.lazycode:lazysodium-java:VERSION_NUMBER"
-    implementation "net.java.dev.jna:jna:JNA_VERSION"
 }
 ```
 
@@ -59,7 +58,6 @@ Substitute `VERSION_NUMBER` for the version in this box:
 
 [![Download](https://api.bintray.com/packages/terl/lazysodium-maven/lazysodium-java/images/download.svg) ](https://bintray.com/terl/lazysodium-maven/lazysodium-java/_latestVersion)
 
-Substitute `JNA_VERSION` for the [latest JNA version](https://mvnrepository.com/artifact/net.java.dev.jna/jna).
 
 ### 2. Let's go!
 
@@ -113,7 +111,7 @@ You can preview some of the features in our free Lazysodium app available on Goo
 <a href='https://play.google.com/store/apps/details?id=com.goterl.lazycode.lazysodium.example&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_gb/badges/images/generic/en_badge_web_generic.png' width="140"/></a>
 
 
-## Who are we?
+---
 
 <a href="https://terl.co"><img width="100" style="float: left: display: inline;" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/terl.png" /></a>
 
