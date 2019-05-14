@@ -105,6 +105,6 @@ You can preview some of the features in our free Lazysodium app available on Goo
 
 ## Who are we?
 
-<a href="https://terl.co"><img width="100" style="float: left: display: inline;" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/terl_tm_small.png" /></a>
+<a href="https://terl.co"><img width="100" style="float: left: display: inline;" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/terl.png" /></a>
 
 Created by the wizards at [Terl](https://terl.co).
