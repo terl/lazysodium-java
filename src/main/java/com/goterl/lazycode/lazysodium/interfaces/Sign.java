@@ -105,7 +105,7 @@ public interface Sign {
          */
         boolean cryptoSignDetached(
                 byte[] signature,
-                long[] sigLength,
+                NativeLong sigLength,
                 byte[] message,
                 NativeLong messageLen,
                 byte[] secretKey
@@ -119,7 +119,7 @@ public interface Sign {
          * @param messageLen The message length.
          * @param publicKey The public key that signed the message.
          * @return Returns true if the signature is valid for the message.
-         * @see #cryptoSignDetached(byte[], long[], byte[], NativeLong, byte[])
+         * @see #cryptoSignDetached(byte[], NativeLong, byte[], NativeLong, byte[])
          */
         boolean cryptoSignVerifyDetached(byte[] signature, byte[] message, int messageLen, byte[] publicKey);
 

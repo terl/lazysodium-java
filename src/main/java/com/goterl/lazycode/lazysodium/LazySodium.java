@@ -992,7 +992,7 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoSignDetached(byte[] signature, long[] sigLength, byte[] message, NativeLong messageLen, byte[] secretKey) {
+    public boolean cryptoSignDetached(byte[] signature, NativeLong sigLength, byte[] message, NativeLong messageLen, byte[] secretKey) {
         return successful(getSodium().crypto_sign_detached(signature, sigLength, message, messageLen, secretKey));
     }
 
