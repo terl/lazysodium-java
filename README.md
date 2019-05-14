@@ -14,11 +14,21 @@ Lazysodium is a **complete** Java (JNA) wrapper over the [Libsodium](https://git
 [![Build Status](https://semaphoreci.com/api/v1/terl/lazysodium-java/branches/master/badge.svg)](https://semaphoreci.com/terl/lazysodium-java)
 [![Download](https://api.bintray.com/packages/terl/lazysodium-maven/lazysodium-java/images/download.svg) ](https://bintray.com/terl/lazysodium-maven/lazysodium-java/_latestVersion)
 
-## Why Lazysodium
-We created Lazysodium because we really wanted a solid Libsodium compatible Java/Android library that would just work without fuss. We were exasperated and annoyed with current Libsodium implementations as some of them were just poorly maintained and poorly architected.
+## Used by
 
-You can find more info [here](https://docs.lazycode.co/lazysodium/about).
-
+| **Name** | **Short description** | **Android** | **Java** |
+| :--- | :--- | :--- | :--- |
+| [**Threema \(SaltyRTC\)**](https://github.com/saltyrtc/saltyrtc-client-java) | Threema is a global end-to-end encrypted chatting app and _SaltyRTC_ is their protocol for encryption. | ✓ | ✓ |
+| [**PayPay**](https://github.com/paypayue/AndroidPaymentSDK) | CardPaymentSDK is a card payments library to make payments through several payment methods painless. It uses [PayPay](https://paypay.pt/paypay/) as an endpoint to establish a payment security channel. | ✓ | ✗ |
+| [**RDACAA**](https://gitlab.com/MSP_EC/rdacaa/tree/88-cierre-del-mes-atenciones-por-usuario)| Used by the government of Ecuador's Ministry of Health to encrypt and sign a list of ambulatory care and consultations. | ✗ | ✓ |
+| [**E3DB**](https://tozny.com/e3db/) | An encrypted NoSQL database designed from the ground-up for user privacy and security. | ✓ | ✓ |
+| [**ADAMANT**](https://adamant.im/) | The most private messenger possible. Your device does not store any info. It directly interacts with the blockchain, where every byte is fully-encrypted. | ✓ | ✗ |
+| [**Kepler**](https://github.com/Quackster/Kepler) | A small TCP server written in Java powered by Netty, an asynchronous networking library. | ✗ | ✓ |
+| [**Regen Ledger**](https://www.regen.network/) | A global marketplace & contracting platform for Earth's ecosystem assets, services, and data. | ✗ | ✓ |
+| [**Tezos**](https://github.com/LMilfont/TezosJ-plainjava) | The TezosJ SDK library enables plain Java developers to create applications that communicates with Tezos blockchain. | ✗ | ✓ |
+| [**Exonum**](https://github.com/exonum/exonum-java-binding) | Exonum Java Binding is a framework for building blockchain applications in Java, powered by Exonum. | ✗ | ✓ |
+| [**Paseto**](https://github.com/atholbro/paseto) | Java Implementation of Platform-Agnostic Security Tokens. | ✗ | ✓ |
+| [**Recordo**](https://recordo.co) | A super secure diary/journal that provides end to end encryption. | ✓ | ✓ |
 
 ## Features
 You can find an up-to-date feature list [here](https://docs.lazycode.co/lazysodium/features).
@@ -107,4 +117,4 @@ You can preview some of the features in our free Lazysodium app available on Goo
 
 <a href="https://terl.co"><img width="100" style="float: left: display: inline;" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/terl.png" /></a>
 
-Created by the wizards at [Terl](https://terl.co).
+Created by [Terl](https://terl.co).
