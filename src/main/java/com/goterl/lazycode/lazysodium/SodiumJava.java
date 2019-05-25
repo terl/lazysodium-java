@@ -176,8 +176,13 @@ public class SodiumJava extends Sodium {
             } else {
                 path = getPath("linux", "libsodium.so");
             }
-        } else if (Platform.isMac()) {
+        }
+        if (Platform.isMac()) {
             path = getPath("mac", "libsodium.dylib");
+        }
+
+        if (Platform.isARM()) {
+            path = getPath("armv7", "libsodium.so");
         }
 
         return path;
