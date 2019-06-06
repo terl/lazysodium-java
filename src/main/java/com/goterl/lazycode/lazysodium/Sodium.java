@@ -348,7 +348,7 @@ public class Sodium {
 
     public native int crypto_sign(
             byte[] signedMessage,
-            long signedMessageLen,
+            Pointer sigLength,
             byte[] message,
             long messageLen,
             byte[] secretKey
@@ -356,7 +356,7 @@ public class Sodium {
 
     public native int crypto_sign_open(
             byte[] message,
-            long messageLen,
+            Pointer messageLen,
             byte[] signedMessage,
             long signedMessageLen,
             byte[] publicKey
@@ -365,7 +365,7 @@ public class Sodium {
 
     public native int crypto_sign_detached(
             byte[] signature,
-            long sigLength,
+            Pointer sigLength,
             byte[] message,
             long messageLen,
             byte[] secretKey
