@@ -13,6 +13,7 @@ import com.goterl.lazycode.lazysodium.interfaces.*;
 import com.goterl.lazycode.lazysodium.utils.*;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
+import com.sun.jna.ptr.PointerByReference;
 
 import java.nio.charset.Charset;
 
@@ -983,17 +984,17 @@ public abstract class LazySodium implements
 
     @Override
     public boolean cryptoSign(byte[] signedMessage, long signedMessageLen, byte[] message, long messageLen, byte[] secretKey) {
-        return successful(getSodium().crypto_sign(signedMessage, signedMessageLen, message, messageLen, secretKey));
+        return successful(getSodium().crypto_sign(signedMessage, (new PointerByReference(Pointer.NULL)).getPointer(), message, messageLen, secretKey));
     }
 
     @Override
     public boolean cryptoSignOpen(byte[] message, long messageLen, byte[] signedMessage, long signedMessageLen, byte[] publicKey) {
-        return successful(getSodium().crypto_sign_open(message, messageLen, signedMessage, signedMessageLen, publicKey));
+        return successful(getSodium().crypto_sign_open(message, (new PointerByReference(Pointer.NULL)).getPointer(), signedMessage, signedMessageLen, publicKey));
     }
 
     @Override
     public boolean cryptoSignDetached(byte[] signature, long sigLength, byte[] message, long messageLen, byte[] secretKey) {
-        return successful(getSodium().crypto_sign_detached(signature, sigLength, message, messageLen, secretKey));
+        return successful(getSodium().crypto_sign_detached(signature, (new PointerByReference(Pointer.NULL)).getPointer(), message, messageLen, secretKey));
     }
 
     @Override
