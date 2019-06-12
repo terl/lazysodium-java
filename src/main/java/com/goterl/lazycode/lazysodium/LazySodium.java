@@ -983,17 +983,17 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoSign(byte[] signedMessage, long signedMessageLen, byte[] message, long messageLen, byte[] secretKey) {
+    public boolean cryptoSign(byte[] signedMessage, byte[] message, long messageLen, byte[] secretKey) {
         return successful(getSodium().crypto_sign(signedMessage, (new PointerByReference(Pointer.NULL)).getPointer(), message, messageLen, secretKey));
     }
 
     @Override
-    public boolean cryptoSignOpen(byte[] message, long messageLen, byte[] signedMessage, long signedMessageLen, byte[] publicKey) {
+    public boolean cryptoSignOpen(byte[] message, byte[] signedMessage, long signedMessageLen, byte[] publicKey) {
         return successful(getSodium().crypto_sign_open(message, (new PointerByReference(Pointer.NULL)).getPointer(), signedMessage, signedMessageLen, publicKey));
     }
 
     @Override
-    public boolean cryptoSignDetached(byte[] signature, long sigLength, byte[] message, long messageLen, byte[] secretKey) {
+    public boolean cryptoSignDetached(byte[] signature, byte[] message, long messageLen, byte[] secretKey) {
         return successful(getSodium().crypto_sign_detached(signature, (new PointerByReference(Pointer.NULL)).getPointer(), message, messageLen, secretKey));
     }
 
@@ -1059,7 +1059,7 @@ public abstract class LazySodium implements
         byte[] messageBytes = bytes(message);
         byte[] secretKeyBytes = toBin(secretKey);
         byte[] signedMessage = randomBytesBuf(Sign.BYTES + messageBytes.length);
-        boolean res = cryptoSign(signedMessage, 0, messageBytes, messageBytes.length, secretKeyBytes);
+        boolean res = cryptoSign(signedMessage, messageBytes, messageBytes.length, secretKeyBytes);
 
         if (!res) {
             throw new SodiumException("Could not sign your message.");
@@ -1077,7 +1077,6 @@ public abstract class LazySodium implements
 
         boolean res = cryptoSignOpen(
                 messageBytes,
-                0,
                 signedMessageBytes,
                 signedMessageBytes.length,
                 publicKeyBytes
@@ -1096,7 +1095,7 @@ public abstract class LazySodium implements
         byte[] skBytes = secretKey.getAsBytes();
         byte[] signatureBytes = new byte[Sign.BYTES];
 
-        if (!cryptoSignDetached(signatureBytes, 0, messageBytes, messageBytes.length, skBytes)) {
+        if (!cryptoSignDetached(signatureBytes, messageBytes, messageBytes.length, skBytes)) {
             throw new SodiumException("Could not create a signature for your message in detached mode.");
         }
 
