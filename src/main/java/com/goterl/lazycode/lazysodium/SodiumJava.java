@@ -12,7 +12,6 @@ import com.goterl.lazycode.lazysodium.utils.NativeUtils;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
 
-import java.io.File;
 import java.io.IOException;
 
 public class SodiumJava extends Sodium {
@@ -155,7 +154,7 @@ public class SodiumJava extends Sodium {
         try {
             NativeUtils.loadLibraryFromJar(path);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
     }
 
