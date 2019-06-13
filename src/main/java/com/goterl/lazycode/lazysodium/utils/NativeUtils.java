@@ -13,6 +13,7 @@ import com.sun.jna.Native;
 
 import java.io.*;
 import java.nio.file.*;
+import java.util.Objects;
 
 /**
  * A simple library class which helps with loading dynamic libraries stored in the
@@ -56,10 +57,7 @@ public class NativeUtils {
      * @throws FileNotFoundException If the file could not be found inside the JAR.
      */
     public static void loadLibraryFromJar(String path) throws IOException {
-
-        if (path == null) {
-            throw new IOException("Path cannot be null.");
-        }
+        Objects.requireNonNull(path, "Path cannot be null.");
 
         String fileName = new File(path).getName();
         if (fileName.length() <= MIN_PREFIX_LENGTH) {
@@ -73,7 +71,6 @@ public class NativeUtils {
         // Prepare temporary file
         if (temporaryDir == null) {
             temporaryDir = createTempDirectory();
-            temporaryDir.deleteOnExit();
         }
 
         File temp = new File(temporaryDir, fileName);
@@ -131,42 +128,13 @@ public class NativeUtils {
         }
     }
 
-    /**
-     * Deletes a whole directory in java, which is not empty.
-     * Taken from: https://stackoverflow.com/questions/3987921/not-able-to-delete-the-directory-through-java
-     * Shout out to Riduidel.
-     * @param path to delete
-     * @return true if it worked.
-     */
-    
-    private static boolean deleteDirectory(File path) {
-    if (path.exists()) {
-        File[] files = path.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].isDirectory()) {
-                deleteDirectory(files[i]);
-            } else {
-                files[i].delete();
-            }
-        }
-    }
-    return (path.delete());
-}
-    
-    private static File createTempDirectory() throws IOException {
-        String tempDir = System.getProperty("java.io.tmpdir");
-        File generatedDir = new File(tempDir, "libsodium");
+    // VisibleForTesting
+    static File createTempDirectory() throws IOException {
+        String tempDirPrefix = "lazysodium";
+        File generatedDir = Files.createTempDirectory(tempDirPrefix)
+            .toFile();
 
-        if (generatedDir.exists()) {
-            if (!deleteDirectory(generatedDir)) {
-                throw new IOException("Failed to delete already existing temp directory " + generatedDir.getAbsolutePath());
-            }
-        }
-
-        if (!generatedDir.mkdirs()) {
-            throw new IOException("Failed to create temp directory " + generatedDir.getAbsolutePath());
-        }
-
+        generatedDir.deleteOnExit();
         return generatedDir;
     }
 }
