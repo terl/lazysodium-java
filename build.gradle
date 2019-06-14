@@ -45,6 +45,7 @@ dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
     implementation 'net.java.dev.jna:jna:5.3.1'
     testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.28.2'
 }
 
 
