@@ -67,9 +67,9 @@ You can now use the library. **Please note** that this library follows the offic
 // Let's initialise LazySodium
 LazySodiumJava lazySodium = new LazySodiumJava(new SodiumJava());
 
-// Now you can cast to an interface so that our
-// IDE picks up and intelligently loads up the correct methods.
 // Here's an example of hashing a password.
+// Casting the lazySodium object is optional, 
+// but it's wise to do so as it prevents accidents.
 PwHash.Lazy pwHashLazy = (PwHash.Lazy) lazySodium;
 String hash = lazySodium.cryptoPwHashStr("a cool password", PwHash.OPSLIMIT_MIN, PwHash.MEMLIMIT_MIN);
 ```
