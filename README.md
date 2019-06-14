@@ -59,37 +59,22 @@ Substitute `VERSION_NUMBER` for the version in this box:
 [![Download](https://api.bintray.com/packages/terl/lazysodium-maven/lazysodium-java/images/download.svg) ](https://bintray.com/terl/lazysodium-maven/lazysodium-java/_latestVersion)
 
 
-### 2. Let's go!
+### 2. Usage
 
-You can now initialise and start encrypting! **Please note** that this library follows the official [libsodium docs](https://download.libsodium.org/doc/) closely. You need to use those docs to help you find the functions you need.
+You can now use the library. **Please note** that this library follows the official [libsodium docs](https://download.libsodium.org/doc/) closely. You need to use those docs to help you find the functions you need.
 
 ```java
 // Let's initialise LazySodium
 LazySodiumJava lazySodium = new LazySodiumJava(new SodiumJava());
 
 // Now you can cast to an interface so that our
-// IDE picks up and intelligently loads up the correct methods. 
-SecretBox.Native secretBoxNative = (SecretBox.Native) lazySodium;
-SecretBox.Lazy secretBoxLazy = (SecretBox.Lazy) lazySodium;
-
-// The first one is Lazysodium's Native implementation which
-// is just like libsodium's native C function but with tiny enhancements
-// to make your life easier.
-secretBoxNative.cryptoSecretBoxKeygen(key);
-// Convert key to string and save to DB
-
-// This one is Lazysodium's Lazy implementation which makes
-// your work with cryptography super easy.
-Key key = secretBoxLazy.cryptoSecretBoxKeygen();
+// IDE picks up and intelligently loads up the correct methods.
+// Here's an example of hashing a password.
+PwHash.Lazy pwHashLazy = (PwHash.Lazy) lazySodium;
+String hash = lazySodium.cryptoPwHashStr("a cool password", PwHash.OPSLIMIT_MIN, PwHash.MEMLIMIT_MIN);
 ```
 
-In the above code there are two ways you can use Lazysodium. The first way is through the Native interface. The second is through the Lazy interface. 
-
-### 3. You decide
-
-Every project is different, you may need to use lower-level APIs to achieve the control you need so you use the `Native` interface. Or alternatively you just don't want to deal with the details so you stick to the `Lazy` interface.
-
-Every interface you can cast to is helpfully all in [one directory](https://github.com/terl/lazysodium-java/tree/master/src/main/java/com/goterl/lazycode/lazysodium/interfaces) so you can easily pick the functions you need. This isolates your code and prevents you from making mistakes.
+You can use the `Native` or `Lazy` interfaces to encrypt at a lower or a higher level. It's all very simple.
 
 **Important:** If possible, please stick to using either the Native *or* the Lazy interface. The reason for this is that the Lazy interface normally converts everything to hexadecimal whereas the Native interface assumes everything is non-hexadecimal. If you don't know what you're doing, you could end up making mistakes.
 
