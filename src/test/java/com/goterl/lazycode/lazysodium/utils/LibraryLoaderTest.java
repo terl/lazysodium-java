@@ -81,6 +81,7 @@ public class LibraryLoaderTest {
 
   @Test
   public void testConcurrentLoading() throws Exception {
+    // Make several attempts to increase the confidence of thread collision
     int numAttempts = 100;
     for (int i = 0; i < numAttempts; i++) {
       testConcurrentLoadingOnce();
