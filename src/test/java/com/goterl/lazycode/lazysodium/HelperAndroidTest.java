@@ -1,12 +1,12 @@
 /*
- * Copyright (c) Terl Tech Ltd • 18/05/18 18:35 • goterl.com
+ * Copyright (c) Terl Tech Ltd • 14/06/19 17:52 • goterl.com
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v2.0. If a copy of the MPL was not distributed with this
  * file, you can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import junit.framework.TestCase;
+package com.goterl.lazycode.lazysodium;import junit.framework.TestCase;
 import org.junit.Test;
 
 public class HelperAndroidTest extends BaseTest {

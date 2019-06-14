@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Terl Tech Ltd • 16/05/18 11:39 • goterl.com
+ * Copyright (c) Terl Tech Ltd • 14/06/19 17:46 • goterl.com
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v2.0. If a copy of the MPL was not distributed with this
@@ -40,8 +40,10 @@ public final class LibraryLoader {
 
     private final JnaLoader loader;
     private final Object lock = new Object();
+
     /** True iff the library was successfully loaded; false — otherwise. */
     private boolean loaded;
+
     /**
      * Temporary directory which will contain the DLLs.
      * {@code null} unless {@link #loadLibraryFromJar(String)} was used to load the library.
@@ -119,12 +121,11 @@ public final class LibraryLoader {
         File temp = new File(temporaryDir, fileName);
         InputStream is = LibraryLoader.class.getResourceAsStream(pathInJar);
 
-        // fixme: this code makes no sense — shall we delete it?
         // This check falls back to loading the .so from editors like
         // IntelliJ and Eclipse
-        if (is == null) {
-            is = LibraryLoader.class.getResourceAsStream(pathInJar);
-        }
+        // if (is == null) {
+        //    is = LibraryLoader.class.getResourceAsStream(pathInJar);
+        // }
 
         OutputStream out = new BufferedOutputStream(new FileOutputStream(temp, false));
         try {

@@ -1,13 +1,12 @@
 /*
- * Copyright (c) Terl Tech Ltd • 05/06/18 00:15 • goterl.com
+ * Copyright (c) Terl Tech Ltd • 14/06/19 17:52 • goterl.com
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v2.0. If a copy of the MPL was not distributed with this
  * file, you can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import com.sun.jna.Memory;
-import com.sun.jna.Pointer;
+package com.goterl.lazycode.lazysodium;import com.sun.jna.Pointer;
 import junit.framework.TestCase;
 import org.junit.Test;
 
