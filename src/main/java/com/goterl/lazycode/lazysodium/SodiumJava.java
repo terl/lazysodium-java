@@ -8,8 +8,7 @@
 
 package com.goterl.lazycode.lazysodium;
 
-import com.goterl.lazycode.lazysodium.utils.NativeUtils;
-import com.sun.jna.Native;
+import com.goterl.lazycode.lazysodium.utils.LibraryLoader;
 import com.sun.jna.Platform;
 
 import java.io.IOException;
@@ -21,18 +20,18 @@ public class SodiumJava extends Sodium {
         onRegistered();
     }
 
-
     /**
-     * Please note that the libsodium.so
-     * file HAS to be built for the platform this program will run on.
+     * Creates the SodiumJava with the custom sodium library.
      *
-     * @param path Absolute path to libsodium.so.
+     * <p>Please note that the sodium library <b>must</b> be built for the platform this program will run on.
+     *
+     * @param libLocator a library locator: either a path to it, or, for installed libraries,
+     *      a short name (sodium) or its full name (e.g., libsodium.dylib)
      */
-    public SodiumJava(String path) {
-        Native.register(SodiumJava.class, path);
+    public SodiumJava(String libLocator) {
+        registerFromPath(libLocator);
         onRegistered();
     }
-
 
     // Scrypt
 
@@ -152,10 +151,14 @@ public class SodiumJava extends Sodium {
     private void registerFromResources() {
         String path = getLibSodiumFromResources();
         try {
-            NativeUtils.loadLibraryFromJar(path);
+            LibraryLoader.getInstance().loadLibraryFromJar(path);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    private void registerFromPath(String libLocator) {
+        LibraryLoader.getInstance().loadLibrary(libLocator);
     }
 
     private String getLibSodiumFromResources() {
