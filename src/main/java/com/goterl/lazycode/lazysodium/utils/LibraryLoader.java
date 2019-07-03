@@ -12,10 +12,10 @@ import static java.util.Objects.requireNonNull;
 import com.goterl.lazycode.lazysodium.Sodium;
 import com.goterl.lazycode.lazysodium.SodiumJava;
 import com.sun.jna.Native;
+import com.sun.jna.Platform;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,6 +36,37 @@ import java.nio.file.ProviderNotFoundException;
  */
 public final class LibraryLoader {
 
+    /**
+     * Library loading mode controls which libraries are attempted to be loaded (installed in the system or bundled
+     * in the Lazysodium JAR) and in which order.
+     *
+     * <p>It is also possible to load a custom build of sodium library from an arbitrary directory using
+     * {@link LibraryLoader#loadLibrary(String)}
+     */
+    public enum Mode {
+        /**
+         * Try to load the system sodium first, if that fails — load the bundled version.
+         *
+         * <p>This is the recommended mode, because it allows the clients to upgrade the sodium library
+         * as soon as it is available instead of waiting for lazysodium release and releasing a new version of
+         * the client library/application.
+         */
+        PREFER_SYSTEM,
+        /**
+         * Load the bundled version, ignoring the system.
+         *
+         * <p>This mode might be useful if the system sodium turns out to be outdated and cannot be upgraded.
+         */
+        BUNDLED_ONLY,
+        /**
+         * Load the system sodium only, ignoring the bundled.
+         *
+         * <p>This mode is recommended if it is required to use the system sodium only, and the application
+         * must fail if it is not installed.
+         */
+        SYSTEM_ONLY,
+    }
+
     private static LibraryLoader INSTANCE = new LibraryLoader(Native::register);
 
     private final JnaLoader loader;
@@ -46,7 +77,7 @@ public final class LibraryLoader {
 
     /**
      * Temporary directory which will contain the DLLs.
-     * {@code null} unless {@link #loadLibraryFromJar(String)} was used to load the library.
+     * {@code null} unless it was attempted to load the library from resources.
      */
     private File temporaryDir;
 
@@ -63,30 +94,65 @@ public final class LibraryLoader {
     }
 
     /**
+     * Loads the sodium library and registers the native methods of {@link Sodium}
+     * and {@link SodiumJava} using the specified loading mode.
+     * The library will be loaded at most once.
+     *
+     * @param mode controls which sodium library (installed in the system or bundled in the JAR)
+     *     is loaded, and in which order
+     * @throws LibraryLoadingException if fails to load the library
+     * @see Native#register(Class, String)
+     */
+    public void loadLibrary(Mode mode) {
+        synchronized (lock) {
+            switch (mode) {
+                case PREFER_SYSTEM:
+                    try {
+                        loadSystemLibrary();
+                    } catch (LibraryLoadingException suppressed) {
+                        // Attempt to load the bundled
+                        loadBundledLibrary();
+                    }
+                    break;
+                case BUNDLED_ONLY:
+                    loadBundledLibrary();
+                    break;
+                case SYSTEM_ONLY:
+                    loadSystemLibrary();
+                    break;
+                default:
+                    throw new IllegalStateException("Unsupported mode: " + mode);
+            }
+        }
+    }
+
+    private void loadSystemLibrary() {
+        loadLibrary("sodium");
+    }
+
+    /**
      * Loads library from the current JAR archive and registers the native methods
      * of {@link Sodium} and {@link SodiumJava}. The library will be loaded at most once.
      *
      * <p>The file from JAR is copied into system temporary directory and then loaded.
      * The temporary file is deleted after exiting.
      *
-     * <p>Method uses String as filename because the pathname is "abstract", not system-dependent.
-     *
-     * @param pathInJar The path of file inside JAR as absolute path (beginning with '/'),
-     *      e.g. /package/File.ext
-     * @throws IOException If temporary file creation or read/write operation fails
-     * @throws IllegalArgumentException If source file (param path) does not exist
-     * @throws FileNotFoundException If the file could not be found inside the JAR.
+     * @throws LibraryLoadingException If fails to load the library
      */
-    public void loadLibraryFromJar(String pathInJar) throws IOException {
-        requireNonNull(pathInJar, "pathInJar");
-        synchronized (lock) {
-            if (loaded) {
-                return;
-            }
+    private void loadBundledLibrary() {
+        if (loaded) {
+            return;
+        }
 
+        String pathInJar = getSodiumPathInResources();
+        try {
             File sodiumLib = copyFromJarToTemp(pathInJar);
             loadLibrary(sodiumLib.getAbsolutePath());
             requestLibDeletion(sodiumLib);
+        } catch (IOException e) {
+            String message = String.format("Failed to load the bundled library from resources by path (%s)",
+                    pathInJar);
+            throw new LibraryLoadingException(message, e);
         }
     }
 
@@ -97,6 +163,7 @@ public final class LibraryLoader {
      *
      * @param libLocator a library locator: either a path to it, or, for installed libraries,
      *      a short name (sodium) or a full name (e.g., libsodium.dylib)
+     * @throws LibraryLoadingException if fails to load the library
      * @see Native#register(Class, String)
      */
     public void loadLibrary(String libLocator) {
@@ -105,10 +172,57 @@ public final class LibraryLoader {
             if (loaded) {
                 return;
             }
-            loader.register(Sodium.class, libLocator);
-            loader.register(SodiumJava.class, libLocator);
-            loaded = true;
+            try {
+                loader.register(Sodium.class, libLocator);
+                loader.register(SodiumJava.class, libLocator);
+                loaded = true;
+            } catch (UnsatisfiedLinkError e) {
+                // Translate UnsatisfiedLinkError which JNA throws if it fails to find the library using the supplied
+                // locator into LibraryLoadingException.
+                throw new LibraryLoadingException("Failed to load the library using " + libLocator, e);
+            }
         }
+    }
+
+    /**
+     * Returns the absolute path to sodium library inside JAR (beginning with '/'), e.g. /linux/libsodium.so.
+     */
+    private static String getSodiumPathInResources() {
+        boolean is64Bit = Native.POINTER_SIZE == 8;
+        if (Platform.isWindows()) {
+            if (is64Bit) {
+                return getPath("windows64", "libsodium.dll");
+            } else {
+                return getPath("windows", "libsodium.dll");
+            }
+        }
+        if (Platform.isLinux()) {
+            if (is64Bit) {
+                return getPath("linux64", "libsodium.so");
+            } else {
+                return getPath("linux", "libsodium.so");
+            }
+        }
+        if (Platform.isMac()) {
+            return getPath("mac", "libsodium.dylib");
+        }
+
+        if (Platform.isARM()) {
+            return getPath("armv7", "libsodium.so");
+        }
+
+        String message = String.format("Unsupported platform: %s/%s", System.getProperty("os.name"),
+                System.getProperty("os.arch"));
+        throw new LibraryLoadingException(message);
+    }
+
+    private static String getPath(String folder, String name) {
+        String separator = "/";
+        String resourcePath = folder + separator + name;
+        if (!resourcePath.startsWith(separator)) {
+            resourcePath = separator + resourcePath;
+        }
+        return resourcePath;
     }
 
     private File copyFromJarToTemp(String pathInJar) throws IOException {

@@ -9,14 +9,26 @@
 package com.goterl.lazycode.lazysodium;
 
 import com.goterl.lazycode.lazysodium.utils.LibraryLoader;
-import com.sun.jna.Platform;
-
-import java.io.IOException;
 
 public class SodiumJava extends Sodium {
 
+    /**
+     * Creates the SodiumJava instance. Uses the {@linkplain LibraryLoader.Mode.PREFER_SYSTEM default loading mode},
+     * first attempting to load the system sodium, and, if that fails — the bundled one.
+     */
     public SodiumJava() {
-        registerFromResources();
+        this(LibraryLoader.Mode.PREFER_SYSTEM);
+    }
+
+    /**
+     * Creates the SodiumJava using the given loading mode.
+     *
+     * @param loadingMode controls which sodium library (installed in the system or bundled in the JAR)
+     *                    is loaded, and in which order
+     * @see LibraryLoader.Mode
+     */
+    public SodiumJava(LibraryLoader.Mode loadingMode) {
+        register(loadingMode);
         onRegistered();
     }
 
@@ -148,55 +160,12 @@ public class SodiumJava extends Sodium {
 
 
 
-    private void registerFromResources() {
-        String path = getLibSodiumFromResources();
-        try {
-            LibraryLoader.getInstance().loadLibraryFromJar(path);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
+    private static void register(LibraryLoader.Mode mode) {
+        LibraryLoader.getInstance().loadLibrary(mode);
     }
 
     private void registerFromPath(String libLocator) {
         LibraryLoader.getInstance().loadLibrary(libLocator);
-    }
-
-    private String getLibSodiumFromResources() {
-        String path = "";
-
-        boolean is64Bit = com.sun.jna.Native.POINTER_SIZE == 8;
-        if (Platform.isWindows()) {
-            if (is64Bit) {
-                path = getPath("windows64", "libsodium.dll");
-            } else {
-                path = getPath("windows", "libsodium.dll");
-            }
-        }
-        if (Platform.isLinux()) {
-            if (is64Bit) {
-                path = getPath("linux64", "libsodium.so");
-            } else {
-                path = getPath("linux", "libsodium.so");
-            }
-        }
-        if (Platform.isMac()) {
-            path = getPath("mac", "libsodium.dylib");
-        }
-
-        if (Platform.isARM()) {
-            path = getPath("armv7", "libsodium.so");
-        }
-
-        return path;
-    }
-
-    private String getPath(String folder, String name) {
-        String separator = "/";
-        String resourcePath = folder + separator + name;
-        if (!resourcePath.startsWith(separator)) {
-            resourcePath = separator + resourcePath;
-        }
-        return resourcePath;
     }
 
 
