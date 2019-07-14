@@ -13,7 +13,7 @@ import com.goterl.lazycode.lazysodium.utils.LibraryLoader;
 public class SodiumJava extends Sodium {
 
     /**
-     * Creates the SodiumJava instance. Uses the {@linkplain LibraryLoader.Mode.PREFER_SYSTEM default loading mode},
+     * Creates the SodiumJava instance. Uses the {@linkplain LibraryLoader.Mode#PREFER_SYSTEM default loading mode},
      * first attempting to load the system sodium, and, if that fails — the bundled one.
      */
     public SodiumJava() {

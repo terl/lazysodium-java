@@ -44,6 +44,7 @@ public final class LibraryLoader {
      * {@link LibraryLoader#loadLibrary(String)}
      */
     public enum Mode {
+
         /**
          * Try to load the system sodium first, if that fails — load the bundled version.
          *
@@ -52,12 +53,14 @@ public final class LibraryLoader {
          * the client library/application.
          */
         PREFER_SYSTEM,
+
         /**
          * Load the bundled version, ignoring the system.
          *
          * <p>This mode might be useful if the system sodium turns out to be outdated and cannot be upgraded.
          */
         BUNDLED_ONLY,
+
         /**
          * Load the system sodium only, ignoring the bundled.
          *
