@@ -238,12 +238,6 @@ public final class LibraryLoader {
         File temp = new File(temporaryDir, fileName);
         InputStream is = LibraryLoader.class.getResourceAsStream(pathInJar);
 
-        // This check falls back to loading the .so from editors like
-        // IntelliJ and Eclipse
-        // if (is == null) {
-        //    is = LibraryLoader.class.getResourceAsStream(pathInJar);
-        // }
-
         OutputStream out = new BufferedOutputStream(new FileOutputStream(temp, false));
         try {
             byte [] dest = new byte[4096];
