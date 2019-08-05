@@ -221,10 +221,10 @@ public class LibraryLoaderTest {
   }
 
   @Test
-  public void createsUniqueTempDirectory() throws IOException {
+  public void createsNonUniqueTempDirectory() throws IOException {
     File firstDir = LibraryLoader.createTempDirectory();
     File secondDir = LibraryLoader.createTempDirectory();
 
-    assertThat(firstDir, not(equalTo(secondDir)));
+    assertThat(firstDir, equalTo(secondDir));
   }
 }

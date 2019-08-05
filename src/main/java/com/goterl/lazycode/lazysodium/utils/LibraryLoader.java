@@ -24,6 +24,9 @@ import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.ProviderNotFoundException;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A simple library class which helps with loading dynamic sodium library stored in the
@@ -199,6 +202,9 @@ public final class LibraryLoader {
                 return getPath("windows", "libsodium.dll");
             }
         }
+        if (Platform.isARM()) {
+            return getPath("armv7", "libsodium.so");
+        }
         if (Platform.isLinux()) {
             if (is64Bit) {
                 return getPath("linux64", "libsodium.so");
@@ -208,10 +214,6 @@ public final class LibraryLoader {
         }
         if (Platform.isMac()) {
             return getPath("mac", "libsodium.dylib");
-        }
-
-        if (Platform.isARM()) {
-            return getPath("armv7", "libsodium.so");
         }
 
         String message = String.format("Unsupported platform: %s/%s", System.getProperty("os.name"),
@@ -236,8 +238,9 @@ public final class LibraryLoader {
 
         String fileName = new File(pathInJar).getName();
         File temp = new File(temporaryDir, fileName);
-        InputStream is = LibraryLoader.class.getResourceAsStream(pathInJar);
+        temp.createNewFile();
 
+        InputStream is = LibraryLoader.class.getResourceAsStream(pathInJar);
         OutputStream out = new BufferedOutputStream(new FileOutputStream(temp, false));
         try {
             byte [] dest = new byte[4096];
@@ -258,7 +261,7 @@ public final class LibraryLoader {
             is.close();
             out.close();
         }
-
+        setPermissions(temp);
         return temp;
     }
 
@@ -286,13 +289,29 @@ public final class LibraryLoader {
     }
 
     // VisibleForTesting
-    static File createTempDirectory() throws IOException {
-        String tempDirPrefix = "lazysodium";
-        File generatedDir = Files.createTempDirectory(tempDirPrefix)
-            .toFile();
+    static File createTempDirectory() {
+        String tempDir = System.getProperty("java.io.tmpdir");
+        File hydrideDirectory = new File(tempDir, "lazysodium");
+        hydrideDirectory.mkdir();
+        hydrideDirectory.deleteOnExit();
+        return hydrideDirectory;
+    }
 
-        generatedDir.deleteOnExit();
-        return generatedDir;
+    private void setPermissions(File file) throws IOException{
+        Set<PosixFilePermission> perms = new HashSet<>();
+        perms.add(PosixFilePermission.OWNER_READ);
+        perms.add(PosixFilePermission.OWNER_WRITE);
+        perms.add(PosixFilePermission.OWNER_EXECUTE);
+
+        perms.add(PosixFilePermission.OTHERS_READ);
+        perms.add(PosixFilePermission.OTHERS_WRITE);
+        perms.add(PosixFilePermission.OTHERS_EXECUTE);
+
+        perms.add(PosixFilePermission.GROUP_READ);
+        perms.add(PosixFilePermission.GROUP_WRITE);
+        perms.add(PosixFilePermission.GROUP_EXECUTE);
+
+        Files.setPosixFilePermissions(file.toPath(), perms);
     }
 
     /**
