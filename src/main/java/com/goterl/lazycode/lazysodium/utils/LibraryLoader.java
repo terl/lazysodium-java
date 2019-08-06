@@ -154,7 +154,7 @@ public final class LibraryLoader {
         try {
             File sodiumLib = copyFromJarToTemp(pathInJar);
             loadLibrary(sodiumLib.getAbsolutePath());
-            requestLibDeletion(sodiumLib);
+            //requestLibDeletion(sodiumLib);
         } catch (IOException e) {
             String message = String.format("Failed to load the bundled library from resources by path (%s)",
                     pathInJar);
@@ -214,7 +214,6 @@ public final class LibraryLoader {
 
         String fileName = new File(pathInJar).getName();
         File temp = new File(temporaryDir, fileName);
-        temp.delete();
         temp.createNewFile();
 
         InputStream is = LibraryLoader.class.getResourceAsStream(pathInJar);
