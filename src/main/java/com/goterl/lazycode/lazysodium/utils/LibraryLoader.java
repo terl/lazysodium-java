@@ -270,7 +270,6 @@ public final class LibraryLoader {
         String tempDir = System.getProperty("user.home");
         File hydrideDirectory = new File(tempDir, "lazysodium");
         hydrideDirectory.mkdir();
-        hydrideDirectory.deleteOnExit();
         return hydrideDirectory;
     }
 
