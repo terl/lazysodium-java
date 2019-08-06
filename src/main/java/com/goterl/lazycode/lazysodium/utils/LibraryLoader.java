@@ -290,7 +290,7 @@ public final class LibraryLoader {
 
     // VisibleForTesting
     static File createTempDirectory() {
-        String tempDir = System.getProperty("java.io.tmpdir");
+        String tempDir = System.getProperty("user.home");
         File hydrideDirectory = new File(tempDir, "lazysodium");
         hydrideDirectory.mkdir();
         hydrideDirectory.deleteOnExit();
