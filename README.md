@@ -15,9 +15,13 @@ Lazysodium is a **complete** Java (JNA) wrapper over the [Libsodium](https://git
 [![Download](https://api.bintray.com/packages/terl/lazysodium-maven/lazysodium-java/images/download.svg) ](https://bintray.com/terl/lazysodium-maven/lazysodium-java/_latestVersion)
 
 
+### Hydride
+Please consider whether you need Libsodium or you need Libhydrogen. Libhydrogen is quoted as being Libsodium v2. 
+There is a binding that we have created, called Hydride, available [here](https://github.com/libly/hydride-java).
+
+
 ## Features
 You can find an up-to-date feature list [here](https://docs.lazycode.co/lazysodium/features).
-
 
 ## Quick start
 Please view the [official documentation](https://docs.lazycode.co/lazysodium/installation) for a more comprehensive guide.
