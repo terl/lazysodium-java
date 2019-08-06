@@ -1554,12 +1554,12 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAuthHMACSha256(byte[] out, byte[] in, NativeLong inLen, byte[] k) {
+    public boolean cryptoAuthHMACSha256(byte[] out, byte[] in, long inLen, byte[] k) {
         return successful(getSodium().crypto_auth_hmacsha256(out, in, inLen, k));
     }
 
     @Override
-    public boolean cryptoAuthHMACSha256Verify(byte[] h, byte[] in, NativeLong inLen, byte[] k) {
+    public boolean cryptoAuthHMACSha256Verify(byte[] h, byte[] in, long inLen, byte[] k) {
         return successful(getSodium().crypto_auth_hmacsha256_verify(h, in, inLen, k));
     }
 
@@ -1569,7 +1569,7 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAuthHMACSha256Update(Auth.StateHMAC256 state, byte[] in, NativeLong inLen) {
+    public boolean cryptoAuthHMACSha256Update(Auth.StateHMAC256 state, byte[] in, long inLen) {
         return successful(getSodium().crypto_auth_hmacsha256_update(state, in, inLen));
     }
 
@@ -1585,12 +1585,12 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAuthHMACSha512(byte[] out, byte[] in, NativeLong inLen, byte[] k) {
+    public boolean cryptoAuthHMACSha512(byte[] out, byte[] in, long inLen, byte[] k) {
         return successful(getSodium().crypto_auth_hmacsha512(out, in, inLen, k));
     }
 
     @Override
-    public boolean cryptoAuthHMACSha512Verify(byte[] h, byte[] in, NativeLong inLen, byte[] k) {
+    public boolean cryptoAuthHMACSha512Verify(byte[] h, byte[] in, long inLen, byte[] k) {
         return successful(getSodium().crypto_auth_hmacsha512_verify(h, in, inLen, k));
     }
 
@@ -1600,7 +1600,7 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAuthHMACSha512Update(Auth.StateHMAC512 state, byte[] in, NativeLong inLen) {
+    public boolean cryptoAuthHMACSha512Update(Auth.StateHMAC512 state, byte[] in, long inLen) {
         return successful(getSodium().crypto_auth_hmacsha512_update(state, in, inLen));
     }
 
@@ -1615,12 +1615,12 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAuthHMACSha512256(byte[] out, byte[] in, NativeLong inLen, byte[] k) {
+    public boolean cryptoAuthHMACSha512256(byte[] out, byte[] in, long inLen, byte[] k) {
         return successful(getSodium().crypto_auth_hmacsha512256(out, in, inLen, k));
     }
 
     @Override
-    public boolean cryptoAuthHMACSha512256Verify(byte[] h, byte[] in, NativeLong inLen, byte[] k) {
+    public boolean cryptoAuthHMACSha512256Verify(byte[] h, byte[] in, long inLen, byte[] k) {
         return successful(getSodium().crypto_auth_hmacsha512256_verify(h, in, inLen, k));
     }
 
@@ -1630,7 +1630,7 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoAuthHMACSha512256Update(Auth.StateHMAC512256 state, byte[] in, NativeLong inLen) {
+    public boolean cryptoAuthHMACSha512256Update(Auth.StateHMAC512256 state, byte[] in, long inLen) {
         return successful(getSodium().crypto_auth_hmacsha512256_update(state, in, inLen));
     }
 
@@ -1662,7 +1662,7 @@ public abstract class LazySodium implements
     public String cryptoAuthHMACSha(Auth.Type type, String in, Key key) {
         byte[] inBytes = bytes(in);
         byte[] keyBytes = key.getAsBytes();
-        NativeLong inByteLen = new NativeLong(inBytes.length);
+        long inByteLen = inBytes.length;
         if (type.equals(Auth.Type.SHA256)) {
             byte[] out = new byte[Auth.HMACSHA256_BYTES];
             cryptoAuthHMACSha256(out, inBytes, inByteLen, keyBytes);
@@ -1683,7 +1683,7 @@ public abstract class LazySodium implements
         byte[] authBytes = toBin(h);
         byte[] inBytes = bytes(in);
         byte[] keyBytes = key.getAsBytes();
-        NativeLong inByteLen = new NativeLong(inBytes.length);
+        long inByteLen = inBytes.length;
         if (type.equals(Auth.Type.SHA256)) {
             return cryptoAuthHMACSha256Verify(authBytes, inBytes, inByteLen, keyBytes);
         } else if (type.equals(Auth.Type.SHA512)) {
@@ -1702,7 +1702,7 @@ public abstract class LazySodium implements
     @Override
     public boolean cryptoAuthHMACShaUpdate(Auth.StateHMAC256 state, String in) {
         byte[] inBytes = bytes(in);
-        NativeLong inByteLen = new NativeLong(inBytes.length);
+        long inByteLen = inBytes.length;
         return cryptoAuthHMACSha256Update(state, inBytes, inByteLen);
     }
 
@@ -1725,7 +1725,7 @@ public abstract class LazySodium implements
     @Override
     public boolean cryptoAuthHMACShaUpdate(Auth.StateHMAC512 state, String in) {
         byte[] inBytes = bytes(in);
-        NativeLong inByteLen = new NativeLong(inBytes.length);
+        long inByteLen = inBytes.length;
         return cryptoAuthHMACSha512Update(state, inBytes, inByteLen);
     }
 
@@ -1748,7 +1748,7 @@ public abstract class LazySodium implements
     @Override
     public boolean cryptoAuthHMACShaUpdate(Auth.StateHMAC512256 state, String in) {
         byte[] inBytes = bytes(in);
-        NativeLong inByteLen = new NativeLong(inBytes.length);
+        long inByteLen = inBytes.length;
         return cryptoAuthHMACSha512256Update(state, inBytes, inByteLen);
     }
 

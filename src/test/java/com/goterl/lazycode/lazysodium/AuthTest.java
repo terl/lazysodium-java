@@ -57,7 +57,7 @@ public class AuthTest extends BaseTest {
         String m2 = "the best";
 
         Key k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA256);
-        Auth.StateHMAC256 state = new Auth.StateHMAC256.ByReference();
+        Auth.StateHMAC256 state = new Auth.StateHMAC256();
 
 
         boolean res = lazySodium.cryptoAuthHMACShaInit(state, k);
@@ -91,7 +91,7 @@ public class AuthTest extends BaseTest {
         String m2 = " but don't tell your manager that!";
 
         Key k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA512);
-        Auth.StateHMAC512 state = new Auth.StateHMAC512.ByReference();
+        Auth.StateHMAC512 state = new Auth.StateHMAC512();
 
 
         boolean res = lazySodium.cryptoAuthHMACShaInit(state, k);
@@ -126,7 +126,7 @@ public class AuthTest extends BaseTest {
         String m3 = "is super secure.";
 
         Key k = lazySodium.cryptoAuthHMACShaKeygen(Auth.Type.SHA512256);
-        Auth.StateHMAC512256 state = new Auth.StateHMAC512256.ByReference();
+        Auth.StateHMAC512256 state = new Auth.StateHMAC512256();
 
 
         boolean res = lazySodium.cryptoAuthHMACShaInit(state, k);

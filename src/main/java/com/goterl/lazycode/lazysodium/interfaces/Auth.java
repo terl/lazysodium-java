@@ -71,14 +71,14 @@ public interface Auth {
         boolean cryptoAuthHMACSha256(
                 byte[] out,
                 byte[] in,
-                NativeLong inLen,
+                long inLen,
                 byte[] k
         );
 
         boolean cryptoAuthHMACSha256Verify(
                 byte[] h,
                 byte[] in,
-                NativeLong inLen,
+                long inLen,
                 byte[] k
         );
 
@@ -91,7 +91,7 @@ public interface Auth {
         boolean cryptoAuthHMACSha256Update(
                 Auth.StateHMAC256 state,
                 byte[] in,
-                NativeLong inLen
+                long inLen
         );
 
         boolean cryptoAuthHMACSha256Final(
@@ -105,14 +105,14 @@ public interface Auth {
         boolean cryptoAuthHMACSha512(
                 byte[] out,
                 byte[] in,
-                NativeLong inLen,
+                long inLen,
                 byte[] k
         );
 
         boolean cryptoAuthHMACSha512Verify(
                 byte[] h,
                 byte[] in,
-                NativeLong inLen,
+                long inLen,
                 byte[] k
         );
 
@@ -125,7 +125,7 @@ public interface Auth {
         boolean cryptoAuthHMACSha512Update(
                 Auth.StateHMAC512 state,
                 byte[] in,
-                NativeLong inLen
+                long inLen
         );
 
         boolean cryptoAuthHMACSha512Final(
@@ -140,14 +140,14 @@ public interface Auth {
         boolean cryptoAuthHMACSha512256(
                 byte[] out,
                 byte[] in,
-                NativeLong inLen,
+                long inLen,
                 byte[] k
         );
 
         boolean cryptoAuthHMACSha512256Verify(
                 byte[] h,
                 byte[] in,
-                NativeLong inLen,
+                long inLen,
                 byte[] k
         );
 
@@ -160,7 +160,7 @@ public interface Auth {
         boolean cryptoAuthHMACSha512256Update(
                 Auth.StateHMAC512256 state,
                 byte[] in,
-                NativeLong inLen
+                long inLen
         );
 
         boolean cryptoAuthHMACSha512256Final(
@@ -266,8 +266,6 @@ public interface Auth {
         public Hash.State256 ictx;
         public Hash.State256 octx;
 
-        public static class ByReference extends StateHMAC256 implements Structure.ByReference { }
-
         @Override
         protected List<String> getFieldOrder() {
             return Arrays.asList("ictx", "octx");
@@ -278,7 +276,6 @@ public interface Auth {
         public Hash.State512 ictx;
         public Hash.State512 octx;
 
-        public static class ByReference extends StateHMAC512 implements Structure.ByReference { }
 
         @Override
         protected List<String> getFieldOrder() {
@@ -289,8 +286,6 @@ public interface Auth {
     class StateHMAC512256 extends Structure {
         public Hash.State512 ictx;
         public Hash.State512 octx;
-
-        public static class ByReference extends StateHMAC512256 implements Structure.ByReference { }
 
         @Override
         protected List<String> getFieldOrder() {
