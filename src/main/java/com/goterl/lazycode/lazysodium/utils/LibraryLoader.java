@@ -203,7 +203,7 @@ public final class LibraryLoader {
             }
         }
         if (Platform.isARM()) {
-
+            return getPath("armv6", "libsodium.so");
         }
         if (Platform.isLinux()) {
             if (is64Bit) {
@@ -290,7 +290,7 @@ public final class LibraryLoader {
 
     // VisibleForTesting
     static File createTempDirectory() {
-        String tempDir = System.getProperty("user.home");
+        String tempDir = System.getProperty("java.io.tmpdir");
         File hydrideDirectory = new File(tempDir, "lazysodium");
         hydrideDirectory.mkdir();
         hydrideDirectory.deleteOnExit();
