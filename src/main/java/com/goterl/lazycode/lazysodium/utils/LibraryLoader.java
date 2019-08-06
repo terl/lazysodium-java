@@ -194,31 +194,7 @@ public final class LibraryLoader {
      * Returns the absolute path to sodium library inside JAR (beginning with '/'), e.g. /linux/libsodium.so.
      */
     private static String getSodiumPathInResources() {
-        boolean is64Bit = Native.POINTER_SIZE == 8;
-        if (Platform.isWindows()) {
-            if (is64Bit) {
-                return getPath("windows64", "libsodium.dll");
-            } else {
-                return getPath("windows", "libsodium.dll");
-            }
-        }
-        if (Platform.isARM()) {
-            return getPath("armv6", "libsodium.so");
-        }
-        if (Platform.isLinux()) {
-            if (is64Bit) {
-                return getPath("linux64", "libsodium.so");
-            } else {
-                return getPath("linux", "libsodium.so");
-            }
-        }
-        if (Platform.isMac()) {
-            return getPath("mac", "libsodium.dylib");
-        }
-
-        String message = String.format("Unsupported platform: %s/%s", System.getProperty("os.name"),
-                System.getProperty("os.arch"));
-        throw new LibraryLoadingException(message);
+        return getPath("armv6", "libsodium.so");
     }
 
     private static String getPath(String folder, String name) {
