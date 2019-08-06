@@ -214,6 +214,7 @@ public final class LibraryLoader {
 
         String fileName = new File(pathInJar).getName();
         File temp = new File(temporaryDir, fileName);
+        temp.delete();
         temp.createNewFile();
 
         InputStream is = LibraryLoader.class.getResourceAsStream(pathInJar);
@@ -266,7 +267,7 @@ public final class LibraryLoader {
 
     // VisibleForTesting
     static File createTempDirectory() {
-        String tempDir = System.getProperty("java.io.tmpdir");
+        String tempDir = System.getProperty("user.home");
         File hydrideDirectory = new File(tempDir, "lazysodium");
         hydrideDirectory.mkdir();
         hydrideDirectory.deleteOnExit();
