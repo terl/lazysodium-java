@@ -20,10 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.FileSystemNotFoundException;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.ProviderNotFoundException;
+import java.nio.file.*;
 import java.nio.file.attribute.PosixFilePermission;
 import java.util.HashSet;
 import java.util.Set;
@@ -289,12 +286,12 @@ public final class LibraryLoader {
     }
 
     // VisibleForTesting
-    static File createTempDirectory() {
-        String tempDir = System.getProperty("java.io.tmpdir");
-        File hydrideDirectory = new File(tempDir, "lazysodium");
-        hydrideDirectory.mkdir();
-        hydrideDirectory.deleteOnExit();
-        return hydrideDirectory;
+    static File createTempDirectory() throws IOException {
+        Path hydridePath = Files.createTempDirectory("lazysodium");
+        File hydrideDir = hydridePath.toFile();
+        hydrideDir.mkdir();
+        hydrideDir.deleteOnExit();
+        return hydrideDir;
     }
 
     private void setPermissions(File file) throws IOException{

@@ -225,6 +225,6 @@ public class LibraryLoaderTest {
     File firstDir = LibraryLoader.createTempDirectory();
     File secondDir = LibraryLoader.createTempDirectory();
 
-    assertThat(firstDir, equalTo(secondDir));
+    assertThat(firstDir, not(equalTo(secondDir)));
   }
 }
