@@ -288,7 +288,7 @@ public class Sodium {
     public native int crypto_box_open_detached(byte[] message,
                                         byte[] cipherText,
                                         byte[] mac,
-                                        byte[] cipherTextLen,
+                                        long cipherTextLen,
                                         byte[] nonce,
                                         byte[] publicKey,
                                         byte[] secretKey);

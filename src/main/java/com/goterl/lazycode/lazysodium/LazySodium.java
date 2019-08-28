@@ -746,7 +746,7 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoBoxOpenDetached(byte[] message, byte[] cipherText, byte[] mac, byte[] cipherTextLen, byte[] nonce, byte[] publicKey, byte[] secretKey) {
+    public boolean cryptoBoxOpenDetached(byte[] message, byte[] cipherText, byte[] mac, long cipherTextLen, byte[] nonce, byte[] publicKey, byte[] secretKey) {
         return successful(getSodium().crypto_box_open_detached(message, cipherText, mac, cipherTextLen, nonce, publicKey, secretKey));
     }
 

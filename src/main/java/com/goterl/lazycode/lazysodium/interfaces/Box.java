@@ -102,7 +102,7 @@ public interface Box {
         boolean cryptoBoxOpenDetached(byte[] message,
                                             byte[] cipherText,
                                             byte[] mac,
-                                            byte[] cipherTextLen,
+                                            long cipherTextLen,
                                             byte[] nonce,
                                             byte[] publicKey,
                                             byte[] secretKey);
