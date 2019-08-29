@@ -26,6 +26,7 @@ ext {
 
 repositories {
     jcenter()
+    maven { url 'https://jitpack.io' }
 }
 
 
@@ -44,6 +45,8 @@ targetCompatibility = 1.8
 dependencies {
     implementation fileTree(dir: 'libs', include: '*.jar')
     implementation 'net.java.dev.jna:jna:5.3.1'
+    implementation 'com.github.libly:resource-loader:1.2.0'
+
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.28.2'
 }

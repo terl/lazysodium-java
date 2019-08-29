@@ -10,6 +10,9 @@ package com.goterl.lazycode.lazysodium;
 
 import com.goterl.lazycode.lazysodium.utils.LibraryLoader;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SodiumJava extends Sodium {
 
     /**
@@ -28,25 +31,17 @@ public class SodiumJava extends Sodium {
      * @see LibraryLoader.Mode
      */
     public SodiumJava(LibraryLoader.Mode loadingMode) {
-        register(loadingMode);
+        new LibraryLoader(getClassesToRegister()).loadLibrary(loadingMode, "sodium");
         onRegistered();
     }
 
-    /**
-     * Creates the SodiumJava with the custom sodium library.
-     *
-     * <p>Please note that the sodium library <b>must</b> be built for the platform this program will run on.
-     *
-     * @param libLocator a library locator: either a path to it, or, for installed libraries,
-     *      a short name (sodium) or its full name (e.g., libsodium.dylib)
-     */
-    public SodiumJava(String libLocator) {
-        registerFromPath(libLocator);
+    public SodiumJava(String absolutePath) {
+        new LibraryLoader(getClassesToRegister()).loadAbsolutePath(absolutePath);
         onRegistered();
     }
+
 
     // Scrypt
-
 
     public native int crypto_pwhash_scryptsalsa208sha256(
             byte[] out,
@@ -157,16 +152,11 @@ public class SodiumJava extends Sodium {
 
     public native void crypto_stream_xchacha20_keygen(byte[] key);
 
-
-
-
-    private static void register(LibraryLoader.Mode mode) {
-        LibraryLoader.getInstance().loadLibrary(mode);
+    public static List<Class> getClassesToRegister() {
+        final List<Class> classes = new ArrayList<>();
+        classes.add(Sodium.class);
+        classes.add(SodiumJava.class);
+        return classes;
     }
-
-    private void registerFromPath(String libLocator) {
-        LibraryLoader.getInstance().loadLibrary(libLocator);
-    }
-
 
 }

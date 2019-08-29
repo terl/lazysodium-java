@@ -12,15 +12,13 @@ package com.goterl.lazycode.lazysodium;/*
 
 import org.junit.Before;
 
-import static com.goterl.lazycode.lazysodium.utils.LibraryLoader.Mode.BUNDLED_ONLY;
-
 public class BaseTest {
 
     public static LazySodiumJava lazySodium;
 
     @Before
     public void doBeforeEverything() {
-        lazySodium = new LazySodiumJava(new SodiumJava(BUNDLED_ONLY));
+        lazySodium = new LazySodiumJava(new SodiumJava());
     }
 
 
