@@ -24,6 +24,7 @@ public class LazySodiumJava extends LazySodium implements
     private final SodiumJava sodium;
 
     public LazySodiumJava(SodiumJava sodium) {
+        super();
         this.sodium = sodium;
     }
 

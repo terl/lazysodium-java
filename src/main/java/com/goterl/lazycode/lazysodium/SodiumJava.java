@@ -8,6 +8,7 @@
 
 package com.goterl.lazycode.lazysodium;
 
+import co.libly.resourceloader.SharedLibraryLoader;
 import com.goterl.lazycode.lazysodium.utils.LibraryLoader;
 
 import java.util.ArrayList;
