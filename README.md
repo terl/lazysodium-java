@@ -32,9 +32,7 @@ Install by adding the bintray repository and the dependency. For Maven users, pl
 ```groovy
 // Top level build file
 repositories {
-    maven {
-        url  "https://dl.bintray.com/terl/lazysodium-maven"
-    }
+    jcenter()
 }
 
 // Add to dependencies section
