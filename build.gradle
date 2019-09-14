@@ -19,13 +19,14 @@ plugins {
 ext {
     artifactId = "lazysodium-java"
     groupId = "com.goterl.lazycode"
-    version = '4.1.0'
+    version = '4.2.0'
     description = "Lazysodium (Java) makes it effortless for Java " +
             "developers to get started with Libsodium's cryptography."
 }
 
 repositories {
     jcenter()
+    maven { url 'https://jitpack.io' }
 }
 
 
