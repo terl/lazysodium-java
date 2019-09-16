@@ -96,7 +96,13 @@ public final class LibraryLoader {
     }
 
     public void loadSystemLibrary(String library) {
-        SharedLibraryLoader.get().loadSystemLibrary(library, classes);
+        try {
+            SharedLibraryLoader.get().loadSystemLibrary(library, classes);
+        } catch (UnsatisfiedLinkError e) {
+            String message = String.format("Failed to load the system library using (%s)",
+                library);
+            throw new LibraryLoadingException(message);
+        }
     }
 
     public void loadAbsolutePath(String absPath) {

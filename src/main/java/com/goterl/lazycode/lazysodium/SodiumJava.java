@@ -8,7 +8,6 @@
 
 package com.goterl.lazycode.lazysodium;
 
-import co.libly.resourceloader.SharedLibraryLoader;
 import com.goterl.lazycode.lazysodium.utils.LibraryLoader;
 
 import java.util.ArrayList;
@@ -40,7 +39,6 @@ public class SodiumJava extends Sodium {
         new LibraryLoader(getClassesToRegister()).loadAbsolutePath(absolutePath);
         onRegistered();
     }
-
 
     // Scrypt
 
