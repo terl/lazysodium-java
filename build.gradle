@@ -26,6 +26,9 @@ ext {
 
 repositories {
     jcenter()
+    maven {
+        url "https://dl.bintray.com/libly/maven"
+    }
 }
 
 
