@@ -79,7 +79,7 @@ public final class LibraryLoader {
             case PREFER_SYSTEM:
                 try {
                     loadSystemLibrary(systemFallBack);
-                } catch (Exception suppressed) {
+                } catch (Throwable suppressed) {
                     // Attempt to load the bundled
                     loadBundledLibrary();
                 }
