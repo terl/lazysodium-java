@@ -21,13 +21,13 @@ There is a binding that we have created, called Hydride, available [here](https:
 
 
 ## Features
-You can find an up-to-date feature list [here](https://docs.lazycode.co/lazysodium/features).
+You can find an up-to-date feature list [here](https://docs.lazycode.co/lazysodium/about-1/features).
 
 ## Quick start
-Please view the [official documentation](https://docs.lazycode.co/lazysodium/installation) for a more comprehensive guide.
+Please view the [official documentation](https://docs.lazycode.co/lazysodium/usage/installation) for a more comprehensive guide.
 
 ### 1. Install
-Install by adding the bintray repository and the dependency. For Maven users, please see [here](https://docs.lazycode.co/lazysodium/installation).
+Install by adding the bintray repository and the dependency. For Maven users, please see [here](https://docs.lazycode.co/lazysodium/usage/installation).
 
 ```groovy
 // Top level build file
@@ -68,7 +68,7 @@ You can use the `Native` or `Lazy` interfaces to encrypt at a lower or a higher 
 
 ## Documentation
 
-See our [official documentation](https://docs.lazycode.co/lazysodium) to get started.
+Please view our [official documentation](https://docs.lazycode.co/lazysodium/) to get started.
 
 
 ## Examples
