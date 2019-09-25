@@ -2404,11 +2404,7 @@ public abstract class LazySodium implements
     //// -------------------------------------------|
     // --
     public static void main(String[] args) throws SodiumException {
-        // Can implement some code here to test
-        LazySodiumJava lazySodium = new LazySodiumJava(new SodiumJava(LibraryLoader.Mode.BUNDLED_ONLY));
-        byte[] seed = new byte[Box.SEEDBYTES];
-        KeyPair keys = lazySodium.cryptoBoxSeedKeypair(seed);
-        KeyPair keys2 = lazySodium.cryptoBoxSeedKeypair(seed);
+
     }
 
 
