@@ -20,6 +20,17 @@ import static org.junit.Assert.assertTrue;
 
 public class AuthTest extends BaseTest {
 
+    @Test
+    public void authKeygenAndVerify() throws SodiumException {
+        String m = "A simple message.";
+
+        Key key = lazySodium.cryptoAuthKeygen();
+        String tag = lazySodium.cryptoAuth(m, key);
+
+        boolean verification = lazySodium.cryptoAuthVerify(tag, m, key);
+
+        assertTrue(verification);
+    }
 
     @Test
     public void auth256KeygenAndVerify() {

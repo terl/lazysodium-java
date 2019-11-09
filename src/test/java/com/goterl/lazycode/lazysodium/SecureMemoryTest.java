@@ -10,7 +10,7 @@ package com.goterl.lazycode.lazysodium;import com.sun.jna.Pointer;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-public class SecureMemoryAndroidTest extends BaseTest {
+public class SecureMemoryTest extends BaseTest {
 
 
     @Test

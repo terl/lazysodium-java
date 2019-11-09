@@ -16,7 +16,7 @@ import com.goterl.lazycode.lazysodium.interfaces.Hash;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-public class HashAndroidTest extends BaseTest {
+public class HashTest extends BaseTest {
 
 
     private String M1 = "With great power ";

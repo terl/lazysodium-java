@@ -24,7 +24,7 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Tests public and private key encryption.
  */
-public class BoxAndroidTest extends BaseTest {
+public class BoxTest extends BaseTest {
 
 
     private Box.Lazy cryptoBoxLazy;

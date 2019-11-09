@@ -21,7 +21,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 
 
-public class SignAndroidTest extends BaseTest {
+public class SignTest extends BaseTest {
 
 
     private Sign.Lazy cryptoSignLazy;

@@ -19,7 +19,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 
-public class KeyExchangeAndroidTest extends BaseTest {
+public class KeyExchangeTest extends BaseTest {
 
 
     @Test

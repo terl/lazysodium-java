@@ -9,7 +9,7 @@
 package com.goterl.lazycode.lazysodium;import junit.framework.TestCase;
 import org.junit.Test;
 
-public class HelperAndroidTest extends BaseTest {
+public class HelperTest extends BaseTest {
 
     @Test
     public void compare() {

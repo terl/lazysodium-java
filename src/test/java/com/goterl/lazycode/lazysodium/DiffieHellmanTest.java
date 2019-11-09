@@ -17,7 +17,7 @@ import com.goterl.lazycode.lazysodium.utils.Key;
 import junit.framework.TestCase;
 import org.junit.Test;
 
-public class DiffieHellmanAndroidTest extends BaseTest {
+public class DiffieHellmanTest extends BaseTest {
 
     private String clientSecretKey = "CLIENT_TOP_SECRET_KEY_1234567890";
     private String serverSecretKey = "SERVER_TOP_SECRET_KEY_1234567890";

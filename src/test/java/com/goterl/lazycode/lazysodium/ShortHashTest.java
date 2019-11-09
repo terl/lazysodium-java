@@ -15,7 +15,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-public class ShortHashAndroidTest extends BaseTest {
+public class ShortHashTest extends BaseTest {
 
 
     @Test
