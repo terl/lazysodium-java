@@ -248,22 +248,6 @@ public class Sodium {
                                               byte[] nonce,
                                               byte[] key);
 
-    // XSalsa20Poly1305
-
-    public native void crypto_secretbox_xsalsa20poly1305_keygen(byte[] key);
-
-    public native int crypto_secretbox_xsalsa20poly1305(byte[] cipher,
-                                                        byte[] message,
-                                                        long messageLen,
-                                                        byte[] nonce,
-                                                        byte[] key);
-
-    public native int crypto_secretbox_xsalsa20poly1305_open(byte[] message,
-                                                            byte[] cipher,
-                                                            long cipherLen,
-                                                            byte[] nonce,
-                                                            byte[] key);
-
 
 
     //// -------------------------------------------|
