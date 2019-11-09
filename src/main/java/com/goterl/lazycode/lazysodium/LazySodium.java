@@ -617,6 +617,21 @@ public abstract class LazySodium implements
         return successful(getSodium().crypto_secretbox_open_detached(message, cipherText, mac, cipherTextLen, nonce, key));
     }
 
+    @Override
+    public void cryptoSecretBoxXSalsa20Poly1305Keygen(byte[] key) {
+        getSodium().crypto_secretbox_xsalsa20poly1305_keygen(key);
+    }
+
+    @Override
+    public boolean cryptoSecretBoxXSalsa20Poly1305(byte[] cipher, byte[] message, long messageLen, byte[] nonce, byte[] key) {
+        return successful(getSodium().crypto_secretbox_xsalsa20poly1305(cipher, message, messageLen, nonce, key));
+    }
+
+    @Override
+    public boolean cryptoSecretBoxXSalsa20Poly1305Open(byte[] message, byte[] cipher, long cipherLen, byte[] nonce, byte[] key) {
+        return successful(getSodium().crypto_secretbox_xsalsa20poly1305_open(message, cipher, cipherLen, nonce, key));
+    }
+
 
     /// --- Lazy
 

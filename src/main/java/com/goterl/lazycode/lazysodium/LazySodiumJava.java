@@ -10,12 +10,10 @@ package com.goterl.lazycode.lazysodium;
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.Scrypt;
-import com.goterl.lazycode.lazysodium.interfaces.Stream;
 import com.goterl.lazycode.lazysodium.interfaces.StreamJava;
 import com.goterl.lazycode.lazysodium.utils.Key;
 
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 public class LazySodiumJava extends LazySodium implements
         Scrypt.Native, Scrypt.Lazy,
@@ -261,4 +259,5 @@ public class LazySodiumJava extends LazySodium implements
     public SodiumJava getSodium() {
         return sodium;
     }
+
 }
