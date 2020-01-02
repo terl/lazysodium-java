@@ -182,6 +182,14 @@ public interface Sign {
         String cryptoSign(String message, String secretKey) throws SodiumException;
 
         /**
+         * Sign a message.
+         * @param message The message to sign.
+         * @param secretKey The secret key.
+         * @return A {@link Helpers.Lazy#sodiumBin2Hex(byte[])}-ified signed message.
+         */
+        String cryptoSign(String message, Key secretKey) throws SodiumException;
+
+        /**
          * Checks that a message is validly signed by a public key.
          * @param signedMessage The signed message.
          * @param publicKey The public key that signed the message.

@@ -1069,6 +1069,11 @@ public abstract class LazySodium implements
     }
 
     @Override
+    public String cryptoSign(String message, Key secretKey) throws SodiumException {
+        return cryptoSign(message, secretKey.getAsHexString());
+    }
+
+    @Override
     public String cryptoSignOpen(String signedMessage, Key publicKey) {
         byte[] signedMessageBytes = toBin(signedMessage);
         byte[] publicKeyBytes = publicKey.getAsBytes();

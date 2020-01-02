@@ -62,7 +62,7 @@ public class SignTest extends BaseTest {
         String message = "This should get signed";
 
         KeyPair keyPair = cryptoSignLazy.cryptoSignKeypair();
-        String signed = cryptoSignLazy.cryptoSign(message, keyPair.getSecretKey().getAsHexString());
+        String signed = cryptoSignLazy.cryptoSign(message, keyPair.getSecretKey());
 
         // Now we can verify the signed message.
         String resultingMessage = cryptoSignLazy.cryptoSignOpen(signed, keyPair.getPublicKey());
