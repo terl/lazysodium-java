@@ -38,6 +38,7 @@ repositories {
 // Add to dependencies section
 dependencies {
     implementation "com.goterl.lazycode:lazysodium-java:VERSION_NUMBER"
+    implementation "net.java.dev.jna:jna:JNA_NUMBER"
 }
 ```
 
@@ -45,6 +46,7 @@ Substitute `VERSION_NUMBER` for the version in this box:
 
 [![Download](https://api.bintray.com/packages/terl/lazysodium-maven/lazysodium-java/images/download.svg) ](https://bintray.com/terl/lazysodium-maven/lazysodium-java/_latestVersion)
 
+Substitute `JNA_NUMBER` for the [latest version of JNA](https://github.com/java-native-access/jna/releases).
 
 ### 2. Usage
 
