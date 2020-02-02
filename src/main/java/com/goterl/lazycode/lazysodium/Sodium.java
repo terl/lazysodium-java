@@ -92,9 +92,9 @@ public class Sodium {
     //// PADDING
     //// -------------------------------------------|
 
-    public native int sodium_pad(int paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize, int maxBufLen);
+    public native int sodium_pad(Pointer paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize, int maxBufLen);
 
-    public native int sodium_unpad(int paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize);
+    public native int sodium_unpad(Pointer paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize);
 
 
 

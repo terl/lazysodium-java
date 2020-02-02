@@ -13,6 +13,7 @@ import com.goterl.lazycode.lazysodium.interfaces.*;
 import com.goterl.lazycode.lazysodium.utils.*;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
+import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 
 import java.nio.charset.Charset;
@@ -175,16 +176,13 @@ public abstract class LazySodium implements
     //// -------------------------------------------|
 
     @Override
-    public boolean sodiumPad(int paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize, int maxBufLen) {
-        if (maxBufLen < 0 || maxBufLen > buf.length) {
-            throw new IllegalArgumentException("maxBufLen out of bounds: " + maxBufLen);
-        }
-        return successful(getSodium().sodium_pad(paddedBuffLen, buf, unpaddedBufLen, blockSize, maxBufLen));
+    public boolean sodiumPad(IntByReference paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize, int maxBufLen) {
+        return successful(getSodium().sodium_pad(paddedBuffLen.getPointer(), buf, unpaddedBufLen, blockSize, maxBufLen));
     }
 
     @Override
-    public boolean sodiumUnpad(int unPaddedBuffLen, char[] buf, int paddedBufLen, int blockSize) {
-        return successful(getSodium().sodium_unpad(unPaddedBuffLen, buf, paddedBufLen, blockSize));
+    public boolean sodiumUnpad(IntByReference unPaddedBuffLen, char[] buf, int paddedBufLen, int blockSize) {
+        return successful(getSodium().sodium_unpad(unPaddedBuffLen.getPointer(), buf, paddedBufLen, blockSize));
     }
 
 
