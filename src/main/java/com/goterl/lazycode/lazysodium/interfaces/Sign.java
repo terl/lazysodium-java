@@ -276,12 +276,20 @@ public interface Sign {
 
 
     class StateCryptoSign extends Structure {
-
         public Hash.State512 hs;
 
         @Override
         protected List<String> getFieldOrder() {
             return Arrays.asList("hs");
+        }
+
+        @Override
+        public StateCryptoSign clone() {
+            StateCryptoSign state2 = new StateCryptoSign();
+            state2.hs.count = hs.count.clone();
+            state2.hs.state = hs.state.clone();
+            state2.hs.buf = hs.buf.clone();
+            return state2;
         }
     }
 
