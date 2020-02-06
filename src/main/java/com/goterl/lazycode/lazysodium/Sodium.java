@@ -8,10 +8,7 @@
 
 package com.goterl.lazycode.lazysodium;
 
-import com.goterl.lazycode.lazysodium.interfaces.AEAD;
-import com.goterl.lazycode.lazysodium.interfaces.Auth;
-import com.goterl.lazycode.lazysodium.interfaces.Hash;
-import com.goterl.lazycode.lazysodium.interfaces.SecretStream;
+import com.goterl.lazycode.lazysodium.interfaces.*;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 
@@ -341,6 +338,14 @@ public class Sodium {
     //// -------------------------------------------|
     //// CRYPTO SIGN
     //// -------------------------------------------|
+
+    public native int crypto_sign_init(Sign.StateCryptoSign state);
+
+    public native int crypto_sign_update(Sign.StateCryptoSign state, byte[] chunk, long chunkLength);
+
+    public native int crypto_sign_final_create(Sign.StateCryptoSign state, byte[] sig, Pointer sigLen, byte[] sk);
+
+    public native int crypto_sign_final_verify(Sign.StateCryptoSign state, byte[] sig, byte[] pk);
 
     public native int crypto_sign_keypair(byte[] publicKey, byte[] secretKey);
 
