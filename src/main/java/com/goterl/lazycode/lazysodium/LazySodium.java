@@ -1042,6 +1042,26 @@ public abstract class LazySodium implements
     //// -------------------------------------------|
 
     @Override
+    public boolean cryptoSignInit(Sign.StateCryptoSign state) {
+        return successful(getSodium().crypto_sign_init(state));
+    }
+
+    @Override
+    public boolean cryptoSignUpdate(Sign.StateCryptoSign state, byte[] chunk, long chunkLength) {
+        return successful(getSodium().crypto_sign_update(state, chunk, chunkLength));
+    }
+
+    @Override
+    public boolean cryptoSignFinalCreate(Sign.StateCryptoSign state, byte[] sig, Pointer sigLen, byte[] sk) {
+        return successful(getSodium().crypto_sign_final_create(state, sig, sigLen, sk));
+    }
+
+    @Override
+    public boolean cryptoSignFinalVerify(Sign.StateCryptoSign state, byte[] sig, byte[] pk) {
+        return successful(getSodium().crypto_sign_final_verify(state, sig, pk));
+    }
+
+    @Override
     public boolean cryptoSignKeypair(byte[] publicKey, byte[] secretKey) {
         return successful(getSodium().crypto_sign_keypair(publicKey, secretKey));
     }

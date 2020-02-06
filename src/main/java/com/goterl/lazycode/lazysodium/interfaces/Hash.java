@@ -10,7 +10,6 @@ package com.goterl.lazycode.lazysodium.interfaces;
 
 
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
-import com.goterl.lazycode.lazysodium.utils.BaseChecker;
 import com.sun.jna.Structure;
 
 import java.util.Arrays;
@@ -18,18 +17,9 @@ import java.util.List;
 
 public interface Hash {
 
-
     int SHA256_BYTES = 32,
         SHA512_BYTES = 64,
-
         BYTES = SHA512_BYTES;
-
-
-
-
-    class Checker extends BaseChecker {
-
-    }
 
     interface Native {
 

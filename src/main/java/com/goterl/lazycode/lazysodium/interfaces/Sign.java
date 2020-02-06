@@ -12,6 +12,11 @@ package com.goterl.lazycode.lazysodium.interfaces;
 import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.utils.*;
 import com.sun.jna.NativeLong;
+import com.sun.jna.Pointer;
+import com.sun.jna.Structure;
+
+import java.util.Arrays;
+import java.util.List;
 
 public interface Sign {
 
@@ -33,11 +38,51 @@ public interface Sign {
     long MESSAGEBYTES_MAX = ED25519_MESSAGEBYTES_MAX;
 
 
-
-    class Checker extends BaseChecker { }
-
-
     interface Native {
+
+        /**
+         * Useful for signing a multi-part message (Ed25519ph).
+         * If the message can fit in memory and can be supplied as a
+         * single chunk, the single-part API should be preferred.
+         * This function must be called before the first crypto_sign_update() call.
+         * @param state The state.
+         * @return True if successful.
+         */
+        boolean cryptoSignInit(Sign.StateCryptoSign state);
+
+        /**
+         * Add a new chunk of length chunkLen bytes to the
+         * message that will eventually be signed.
+         * @param state The state.
+         * @param chunk A part of the long message.
+         * @param chunkLength Message length.
+         * @return True if this chunk was successfully signed.
+         */
+        boolean cryptoSignUpdate(Sign.StateCryptoSign state, byte[] chunk, long chunkLength);
+
+        /**
+         * This function computes a signature for the previously supplied message,
+         * using the secret key sk and puts it into sig.
+         * If sigLen is not NULL, the length of the signature is stored at this address.
+         * However this is kind of redundant as you can just do sig.length.
+         * @param state The state.
+         * @param sig Resultant signature.
+         * @param sigLen Signature length.
+         * @param sk Secret key.
+         * @return True if successfully signed completely.
+         */
+        boolean cryptoSignFinalCreate(Sign.StateCryptoSign state, byte[] sig, Pointer sigLen, byte[] sk);
+
+        /**
+         * Verifies that sig is a valid signature for the message whose
+         * content has been previously supplied using crypto_update(),
+         * using the public key pk.
+         * @param state The state.
+         * @param sig Resultant signature.
+         * @param pk Secret key.
+         * @return True if successfully signed completely.
+         */
+        boolean cryptoSignFinalVerify(Sign.StateCryptoSign state, byte[] sig, byte[] pk);
 
         /**
          * Generate a signing keypair (ed25519).
@@ -229,5 +274,15 @@ public interface Sign {
         KeyPair convertKeyPairEd25519ToCurve25519(KeyPair ed25519KeyPair) throws SodiumException;
     }
 
+
+    class StateCryptoSign extends Structure {
+
+        public Hash.State512 hs;
+
+        @Override
+        protected List<String> getFieldOrder() {
+            return Arrays.asList("hs");
+        }
+    }
 
 }
