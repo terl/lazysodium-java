@@ -13,12 +13,12 @@ import com.goterl.lazycode.lazysodium.interfaces.Hash;
 import com.goterl.lazycode.lazysodium.interfaces.Sign;
 import com.goterl.lazycode.lazysodium.utils.Key;
 import com.goterl.lazycode.lazysodium.utils.KeyPair;
-import com.sun.jna.ptr.IntByReference;
 import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 
-import static junit.framework.TestCase.*;
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertNotNull;
 
 
@@ -135,10 +135,10 @@ public class SignTest extends BaseTest {
         Key sk = keyPair.getSecretKey();
         Key pk = keyPair.getPublicKey();
 
-        Sign.StateCryptoSign state = new Sign.StateCryptoSign();
 
-        boolean started = lazySodium.cryptoSignInit(state);
-        assertTrue("cryptoSignInit not started successfully.", started);
+        Sign.StateCryptoSign state = new Sign.StateCryptoSign();
+        int started = lazySodium.getSodium().crypto_sign_init(state);
+        assertTrue("cryptoSignInit not started successfully.", started == 0);
 
         boolean update1 = lazySodium.cryptoSignUpdate(state, messageBytes, messageBytes.length);
         assertTrue("First cryptoSignUpdate did not work.", update1);
@@ -146,11 +146,15 @@ public class SignTest extends BaseTest {
         boolean update2 = lazySodium.cryptoSignUpdate(state, messageBytes, messageBytes.length);
         assertTrue("Second cryptoSignUpdate did not work.", update2);
 
+        // Clone the state now as cryptoSignFinalCreate zeroes
+        // all the values.
+        Sign.StateCryptoSign clonedState = state.clone();
+
         byte[] signature = new byte[Hash.SHA512_BYTES];
         boolean createdSignature = lazySodium.cryptoSignFinalCreate(state, signature, null, sk.getAsBytes());
         assertTrue("cryptoSignFinalCreate unsuccessful", createdSignature);
 
-        boolean verified = lazySodium.cryptoSignFinalVerify(state, signature, pk.getAsBytes());
+        boolean verified = lazySodium.cryptoSignFinalVerify(clonedState, signature, pk.getAsBytes());
         assertTrue("cryptoSignFinalVerify did not work", verified);
     }
 
