@@ -13,6 +13,7 @@ import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.utils.BaseChecker;
 import com.goterl.lazycode.lazysodium.utils.DetachedDecrypt;
 import com.goterl.lazycode.lazysodium.utils.DetachedEncrypt;
+import com.goterl.lazycode.lazysodium.utils.Key;
 import com.goterl.lazycode.lazysodium.utils.KeyPair;
 
 public interface Box {
@@ -262,6 +263,22 @@ public interface Box {
                                                      String sharedSecretKey) throws SodiumException;
 
 
+        /**
+         * Encrypts a message.
+         * @param message The message.
+         * @param publicKey A public key.
+         * @return The encrypted {@link Helpers.Lazy#sodiumBin2Hex(byte[])}'ified cipher text.
+         */
+        String cryptoBoxSealEasy(String message, Key publicKey) throws SodiumException;
+
+        /**
+         * Decrypts a previously encrypted message.
+         * @param cipherText Encrypted via {@link #cryptoBoxSealEasy(String, Key)}
+         *                   and then {@link Helpers.Lazy#sodiumBin2Hex(byte[])}'ified.
+         * @param keyPair A keypair.
+         * @return The message.
+         */
+        String cryptoBoxSealOpenEasy(String cipherText, KeyPair keyPair) throws SodiumException;
     }
 
 
