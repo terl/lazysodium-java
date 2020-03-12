@@ -1036,6 +1036,33 @@ public abstract class LazySodium implements
         return new DetachedDecrypt(message, mac);
     }
 
+    @Override
+    public String cryptoBoxSealEasy(String message, Key publicKey) throws SodiumException {
+        byte[] keyBytes = publicKey.getAsBytes();
+        byte[] messageBytes = bytes(message);
+        byte[] cipher = new byte[Box.SEALBYTES + messageBytes.length];
+
+        if (!cryptoBoxSeal(cipher, messageBytes, messageBytes.length, keyBytes)) {
+            throw new SodiumException("Could not encrypt message.");
+        }
+        return toHex(cipher);
+    }
+
+    @Override
+    public String cryptoBoxSealOpenEasy(String cipherText, KeyPair keyPair) throws SodiumException {
+        byte[] cipher = toBin(cipherText);
+        byte[] message = new byte[cipher.length - Box.SEALBYTES];
+
+        boolean res = cryptoBoxSealOpen(message,
+                                        cipher,
+                                        cipher.length,
+                                        keyPair.getPublicKey().getAsBytes(),
+                                        keyPair.getSecretKey().getAsBytes());
+        if (!res) {
+            throw new SodiumException("Could not decrypt your message.");
+        }
+        return str(message);
+    }
 
     //// -------------------------------------------|
     //// CRYPTO SIGN

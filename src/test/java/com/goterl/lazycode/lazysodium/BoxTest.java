@@ -130,5 +130,20 @@ public class BoxTest extends BaseTest {
         TestCase.assertEquals(message, lazySodium.str(decryptDet.getMessage()));
     }
 
+    @Test
+    public void sealMessage() throws SodiumException {
+        String message = "This should get encrypted";
 
+        // Generate the keypair
+        KeyPair keyPair = cryptoBoxLazy.cryptoBoxKeypair();
+
+        // Encrypt the message
+        String encrypted = cryptoBoxLazy.cryptoBoxSealEasy(message, keyPair.getPublicKey());
+
+        // Now we can decrypt the encrypted message.
+        String decryptedMessage = cryptoBoxLazy.cryptoBoxSealOpenEasy(encrypted, keyPair);
+
+        // Public-private key encryption complete!
+        TestCase.assertEquals(message, decryptedMessage);
+    }
 }
