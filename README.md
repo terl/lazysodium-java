@@ -60,7 +60,7 @@ LazySodiumJava lazySodium = new LazySodiumJava(new SodiumJava());
 // Casting the lazySodium object is optional, 
 // but it's wise to do so as it prevents accidents.
 PwHash.Lazy pwHashLazy = (PwHash.Lazy) lazySodium;
-String hash = lazySodium.cryptoPwHashStr("a cool password", PwHash.OPSLIMIT_MIN, PwHash.MEMLIMIT_MIN);
+String hash = pwHashLazy.cryptoPwHashStr("a cool password", PwHash.OPSLIMIT_MIN, PwHash.MEMLIMIT_MIN);
 ```
 
 You can use the `Native` or `Lazy` interfaces to encrypt at a lower or a higher level. It's all very simple.
