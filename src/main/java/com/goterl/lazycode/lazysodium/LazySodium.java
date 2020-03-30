@@ -17,6 +17,7 @@ import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 public abstract class LazySodium implements
         Base,
@@ -39,16 +40,25 @@ public abstract class LazySodium implements
         KeyDerivation.Native, KeyDerivation.Lazy,
         DiffieHellman.Native, DiffieHellman.Lazy {
 
-    protected Charset charset = Charset.forName("UTF-8");
+    protected final Charset charset;
+    protected final MessageEncoder messageEncoder;
 
+    public LazySodium(Charset charset, MessageEncoder messageEncoder) {
+        this.charset = charset;
+        this.messageEncoder = messageEncoder;
+    }
 
     public LazySodium() {
+        this(StandardCharsets.UTF_8, new HexMessageEncoder());
     }
 
     public LazySodium(Charset charset) {
-        this.charset = charset;
+        this(charset, new HexMessageEncoder());
     }
 
+    public LazySodium(MessageEncoder messageEncoder) {
+        this(StandardCharsets.UTF_8, messageEncoder);
+    }
 
     public static Integer longToInt(long lng) {
         if (lng > Integer.MAX_VALUE) {
@@ -452,7 +462,7 @@ public abstract class LazySodium implements
                     "memory or your CPU does not support Argon2's instruction set."
             );
         }
-        return toHex(hash);
+        return messageEncoder.encode(hash);
     }
 
     @Override
@@ -463,7 +473,7 @@ public abstract class LazySodium implements
         if (!res) {
             throw new SodiumException("Password hashing failed.");
         }
-        return toHex(hash);
+        return messageEncoder.encode(hash);
     }
 
     @Override
@@ -476,12 +486,12 @@ public abstract class LazySodium implements
         }
 
         byte[] hashNoNulls = removeNulls(hash);
-        return toHex(hashNoNulls);
+        return messageEncoder.encode(hashNoNulls);
     }
 
     @Override
     public boolean cryptoPwHashStrVerify(String hash, String password) {
-        byte[] hashBytes = toBin(hash);
+        byte[] hashBytes = messageEncoder.decode(hash);
         byte[] passwordBytes = bytes(password);
 
         // If the end of the hash does not have an null byte,
@@ -567,7 +577,7 @@ public abstract class LazySodium implements
         if (!cryptoHashSha256(hashedBytes, msgBytes, msgBytes.length)) {
             throw new SodiumException("Unsuccessful sha-256 hash.");
         }
-        return toHex(hashedBytes);
+        return messageEncoder.encode(hashedBytes);
     }
 
     @Override
@@ -577,7 +587,7 @@ public abstract class LazySodium implements
         if (!cryptoHashSha512(hashedBytes, msgBytes, msgBytes.length)) {
             throw new SodiumException("Unsuccessful sha-512 hash.");
         }
-        return toHex(hashedBytes);
+        return messageEncoder.encode(hashedBytes);
     }
 
 
@@ -593,7 +603,7 @@ public abstract class LazySodium implements
         if (!cryptoHashSha256Final(state, finalHash)) {
             throw new SodiumException("Could not finalise sha-256.");
         }
-        return toHex(finalHash);
+        return messageEncoder.encode(finalHash);
     }
 
 
@@ -609,7 +619,7 @@ public abstract class LazySodium implements
         if (!cryptoHashSha512Final(state, finalHash)) {
             throw new SodiumException("Could not finalise sha-512.");
         }
-        return toHex(finalHash);
+        return messageEncoder.encode(finalHash);
     }
 
 
@@ -677,13 +687,13 @@ public abstract class LazySodium implements
             throw new SodiumException("Could not encrypt message.");
         }
 
-        return toHex(cipherTextBytes);
+        return messageEncoder.encode(cipherTextBytes);
     }
 
     @Override
     public String cryptoSecretBoxOpenEasy(String cipher, byte[] nonce, Key key) throws SodiumException {
         byte[] keyBytes = key.getAsBytes();
-        byte[] cipherBytes = toBin(cipher);
+        byte[] cipherBytes = messageEncoder.decode(cipher);
         byte[] messageBytes = new byte[cipherBytes.length - SecretBox.MACBYTES];
 
 
@@ -897,12 +907,12 @@ public abstract class LazySodium implements
         if (!res) {
             throw new SodiumException("Could not encrypt your message.");
         }
-        return toHex(cipherBytes);
+        return messageEncoder.encode(cipherBytes);
     }
 
     @Override
     public String cryptoBoxOpenEasy(String cipherText, byte[] nonce, KeyPair keyPair) throws SodiumException {
-        byte[] cipher = toBin(cipherText);
+        byte[] cipher = messageEncoder.decode(cipherText);
         byte[] message = new byte[cipher.length - Box.MACBYTES];
         boolean res =
                 cryptoBoxOpenEasy(
@@ -934,7 +944,7 @@ public abstract class LazySodium implements
         if (!res) {
             throw new SodiumException("Unable to encrypt using shared secret key.");
         }
-        return toHex(sharedKey);
+        return messageEncoder.encode(sharedKey);
     }
 
     @Override
@@ -948,7 +958,7 @@ public abstract class LazySodium implements
             throw new SodiumException("Incorrect nonce length.");
         }
 
-        byte[] sharedKey = toBin(sharedSecretKey);
+        byte[] sharedKey = messageEncoder.decode(sharedSecretKey);
 
         if (!Box.Checker.checkBeforeNmBytes(sharedKey.length)) {
             throw new SodiumException("Incorrect shared secret key length.");
@@ -962,7 +972,7 @@ public abstract class LazySodium implements
             throw new SodiumException("Could not fully complete shared secret key encryption.");
         }
 
-        return toHex(cipher);
+        return messageEncoder.encode(cipher);
     }
 
     @Override
@@ -971,12 +981,12 @@ public abstract class LazySodium implements
             throw new SodiumException("Incorrect nonce length.");
         }
 
-        byte[] sharedKey = toBin(sharedSecretKey);
+        byte[] sharedKey = messageEncoder.decode(sharedSecretKey);
         if (!Box.Checker.checkBeforeNmBytes(sharedKey.length)) {
             throw new SodiumException("Incorrect shared secret key length.");
         }
 
-        byte[] cipherBytes = toBin(cipher);
+        byte[] cipherBytes = messageEncoder.decode(cipher);
         byte[] message = new byte[cipherBytes.length - Box.MACBYTES];
 
         boolean res = cryptoBoxOpenEasyAfterNm(message, cipherBytes, cipherBytes.length, nonce, sharedKey);
@@ -993,7 +1003,7 @@ public abstract class LazySodium implements
             throw new SodiumException("Incorrect nonce length.");
         }
 
-        byte[] sharedKey = toBin(sharedSecretKey);
+        byte[] sharedKey = messageEncoder.decode(sharedSecretKey);
 
         if (!Box.Checker.checkBeforeNmBytes(sharedKey.length)) {
             throw new SodiumException("Incorrect shared secret key length.");
@@ -1019,7 +1029,7 @@ public abstract class LazySodium implements
             throw new SodiumException("Incorrect nonce length.");
         }
 
-        byte[] sharedKey = toBin(sharedSecretKey);
+        byte[] sharedKey = messageEncoder.decode(sharedSecretKey);
         if (!Box.Checker.checkBeforeNmBytes(sharedKey.length)) {
             throw new SodiumException("Incorrect shared secret key length.");
         }
@@ -1045,12 +1055,12 @@ public abstract class LazySodium implements
         if (!cryptoBoxSeal(cipher, messageBytes, messageBytes.length, keyBytes)) {
             throw new SodiumException("Could not encrypt message.");
         }
-        return toHex(cipher);
+        return messageEncoder.encode(cipher);
     }
 
     @Override
     public String cryptoBoxSealOpenEasy(String cipherText, KeyPair keyPair) throws SodiumException {
-        byte[] cipher = toBin(cipherText);
+        byte[] cipher = messageEncoder.decode(cipherText);
         byte[] message = new byte[cipher.length - Box.SEALBYTES];
 
         boolean res = cryptoBoxSealOpen(message,
@@ -1186,7 +1196,7 @@ public abstract class LazySodium implements
     @Override
     public String cryptoSign(String message, String secretKey) throws SodiumException {
         byte[] messageBytes = bytes(message);
-        byte[] secretKeyBytes = toBin(secretKey);
+        byte[] secretKeyBytes = messageEncoder.decode(secretKey);
         byte[] signedMessage = randomBytesBuf(Sign.BYTES + messageBytes.length);
         boolean res = cryptoSign(signedMessage, messageBytes, messageBytes.length, secretKeyBytes);
 
@@ -1194,7 +1204,7 @@ public abstract class LazySodium implements
             throw new SodiumException("Could not sign your message.");
         }
 
-        return toHex(signedMessage);
+        return messageEncoder.encode(signedMessage);
     }
 
     @Override
@@ -1204,7 +1214,7 @@ public abstract class LazySodium implements
 
     @Override
     public String cryptoSignOpen(String signedMessage, Key publicKey) {
-        byte[] signedMessageBytes = toBin(signedMessage);
+        byte[] signedMessageBytes = messageEncoder.decode(signedMessage);
         byte[] publicKeyBytes = publicKey.getAsBytes();
 
         byte[] messageBytes = randomBytesBuf(signedMessageBytes.length - Sign.BYTES);
@@ -1233,14 +1243,14 @@ public abstract class LazySodium implements
             throw new SodiumException("Could not create a signature for your message in detached mode.");
         }
 
-        return toHex(signatureBytes);
+        return messageEncoder.encode(signatureBytes);
     }
 
     @Override
     public boolean cryptoSignVerifyDetached(String signature, String message, Key publicKey) {
         byte[] messageBytes = bytes(message);
         byte[] pkBytes = publicKey.getAsBytes();
-        byte[] signatureBytes = toBin(signature);
+        byte[] signatureBytes = messageEncoder.decode(signature);
 
         return cryptoSignVerifyDetached(signatureBytes, messageBytes, messageBytes.length, pkBytes);
     }
@@ -1421,7 +1431,7 @@ public abstract class LazySodium implements
             throw new SodiumException("Error when encrypting a message using secret stream.");
         }
 
-        return toHex(cipher);
+        return messageEncoder.encode(cipher);
     }
 
     @Override
@@ -1442,7 +1452,7 @@ public abstract class LazySodium implements
 
     @Override
     public String cryptoSecretStreamPull(SecretStream.State state, String cipher, byte[] tag) throws SodiumException {
-        byte[] cipherBytes = toBin(cipher);
+        byte[] cipherBytes = messageEncoder.decode(cipher);
         byte[] message = new byte[cipherBytes.length - SecretStream.ABYTES];
 
         int res = getSodium().crypto_secretstream_xchacha20poly1305_pull(
@@ -1629,24 +1639,24 @@ public abstract class LazySodium implements
     @Override
     public String cryptoStreamXor(String message, byte[] nonce, Key key, Stream.Method method) {
         byte[] mBytes = bytes(message);
-        return toHex(cryptoStreamDefaultXor(mBytes, nonce, key, method));
+        return messageEncoder.encode(cryptoStreamDefaultXor(mBytes, nonce, key, method));
     }
 
     @Override
     public String cryptoStreamXorDecrypt(String cipher, byte[] nonce, Key key, Stream.Method method) {
-        return str(cryptoStreamDefaultXor(toBin(cipher), nonce, key, method));
+        return str(cryptoStreamDefaultXor(messageEncoder.decode(cipher), nonce, key, method));
     }
 
 
     @Override
     public String cryptoStreamXorIc(String message, byte[] nonce, long ic, Key key, Stream.Method method) {
         byte[] mBytes = bytes(message);
-        return toHex(cryptoStreamDefaultXorIc(mBytes, nonce, ic, key, method));
+        return messageEncoder.encode(cryptoStreamDefaultXorIc(mBytes, nonce, ic, key, method));
     }
 
     @Override
     public String cryptoStreamXorIcDecrypt(String cipher, byte[] nonce, long ic, Key key, Stream.Method method) {
-        byte[] cipherBytes = toBin(cipher);
+        byte[] cipherBytes = messageEncoder.decode(cipher);
         return str(cryptoStreamDefaultXorIc(cipherBytes, nonce, ic, key, method));
     }
 
@@ -1730,12 +1740,12 @@ public abstract class LazySodium implements
             throw new SodiumException("Could not apply auth tag to your message.");
         }
 
-        return toHex(tag);
+        return messageEncoder.encode(tag);
     }
 
     @Override
     public boolean cryptoAuthVerify(String tag, String message, Key key) {
-        byte[] tagToBytes = toBin(tag);
+        byte[] tagToBytes = messageEncoder.decode(tag);
         byte[] messageBytes = bytes(message);
         byte[] keyBytes = key.getAsBytes();
         return cryptoAuthVerify(tagToBytes, messageBytes, messageBytes.length, keyBytes);
@@ -1896,21 +1906,21 @@ public abstract class LazySodium implements
         if (type.equals(Auth.Type.SHA256)) {
             byte[] out = new byte[Auth.HMACSHA256_BYTES];
             cryptoAuthHMACSha256(out, inBytes, inByteLen, keyBytes);
-            return toHex(out);
+            return messageEncoder.encode(out);
         } else if (type.equals(Auth.Type.SHA512)) {
             byte[] out = new byte[Auth.HMACSHA512_BYTES];
             cryptoAuthHMACSha512(out, inBytes, inByteLen, keyBytes);
-            return toHex(out);
+            return messageEncoder.encode(out);
         } else {
             byte[] out = new byte[Auth.HMACSHA512256_BYTES];
             cryptoAuthHMACSha512256(out, inBytes, inByteLen, keyBytes);
-            return toHex(out);
+            return messageEncoder.encode(out);
         }
     }
 
     @Override
     public boolean cryptoAuthHMACShaVerify(Auth.Type type, String h, String in, Key key) {
-        byte[] authBytes = toBin(h);
+        byte[] authBytes = messageEncoder.decode(h);
         byte[] inBytes = bytes(in);
         byte[] keyBytes = key.getAsBytes();
         long inByteLen = inBytes.length;
@@ -1943,7 +1953,7 @@ public abstract class LazySodium implements
         if (!res) {
             throw new SodiumException("Could not finalise SHA Hash.");
         }
-        return toHex(out);
+        return messageEncoder.encode(out);
     }
 
     @Override
@@ -1966,7 +1976,7 @@ public abstract class LazySodium implements
         if (!res) {
             throw new SodiumException("Could not finalise HMAC Sha 512.");
         }
-        return toHex(out);
+        return messageEncoder.encode(out);
     }
 
     @Override
@@ -1989,7 +1999,7 @@ public abstract class LazySodium implements
         if (!res) {
             throw new SodiumException("Could not finalise HMAC Sha 512256.");
         }
-        return toHex(out);
+        return messageEncoder.encode(out);
     }
 
     //// -------------------------------------------|
@@ -2117,7 +2127,7 @@ public abstract class LazySodium implements
             throw new SodiumException("Could not hash the message.");
         }
 
-        return toHex(hash);
+        return messageEncoder.encode(hash);
     }
 
     @Override
@@ -2130,7 +2140,7 @@ public abstract class LazySodium implements
             throw new SodiumException("Could not hash the message.");
         }
 
-        return toHex(hash);
+        return messageEncoder.encode(hash);
     }
 
     @Override
@@ -2152,7 +2162,7 @@ public abstract class LazySodium implements
         if (!res) {
             throw new SodiumException("Could not finalise the hashing process.");
         }
-        return toHex(hash);
+        return messageEncoder.encode(hash);
     }
 
 
@@ -2324,7 +2334,7 @@ public abstract class LazySodium implements
                     nPub,
                     keyBytes
             );
-            return toHex(cipherBytes);
+            return messageEncoder.encode(cipherBytes);
         } else if (method.equals(AEAD.Method.CHACHA20_POLY1305_IETF)) {
             byte[] cipherBytes = new byte[messageBytes.length + AEAD.CHACHA20POLY1305_IETF_ABYTES];
             cryptoAeadChaCha20Poly1305IetfEncrypt(
@@ -2338,7 +2348,7 @@ public abstract class LazySodium implements
                     nPub,
                     keyBytes
             );
-            return toHex(cipherBytes);
+            return messageEncoder.encode(cipherBytes);
         } else if (method.equals(AEAD.Method.XCHACHA20_POLY1305_IETF)) {
             byte[] cipherBytes3 = new byte[messageBytes.length + AEAD.XCHACHA20POLY1305_IETF_ABYTES];
             cryptoAeadXChaCha20Poly1305IetfEncrypt(
@@ -2352,7 +2362,7 @@ public abstract class LazySodium implements
                     nPub,
                     keyBytes
             );
-            return toHex(cipherBytes3);
+            return messageEncoder.encode(cipherBytes3);
         } else {
             byte[] cipherBytes = new byte[messageBytes.length + AEAD.AES256GCM_ABYTES];
             cryptoAeadAES256GCMEncrypt(
@@ -2366,7 +2376,7 @@ public abstract class LazySodium implements
                     nPub,
                     keyBytes
             );
-            return toHex(cipherBytes);
+            return messageEncoder.encode(cipherBytes);
         }
     }
 
@@ -2378,7 +2388,7 @@ public abstract class LazySodium implements
 
     @Override
     public String decrypt(String cipher, String additionalData, byte[] nSec, byte[] nPub, Key k, AEAD.Method method) {
-        byte[] cipherBytes = toBin(cipher);
+        byte[] cipherBytes = messageEncoder.decode(cipher);
         byte[] additionalDataBytes = additionalData == null ? new byte[0] : bytes(additionalData);
         long additionalBytesLen = additionalData == null ? 0L : additionalDataBytes.length;
         byte[] keyBytes = k.getAsBytes();

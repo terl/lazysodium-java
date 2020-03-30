@@ -12,6 +12,7 @@ import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.Scrypt;
 import com.goterl.lazycode.lazysodium.interfaces.StreamJava;
 import com.goterl.lazycode.lazysodium.utils.Key;
+import com.goterl.lazycode.lazysodium.utils.MessageEncoder;
 
 import java.nio.charset.Charset;
 
@@ -31,6 +32,15 @@ public class LazySodiumJava extends LazySodium implements
         this.sodium = sodium;
     }
 
+    public LazySodiumJava(SodiumJava sodium, MessageEncoder messageEncoder) {
+        super(messageEncoder);
+        this.sodium = sodium;
+    }
+
+    public LazySodiumJava(SodiumJava sodium, Charset charset, MessageEncoder messageEncoder) {
+        super(charset, messageEncoder);
+        this.sodium = sodium;
+    }
 
     @Override
     public boolean cryptoPwHashScryptSalsa208Sha256(byte[] out, long outLen, byte[] password, long passwordLen, byte[] salt, long opsLimit, long memLimit) {
@@ -73,7 +83,7 @@ public class LazySodiumJava extends LazySodium implements
             throw new SodiumException("Could not Scrypt hash your password.");
         }
 
-        return toHex(hash);
+        return messageEncoder.encode(hash);
     }
 
     @Override
@@ -96,12 +106,12 @@ public class LazySodiumJava extends LazySodium implements
             throw new SodiumException("Could not string Scrypt hash your password.");
         }
 
-        return toHex(hash);
+        return messageEncoder.encode(hash);
     }
 
     @Override
     public boolean cryptoPwHashScryptSalsa208Sha256StrVerify(String hash, String password) {
-        byte[] hashBytes = toBin(hash);
+        byte[] hashBytes = messageEncoder.decode(hash);
         byte[] passwordBytes = bytes(password);
 
         // If the end of the hash does not have an null byte,
@@ -210,23 +220,23 @@ public class LazySodiumJava extends LazySodium implements
     @Override
     public String cryptoStreamXor(String message, byte[] nonce, Key key, StreamJava.Method method) {
         byte[] mBytes = bytes(message);
-        return toHex(cryptoStreamDefaultXor(mBytes, nonce, key, method));
+        return messageEncoder.encode(cryptoStreamDefaultXor(mBytes, nonce, key, method));
     }
 
     @Override
     public String cryptoStreamXorDecrypt(String cipher, byte[] nonce, Key key, StreamJava.Method method) {
-        return str(cryptoStreamDefaultXor(toBin(cipher), nonce, key, method));
+        return str(cryptoStreamDefaultXor(messageEncoder.decode(cipher), nonce, key, method));
     }
 
     @Override
     public String cryptoStreamXorIc(String message, byte[] nonce, long ic, Key key, StreamJava.Method method) {
         byte[] mBytes = bytes(message);
-        return toHex(cryptoStreamDefaultXorIc(mBytes, nonce, ic, key, method));
+        return messageEncoder.encode(cryptoStreamDefaultXorIc(mBytes, nonce, ic, key, method));
     }
 
     @Override
     public String cryptoStreamXorIcDecrypt(String cipher, byte[] nonce, long ic, Key key, StreamJava.Method method) {
-        return str(cryptoStreamDefaultXorIc(toBin(cipher), nonce, ic, key, method));
+        return str(cryptoStreamDefaultXorIc(messageEncoder.decode(cipher), nonce, ic, key, method));
     }
 
     private byte[] cryptoStreamDefaultXor(byte[] messageBytes, byte[] nonce, Key key, StreamJava.Method method) {
