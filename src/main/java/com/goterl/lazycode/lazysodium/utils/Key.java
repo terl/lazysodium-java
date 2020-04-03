@@ -11,6 +11,7 @@ package com.goterl.lazycode.lazysodium.utils;
 import com.goterl.lazycode.lazysodium.LazySodium;
 
 import java.nio.charset.Charset;
+import java.util.Base64;
 
 public class Key {
     private byte[] key;
@@ -43,6 +44,15 @@ public class Key {
      */
     public static Key fromHexString(String hexString) {
         return new Key(LazySodium.toBin(hexString));
+    }
+
+    /**
+     * Create a Key from a base64 string.
+     * @param base64String A base64 encoded string.
+     * @return A new Key.
+     */
+    public static Key fromBase64String(String base64String) {
+        return new Key(Base64.getDecoder().decode(base64String));
     }
 
     /**
