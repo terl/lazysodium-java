@@ -16,4 +16,7 @@ public class Constants {
    // 256GB
    public static final long GB_256 = 274877906944L;
 
+   public static final String LAZYSODIUM_JAVA = "LazysodiumJava";
+   public static final String LAZYSODIUM_ANDROID = "LazysodiumAndroid";
+
 }

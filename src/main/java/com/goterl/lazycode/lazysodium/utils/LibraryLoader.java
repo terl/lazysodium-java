@@ -8,10 +8,13 @@
 package com.goterl.lazycode.lazysodium.utils;
 
 import co.libly.resourceloader.SharedLibraryLoader;
+import com.goterl.lazycode.lazysodium.LazySodiumJava;
 import com.goterl.lazycode.lazysodium.Sodium;
 import com.goterl.lazycode.lazysodium.SodiumJava;
 import com.sun.jna.Native;
 import com.sun.jna.Platform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,8 @@ import java.util.List;
  */
 public final class LibraryLoader {
 
+    private final Logger logger = LoggerFactory.getLogger(Constants.LAZYSODIUM_JAVA);
+
     /**
      * Library loading mode controls which libraries are attempted to be loaded (installed in the system or bundled
      * in the Lazysodium JAR) and in which order.
@@ -41,6 +46,11 @@ public final class LibraryLoader {
          * the client library/application.
          */
         PREFER_SYSTEM,
+
+        /**
+         * Load the bundled native libraries first, then fallback to finding it in the system.
+         */
+        PREFER_BUNDLED,
 
         /**
          * Load the bundled version, ignoring the system.
@@ -80,8 +90,17 @@ public final class LibraryLoader {
                 try {
                     loadSystemLibrary(systemFallBack);
                 } catch (Throwable suppressed) {
+                    logger.debug("Tried loading from system but failed. Message: {}.", suppressed.getMessage());
                     // Attempt to load the bundled
                     loadBundledLibrary();
+                }
+                break;
+            case PREFER_BUNDLED:
+                try {
+                    loadBundledLibrary();
+                } catch (Throwable suppressed) {
+                    logger.debug("Tried loading from bundled but failed. Message: {}.", suppressed.getMessage());
+                    loadSystemLibrary(systemFallBack);
                 }
                 break;
             case BUNDLED_ONLY:
