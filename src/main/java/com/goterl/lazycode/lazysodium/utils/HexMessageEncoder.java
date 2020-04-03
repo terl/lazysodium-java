@@ -1,6 +1,7 @@
 package com.goterl.lazycode.lazysodium.utils;
 
 import com.goterl.lazycode.lazysodium.LazySodium;
+import com.goterl.lazycode.lazysodium.interfaces.MessageEncoder;
 
 public class HexMessageEncoder implements MessageEncoder {
 

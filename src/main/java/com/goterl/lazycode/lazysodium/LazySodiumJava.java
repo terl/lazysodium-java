@@ -12,7 +12,7 @@ import com.goterl.lazycode.lazysodium.exceptions.SodiumException;
 import com.goterl.lazycode.lazysodium.interfaces.Scrypt;
 import com.goterl.lazycode.lazysodium.interfaces.StreamJava;
 import com.goterl.lazycode.lazysodium.utils.Key;
-import com.goterl.lazycode.lazysodium.utils.MessageEncoder;
+import com.goterl.lazycode.lazysodium.interfaces.MessageEncoder;
 
 import java.nio.charset.Charset;
 

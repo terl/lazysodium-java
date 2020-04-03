@@ -1,5 +1,7 @@
 package com.goterl.lazycode.lazysodium.utils;
 
+import com.goterl.lazycode.lazysodium.interfaces.MessageEncoder;
+
 import java.util.Base64;
 
 public class Base64MessageEncoder implements MessageEncoder {

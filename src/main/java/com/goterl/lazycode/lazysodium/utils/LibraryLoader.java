@@ -8,7 +8,6 @@
 package com.goterl.lazycode.lazysodium.utils;
 
 import co.libly.resourceloader.SharedLibraryLoader;
-import com.goterl.lazycode.lazysodium.LazySodiumJava;
 import com.goterl.lazycode.lazysodium.Sodium;
 import com.goterl.lazycode.lazysodium.SodiumJava;
 import com.sun.jna.Native;
@@ -90,7 +89,7 @@ public final class LibraryLoader {
                 try {
                     loadSystemLibrary(systemFallBack);
                 } catch (Throwable suppressed) {
-                    logger.debug("Tried loading from system but failed. Message: {}.", suppressed.getMessage());
+                    logger.debug("Tried loading native libraries from system but failed. Message: {}.", suppressed.getMessage());
                     // Attempt to load the bundled
                     loadBundledLibrary();
                 }
@@ -99,7 +98,7 @@ public final class LibraryLoader {
                 try {
                     loadBundledLibrary();
                 } catch (Throwable suppressed) {
-                    logger.debug("Tried loading from bundled but failed. Message: {}.", suppressed.getMessage());
+                    logger.debug("Tried loading native libraries from the bundled resources but failed. Message: {}.", suppressed.getMessage());
                     loadSystemLibrary(systemFallBack);
                 }
                 break;
