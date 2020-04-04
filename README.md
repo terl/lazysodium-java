@@ -81,10 +81,11 @@ There are some example projects available [here](https://github.com/terl/lazysod
 
 | **Name** | **Short description** | 
 | :--- | :--- | 
+| [**WordPress**](https://apps.wordpress.com/mobile/) | WordPress, one of the largest website builders, has Lazysodium powering their encryption in their Android app. |
 | [**Threema \(SaltyRTC\)**](https://github.com/saltyrtc/saltyrtc-client-java) | Threema is a global end-to-end encrypted chatting app and _SaltyRTC_ is their protocol for encryption. |
 | [**OpenHAB**](https://github.com/openhab/openhab-osgiify) | [OpenHAB](https://www.openhab.org/) allows you to automate and superpower your home. |
 | [**PayPay**](https://github.com/paypayue/AndroidPaymentSDK) | CardPaymentSDK is a card payments library to make payments through several payment methods painless. It uses [PayPay](https://paypay.pt/paypay/) as an endpoint to establish a payment security channel. | 
-| [**RDACAA**](https://gitlab.com/MSP_EC/rdacaa/tree/88-cierre-del-mes-atenciones-por-usuario)| Used by the government of Ecuador's Ministry of Health to encrypt and sign a list of ambulatory care and consultations. |
+| [**UXBOX**](https://github.com/uxbox/uxbox) | UXBox, the open-source solution for design and prototyping |
 | [**E3DB**](https://tozny.com/e3db/) | An encrypted NoSQL database designed from the ground-up for user privacy and security. | 
 | [**ADAMANT**](https://adamant.im/) | The most private messenger possible. Your device does not store any info. It directly interacts with the blockchain, where every byte is fully-encrypted. | 
 | [**Kepler**](https://github.com/Quackster/Kepler) | A small TCP server written in Java powered by Netty, an asynchronous networking library. |
