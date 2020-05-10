@@ -82,6 +82,7 @@ There are some example projects available [here](https://github.com/terl/lazysod
 | **Name** | **Short description** | 
 | :--- | :--- | 
 | [**WordPress**](https://apps.wordpress.com/mobile/) | WordPress, one of the largest website builders, has Lazysodium powering their encryption in their Android app. |
+| [**Dailymotion Kinta**](https://github.com/dailymotion/kinta) | Dailymotion Kinta, end-to-end automation for mobiles |
 | [**Threema \(SaltyRTC\)**](https://github.com/saltyrtc/saltyrtc-client-java) | Threema is a global end-to-end encrypted chatting app and _SaltyRTC_ is their protocol for encryption. |
 | [**OpenHAB**](https://github.com/openhab/openhab-osgiify) | [OpenHAB](https://www.openhab.org/) allows you to automate and superpower your home. |
 | [**PayPay**](https://github.com/paypayue/AndroidPaymentSDK) | CardPaymentSDK is a card payments library to make payments through several payment methods painless. It uses [PayPay](https://paypay.pt/paypay/) as an endpoint to establish a payment security channel. | 
