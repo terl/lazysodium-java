@@ -16,7 +16,11 @@ import com.goterl.lazycode.lazysodium.utils.Key;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+
 import static junit.framework.TestCase.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
 
 
 public class KeyDerivationTest extends BaseTest {
@@ -57,6 +61,78 @@ public class KeyDerivationTest extends BaseTest {
         );
 
         assertEquals(skStr, skStr2.getAsHexString());
+    }
+
+    @Test
+    public void doesRawGen() {
+        byte[] masterKey = new byte[KeyDerivation.MASTER_KEY_BYTES];
+        keyDerivation.cryptoKdfKeygen(masterKey);
+    }
+
+    @Test
+    public void doesRawGenSubEachTime() {
+        byte[] masterKey = new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31};
+        byte[] context = new byte[]{0, 1, 2, 3, 4, 5, 6, 7};
+        byte[] out = new byte[KeyDerivation.BYTES_MIN];
+        int result = keyDerivation.cryptoKdfDeriveFromKey(out, KeyDerivation.BYTES_MIN, 1L, context, masterKey);
+        assertEquals(0, result);
+        for (byte b : out) {
+            System.out.print(b);
+            System.out.print(", ");
+        }
+        System.out.println();
+
+        byte[] expected = new byte[]{61, -17, -126, -25, -14, 29, 2, -83, 89, -120, 37, -35, 102, -11, -77, -59};
+
+        assertArrayEquals(expected, out);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void doesntGenerateShortKeys() {
+        byte[] masterKey = new byte[KeyDerivation.MASTER_KEY_BYTES - 5];
+        keyDerivation.cryptoKdfKeygen(masterKey);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void doesntGenerateLongKeys() {
+        byte[] masterKey = new byte[KeyDerivation.MASTER_KEY_BYTES + 5];
+        keyDerivation.cryptoKdfKeygen(masterKey);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void doesntAllowShortKeys() throws NoSuchAlgorithmException {
+        byte[] masterKey = new byte[KeyDerivation.MASTER_KEY_BYTES - 5];
+        SecureRandom.getInstanceStrong().nextBytes(masterKey);
+        byte[] context = new byte[]{0, 1, 2, 3, 4, 5, 6, 7};
+        byte[] out = new byte[KeyDerivation.BYTES_MAX];
+        keyDerivation.cryptoKdfDeriveFromKey(out, KeyDerivation.BYTES_MAX, 1L, context, masterKey);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void doesntAllowLongKeys() throws NoSuchAlgorithmException {
+        byte[] masterKey = new byte[KeyDerivation.MASTER_KEY_BYTES + 5];
+        SecureRandom.getInstanceStrong().nextBytes(masterKey);
+        byte[] context = new byte[]{0, 1, 2, 3, 4, 5, 6, 7};
+        byte[] out = new byte[KeyDerivation.BYTES_MAX];
+        keyDerivation.cryptoKdfDeriveFromKey(out, KeyDerivation.BYTES_MAX, 1L, context, masterKey);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void doesntAllowShortContext() {
+        byte[] masterKey = new byte[KeyDerivation.MASTER_KEY_BYTES];
+        keyDerivation.cryptoKdfKeygen(masterKey);
+        byte[] context = new byte[]{0, 1, 2, 3, 4, 5};
+        byte[] out = new byte[KeyDerivation.BYTES_MAX];
+        keyDerivation.cryptoKdfDeriveFromKey(out, KeyDerivation.BYTES_MAX, 1L, context, masterKey);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void doesntAllowLongContext() {
+        byte[] masterKey = new byte[KeyDerivation.MASTER_KEY_BYTES];
+        keyDerivation.cryptoKdfKeygen(masterKey);
+        byte[] context = new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8};
+        byte[] out = new byte[KeyDerivation.BYTES_MAX];
+        keyDerivation.cryptoKdfDeriveFromKey(out, KeyDerivation.BYTES_MAX, 1L, context, masterKey);
     }
 
 }

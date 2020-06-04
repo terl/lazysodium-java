@@ -39,7 +39,7 @@ public interface KeyDerivation {
          *                  from {@link KeyDerivation#BYTES_MIN} to {@link KeyDerivation#BYTES_MAX}.
          * @param subKeyId ID of subkey.
          * @param context The context of the subkey. Must be {@link KeyDerivation#CONTEXT_BYTES}.
-         * @param masterKey The generated master key from {@link #cryptoKdfKeygen(byte[])}.
+         * @param masterKey The generated master key from {@link #cryptoKdfKeygen(byte[])}. Must be {@link KeyDerivation#MASTER_KEY_BYTES}.
          * @return 0 on success, -1 otherwise.
          */
         int cryptoKdfDeriveFromKey(byte[] subKey, int subKeyLen, long subKeyId, byte[] context, byte[] masterKey);

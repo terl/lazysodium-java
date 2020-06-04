@@ -72,7 +72,6 @@ public abstract class LazySodium implements
     }
 
 
-
     //// -------------------------------------------|
     //// HELPERS
     //// -------------------------------------------|
@@ -102,6 +101,7 @@ public abstract class LazySodium implements
 
     /**
      * Bytes to hexadecimal. Equivalent to {@link #sodiumBin2Hex(byte[])} but static.
+     *
      * @param bin Byte array.
      * @return Hexadecimal string.
      */
@@ -112,6 +112,7 @@ public abstract class LazySodium implements
 
     /**
      * Hexadecimal string to bytes. Equivalent to {@link #sodiumHex2Bin(String)}} but static.
+     *
      * @param hex Hexadecimal string to convert to bytes.
      * @return Byte array.
      */
@@ -125,7 +126,7 @@ public abstract class LazySodium implements
     // The following is from https://stackoverflow.com/a/9855338/3526705
     private static String bytesToHex(byte[] bytes) {
         char[] hexChars = new char[bytes.length * 2];
-        for ( int j = 0; j < bytes.length; j++ ) {
+        for (int j = 0; j < bytes.length; j++) {
             int v = bytes[j] & 0xFF;
             hexChars[j * 2] = hexArray[v >>> 4];
             hexChars[j * 2 + 1] = hexArray[v & 0x0F];
@@ -139,11 +140,10 @@ public abstract class LazySodium implements
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
             data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                    + Character.digit(s.charAt(i+1), 16));
+                    + Character.digit(s.charAt(i + 1), 16));
         }
         return data;
     }
-
 
 
     //// -------------------------------------------|
@@ -180,7 +180,6 @@ public abstract class LazySodium implements
     }
 
 
-
     //// -------------------------------------------|
     //// PADDING
     //// -------------------------------------------|
@@ -194,7 +193,6 @@ public abstract class LazySodium implements
     public boolean sodiumUnpad(IntByReference unPaddedBuffLen, char[] buf, int paddedBufLen, int blockSize) {
         return successful(getSodium().sodium_unpad(unPaddedBuffLen.getPointer(), buf, paddedBufLen, blockSize));
     }
-
 
 
     //// -------------------------------------------|
@@ -247,20 +245,28 @@ public abstract class LazySodium implements
     }
 
 
-
     //// -------------------------------------------|
     //// KDF KEYGEN
     //// -------------------------------------------|
 
     @Override
     public void cryptoKdfKeygen(byte[] masterKey) {
+        if (masterKey.length != KeyDerivation.MASTER_KEY_BYTES) {
+            throw new IllegalArgumentException("Master key length is wrong: " + masterKey.length);
+        }
         getSodium().crypto_kdf_keygen(masterKey);
     }
 
     @Override
     public int cryptoKdfDeriveFromKey(byte[] subKey, int subKeyLen, long subKeyId, byte[] context, byte[] masterKey) {
         if (subKeyLen < 0 || subKeyLen > subKey.length) {
-            throw new IllegalArgumentException("subKeyLen out of bounds: " + subKeyLen);
+            throw new IllegalArgumentException("Sub Key Length is out of bounds: " + subKeyLen);
+        }
+        if (masterKey.length != KeyDerivation.MASTER_KEY_BYTES) {
+            throw new IllegalArgumentException("Master key length is wrong: " + masterKey.length);
+        }
+        if (context.length != KeyDerivation.CONTEXT_BYTES) {
+            throw new IllegalArgumentException("Context length is wrong: " + context.length);
         }
         return getSodium().crypto_kdf_derive_from_key(subKey, subKeyLen, subKeyId, context, masterKey);
     }
@@ -301,10 +307,6 @@ public abstract class LazySodium implements
         }
         return Key.fromBytes(subKey);
     }
-
-
-
-
 
 
     //// -------------------------------------------|
@@ -459,7 +461,7 @@ public abstract class LazySodium implements
         if (res != 0) {
             throw new SodiumException(
                     "Could not hash your string. This may be due to insufficient " +
-                    "memory or your CPU does not support Argon2's instruction set."
+                            "memory or your CPU does not support Argon2's instruction set."
             );
         }
         return messageEncoder.encode(hash);
@@ -507,7 +509,6 @@ public abstract class LazySodium implements
 
         return cryptoPwHashStrVerify(hashBytes, passwordBytes, passwordBytes.length);
     }
-
 
 
     //// -------------------------------------------|
@@ -623,9 +624,6 @@ public abstract class LazySodium implements
     }
 
 
-
-
-
     //// -------------------------------------------|
     //// SECRET BOX
     //// -------------------------------------------|
@@ -734,8 +732,6 @@ public abstract class LazySodium implements
     }
 
 
-
-
     //// -------------------------------------------|
     //// DIFFIE HELLMAN
     //// -------------------------------------------|
@@ -763,7 +759,6 @@ public abstract class LazySodium implements
         cryptoScalarMult(sharedKey, secretKey.getAsBytes(), publicKey.getAsBytes());
         return Key.fromBytes(sharedKey);
     }
-
 
 
     // -------------------------------------------|
@@ -889,7 +884,6 @@ public abstract class LazySodium implements
         }
         return new KeyPair(Key.fromBytes(publicKey), Key.fromBytes(secretKey));
     }
-
 
 
     @Override
@@ -1064,10 +1058,10 @@ public abstract class LazySodium implements
         byte[] message = new byte[cipher.length - Box.SEALBYTES];
 
         boolean res = cryptoBoxSealOpen(message,
-                                        cipher,
-                                        cipher.length,
-                                        keyPair.getPublicKey().getAsBytes(),
-                                        keyPair.getSecretKey().getAsBytes());
+                cipher,
+                cipher.length,
+                keyPair.getPublicKey().getAsBytes(),
+                keyPair.getSecretKey().getAsBytes());
         if (!res) {
             throw new SodiumException("Could not decrypt your message.");
         }
@@ -1266,7 +1260,7 @@ public abstract class LazySodium implements
         boolean pkSuccess = convertPublicKeyEd25519ToCurve25519(curvePkBytes, edPkBytes);
         boolean skSuccess = convertSecretKeyEd25519ToCurve25519(curveSkBytes, edSkBytes);
 
-        if (!pkSuccess || !skSuccess){
+        if (!pkSuccess || !skSuccess) {
             throw new SodiumException("Could not convert this key pair.");
         }
 
@@ -1694,8 +1688,6 @@ public abstract class LazySodium implements
     }
 
 
-
-
     //// -------------------------------------------|
     //// CRYPTO AUTH
     //// -------------------------------------------|
@@ -1880,7 +1872,6 @@ public abstract class LazySodium implements
     }
 
 
-
     @Override
     public Key cryptoAuthHMACShaKeygen(Auth.Type type) {
         if (type.equals(Auth.Type.SHA256)) {
@@ -2038,8 +2029,6 @@ public abstract class LazySodium implements
     }
 
 
-
-
     //// -------------------------------------------|
     //// GENERIC HASH
     //// -------------------------------------------|
@@ -2144,7 +2133,7 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public boolean cryptoGenericHashInit(byte[] state, Key key, int outLen)  {
+    public boolean cryptoGenericHashInit(byte[] state, Key key, int outLen) {
         byte[] keyBytes = key.getAsBytes();
         return getSodium().crypto_generichash_init(state, keyBytes, keyBytes.length, outLen) == 0;
     }
@@ -2164,8 +2153,6 @@ public abstract class LazySodium implements
         }
         return messageEncoder.encode(hash);
     }
-
-
 
 
     //// -------------------------------------------|
@@ -2661,7 +2648,6 @@ public abstract class LazySodium implements
     public abstract Sodium getSodium();
 
 
-
     // --
     //// -------------------------------------------|
     //// MAIN
@@ -2670,7 +2656,6 @@ public abstract class LazySodium implements
     public static void main(String[] args) throws SodiumException {
 
     }
-
 
 
 }
