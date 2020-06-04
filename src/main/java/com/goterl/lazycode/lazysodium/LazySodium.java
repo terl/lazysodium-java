@@ -259,8 +259,11 @@ public abstract class LazySodium implements
 
     @Override
     public int cryptoKdfDeriveFromKey(byte[] subKey, int subKeyLen, long subKeyId, byte[] context, byte[] masterKey) {
-        if (subKeyLen < 0 || subKeyLen > subKey.length) {
+        if (subKeyLen < KeyDerivation.BYTES_MIN || KeyDerivation.BYTES_MAX < subKeyLen) {
             throw new IllegalArgumentException("Sub Key Length is out of bounds: " + subKeyLen);
+        }
+        if (subKey.length < subKeyLen) {
+            throw new IllegalArgumentException("Sub Key array is less than specified size");
         }
         if (masterKey.length != KeyDerivation.MASTER_KEY_BYTES) {
             throw new IllegalArgumentException("Master key length is wrong: " + masterKey.length);
