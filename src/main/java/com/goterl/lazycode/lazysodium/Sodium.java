@@ -729,7 +729,7 @@ public class Sodium {
             long inLen,
             byte[] masterKey,
             int masterKeyLen,
-            long subKeyId,
+            byte[] subKeyId,
             byte[] context
     );
 
