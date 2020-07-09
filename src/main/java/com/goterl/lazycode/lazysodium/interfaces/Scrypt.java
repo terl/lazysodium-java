@@ -55,7 +55,7 @@ public interface Scrypt {
 
             if (!isBetween(hashLen, SCRYPTSALSA208SHA256_BYTES_MIN, SCRYPTSALSA208SHA256_BYTES_MAX)) {
                 throw new SodiumException(
-                        "Please supply a hashSize greater " +
+                        "Please supply a hashLen greater " +
                         "than SCRYPTSALSA208SHA256_PASSWD_MIN " +
                         "but less than SCRYPTSALSA208SHA256_PASSWD_MAX");
             }
