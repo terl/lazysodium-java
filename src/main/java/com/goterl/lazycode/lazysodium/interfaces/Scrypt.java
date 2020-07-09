@@ -15,7 +15,7 @@ import com.goterl.lazycode.lazysodium.utils.Constants;
 public interface Scrypt {
 
     long SCRYPTSALSA208SHA256_BYTES_MIN = 16L,
-            SCRYPTSALSA208SHA256_BYTES_MAX = 16L,
+            SCRYPTSALSA208SHA256_BYTES_MAX = Constants.SIZE_MAX,
             SCRYPTSALSA208SHA256_PASSWD_MIN = 0L,
             SCRYPTSALSA208SHA256_PASSWD_MAX = Constants.SIZE_MAX,
             SCRYPTSALSA208SHA256_SALT_BYTES = 32L,
@@ -45,11 +45,19 @@ public interface Scrypt {
 
         public static boolean checkAllScrypt(long passwordBytesLen,
                                              long saltBytesLen,
+                                             long hashLen,
                                              long opsLimit,
                                              long memLimit)
                 throws SodiumException {
             if (!isBetween(passwordBytesLen, SCRYPTSALSA208SHA256_PASSWD_MIN, SCRYPTSALSA208SHA256_PASSWD_MAX)) {
                 throw new SodiumException("The password provided is not the correct size.");
+            }
+
+            if (!isBetween(hashLen, SCRYPTSALSA208SHA256_BYTES_MIN, SCRYPTSALSA208SHA256_BYTES_MAX)) {
+                throw new SodiumException(
+                        "Please supply a hashSize greater " +
+                        "than SCRYPTSALSA208SHA256_PASSWD_MIN " +
+                        "but less than SCRYPTSALSA208SHA256_PASSWD_MAX");
             }
 
             if (!correctLen(saltBytesLen, SCRYPTSALSA208SHA256_SALT_BYTES)) {
@@ -125,6 +133,8 @@ public interface Scrypt {
         /**
          * Hash a password using a salt.
          * @param password The password string to hash.
+         * @param hashLen The length of the resulting hash. Between {@link #SCRYPTSALSA208SHA256_BYTES_MIN}
+         *                and {@link #SCRYPTSALSA208SHA256_BYTES_MAX}.
          * @param salt The salt to use.
          * @param opsLimit The number of cycles to perform whilst hashing.
          *                 Between {@link #SCRYPTSALSA208SHA256_OPSLIMIT_MIN} and {@link #SCRYPTSALSA208SHA256_OPSLIMIT_MAX}.
@@ -135,6 +145,7 @@ public interface Scrypt {
          */
         String cryptoPwHashScryptSalsa208Sha256(
                 String password,
+                long hashLen,
                 byte[] salt,
                 long opsLimit,
                 long memLimit

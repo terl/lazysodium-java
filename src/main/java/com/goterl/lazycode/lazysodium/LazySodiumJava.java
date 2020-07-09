@@ -72,11 +72,11 @@ public class LazySodiumJava extends LazySodium implements
 
 
     @Override
-    public String cryptoPwHashScryptSalsa208Sha256(String password, byte[] salt, long opsLimit, long memLimit) throws SodiumException {
+    public String cryptoPwHashScryptSalsa208Sha256(String password, long hashLen, byte[] salt, long opsLimit, long memLimit) throws SodiumException {
         byte[] passwordBytes = bytes(password);
-        Scrypt.Checker.checkAllScrypt(passwordBytes.length, salt.length, opsLimit, memLimit);
+        Scrypt.Checker.checkAllScrypt(passwordBytes.length, salt.length, hashLen, opsLimit, memLimit);
 
-        byte[] hash = new byte[longToInt(Scrypt.SCRYPTSALSA208SHA256_BYTES_MAX)];
+        byte[] hash = new byte[longToInt(hashLen)];
         boolean res = cryptoPwHashScryptSalsa208Sha256(hash, hash.length, passwordBytes, passwordBytes.length, salt, opsLimit, memLimit);
 
         if (!res) {

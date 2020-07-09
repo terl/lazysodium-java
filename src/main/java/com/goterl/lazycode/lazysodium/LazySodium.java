@@ -61,14 +61,10 @@ public abstract class LazySodium implements
     }
 
     public static Integer longToInt(long lng) {
-        if (lng > Integer.MAX_VALUE) {
-            return Integer.MAX_VALUE - 200;
-        }
         if (lng < 0) {
             return 0;
         }
-
-        return (int) lng;
+        return Math.toIntExact(lng);
     }
 
 
