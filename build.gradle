@@ -20,7 +20,7 @@ plugins {
 ext {
     artifactId = "lazysodium-java"
     groupId = "com.goterl.lazycode"
-    version = '4.2.6'
+    version = '4.3.0'
     description = "Lazysodium (Java) makes it effortless for Java " +
             "developers to get started with Libsodium's cryptography."
 }
