@@ -22,8 +22,9 @@ steps:
 - task: Gradle@2
   inputs:
     workingDirectory: ''
+    options: "--stacktrace"
     gradleWrapperFile: 'gradlew'
-    gradleOptions: '-Xmx3072m --stacktrace'
+    gradleOptions: '-Xmx3072m'
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
