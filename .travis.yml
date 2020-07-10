@@ -1,0 +1,10 @@
+language: java
+
+os:
+  - linux
+  - osx
+  - windows
+
+script:
+  - gradle clean
+  - gradle test
