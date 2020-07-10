@@ -6,5 +6,5 @@ os:
   - windows
 
 script:
-  - gradle clean
-  - gradle test
+  - ./gradlew clean
+  - ./gradlew test
