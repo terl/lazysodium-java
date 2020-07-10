@@ -22,7 +22,7 @@ steps:
 - task: Gradle@2
   inputs:
     workingDirectory: ''
-    options: "--stacktrace"
+    options: "--stacktrace --in"
     gradleWrapperFile: 'gradlew'
     gradleOptions: '-Xmx3072m'
     javaHomeOption: 'JDKVersion'
