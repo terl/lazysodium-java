@@ -46,8 +46,8 @@ public class Sodium {
                                      byte[] hex,
                                      int hexLen,
                                      byte[] ignore,
-                                     int binLen,
-                                     byte hexEnd);
+                                     Pointer binLen,
+                                     Pointer hexEnd);
 
     public native String sodium_bin2base64(byte[] b64,
                                           int b64MaxLen,
@@ -60,8 +60,8 @@ public class Sodium {
                                         byte[] b64,
                                         int b64Len,
                                         byte[] ignore,
-                                        int binLen,
-                                        byte b64End,
+                                        Pointer binLen,
+                                        Pointer b64End,
                                         int variant);
 
 
