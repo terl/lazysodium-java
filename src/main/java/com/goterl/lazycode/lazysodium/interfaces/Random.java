@@ -13,10 +13,10 @@ package com.goterl.lazycode.lazysodium.interfaces;
 public interface Random {
 
     /**
-     * Return a random byte 0 and 0xffffffff included.
+     * Return a unsigned int byte 0 and 0xffffffff included.
      * @return A random byte.
      */
-    byte randomBytesRandom();
+    long randomBytesRandom();
 
     /**
      * Returns an unpredictable value between 0 and upperBound (excluded).
@@ -24,9 +24,9 @@ public interface Random {
      * of the possible output values even when upper_bound is not a power of 2. Note
      * that an upper_bound less than 2 leaves only a single element to be chosen, namely 0.
      * @param upperBound
-     * @return A uniformally random bytes.
+     * @return A uniformly random unsigned int.
      */
-    byte randomBytesUniform(int upperBound);
+    long randomBytesUniform(int upperBound);
 
     /**
      * Get a random number of bytes.

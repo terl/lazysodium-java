@@ -100,9 +100,9 @@ public class Sodium {
     //// RANDOM
     //// -------------------------------------------|
 
-    public native byte randombytes_random();
+    public native long randombytes_random();
 
-    public native byte randombytes_uniform(int upperBound);
+    public native long randombytes_uniform(int upperBound);
 
     public native void randombytes_buf(byte[] buffer, int size);
 
