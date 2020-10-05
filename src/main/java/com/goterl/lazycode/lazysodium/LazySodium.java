@@ -147,7 +147,7 @@ public abstract class LazySodium implements
     //// -------------------------------------------|
 
     @Override
-    public byte randomBytesRandom() {
+    public long randomBytesRandom() {
         return getSodium().randombytes_random();
     }
 
@@ -164,7 +164,7 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public byte randomBytesUniform(int upperBound) {
+    public long randomBytesUniform(int upperBound) {
         return getSodium().randombytes_uniform(upperBound);
     }
 
