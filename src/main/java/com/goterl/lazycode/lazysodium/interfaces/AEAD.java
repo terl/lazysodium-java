@@ -9,6 +9,7 @@
 package com.goterl.lazycode.lazysodium.interfaces;
 
 
+import com.goterl.lazycode.lazysodium.exceptions.AEADAuthenticationException;
 import com.goterl.lazycode.lazysodium.utils.DetachedDecrypt;
 import com.goterl.lazycode.lazysodium.utils.DetachedEncrypt;
 import com.goterl.lazycode.lazysodium.utils.Key;
@@ -313,7 +314,7 @@ public interface AEAD {
                 byte[] nPub,
                 Key k,
                 AEAD.Method method
-        );
+        ) throws AEADAuthenticationException;
 
         String decrypt(
                 String cipher,
@@ -322,7 +323,7 @@ public interface AEAD {
                 byte[] nPub,
                 Key k,
                 Method method
-        );
+        ) throws AEADAuthenticationException;
 
         DetachedEncrypt encryptDetached(
                 String m,
@@ -340,7 +341,7 @@ public interface AEAD {
                 byte[] nPub,
                 Key k,
                 Method method
-        );
+        ) throws AEADAuthenticationException;
 
 
     }
