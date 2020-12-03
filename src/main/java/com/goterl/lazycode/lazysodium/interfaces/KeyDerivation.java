@@ -77,8 +77,8 @@ public interface KeyDerivation {
             return masterKeyLen == KeyDerivation.MASTER_KEY_BYTES;
         }
 
-        public static boolean subKeyIsCorrect(int lengthOfSubkey) {
-            return isBetween(lengthOfSubkey, BYTES_MIN, BYTES_MAX);
+        public static void checkSubKeyLength(int subkeyLen) {
+            checkBetween("subkey length", subkeyLen, BYTES_MIN, BYTES_MAX);
         }
 
         public static boolean contextIsCorrect(int length) {

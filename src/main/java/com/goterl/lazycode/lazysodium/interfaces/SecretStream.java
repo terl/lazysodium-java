@@ -44,8 +44,26 @@ public interface SecretStream {
 
     class Checker extends BaseChecker {
 
-        public static boolean headerCheck(int headerSize) {
-            return headerSize == HEADERBYTES;
+        public static void checkHeader(byte[] header) {
+            checkEqual("secret stream header length", HEADERBYTES, header.length);
+        }
+
+        public static void checkKey(byte[] key) {
+            checkEqual("secret stream key length", KEYBYTES, key.length);
+        }
+
+        public static void checkPush(byte[] message, long messageLen, byte[] cipher) {
+            checkArrayLength("message bytes", message, messageLen);
+            if (cipher.length < messageLen + ABYTES) {
+                throw new IllegalArgumentException("Cipher array too small for messageLen + header");
+            }
+        }
+
+        public static void checkPull(byte[] cipher, long cipherLen, byte[] message) {
+            checkArrayLength("message bytes", cipher, cipherLen);
+            if (message.length < cipherLen - ABYTES) {
+                throw new IllegalArgumentException("Message array too small for cipherLen - header");
+            }
         }
 
     }

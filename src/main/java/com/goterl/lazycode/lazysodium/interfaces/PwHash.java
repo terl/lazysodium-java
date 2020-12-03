@@ -70,37 +70,20 @@ public interface PwHash {
 
 
     class Checker extends BaseChecker {
-        public static boolean saltIsCorrect(long saltLen) {
-            return correctLen(saltLen, PwHash.SALTBYTES);
-        }
-        public static boolean passwordIsCorrect(long len) {
-            return isBetween(len, PwHash.PASSWD_MIN, PwHash.PASSWD_MAX);
-        }
-        public static boolean opsLimitIsCorrect(long ops) {
-            return isBetween(ops, PwHash.OPSLIMIT_MIN, PwHash.OPSLIMIT_MAX);
-        }
-        public static boolean memLimitIsCorrect(NativeLong len) {
-            return isBetween(len, PwHash.MEMLIMIT_MIN, PwHash.MEMLIMIT_MAX);
+        public static void checkPassword(byte[] password) {
+            checkBetween("password length", password.length, PwHash.PASSWD_MIN, PwHash.PASSWD_MAX);
         }
 
-        public static boolean checkAll(long passwordBytesLen,
-                                       long saltBytesLen,
-                                       long opsLimit,
-                                       NativeLong memLimit)
-                throws SodiumException {
-            if (!PwHash.Checker.saltIsCorrect(saltBytesLen)) {
-                throw new SodiumException("The salt provided is not the correct length.");
-            }
-            if (!PwHash.Checker.passwordIsCorrect(passwordBytesLen)) {
-                throw new SodiumException("The password provided is not the correct length.");
-            }
-            if (!PwHash.Checker.opsLimitIsCorrect(opsLimit)) {
-                throw new SodiumException("The opsLimit provided is not the correct value.");
-            }
-            if (!PwHash.Checker.memLimitIsCorrect(memLimit)) {
-                throw new SodiumException("The memLimit provided is not the correct value.");
-            }
-            return true;
+        public static void checkSalt(byte[] salt) {
+            checkEqual("salt length", salt.length, SALTBYTES);
+        }
+
+        public static void checkOpsLimit(long opsLimit) {
+            checkBetween("opsLimit", opsLimit, PwHash.OPSLIMIT_MIN, PwHash.OPSLIMIT_MAX);
+        }
+
+        public static void checkMemLimit(NativeLong memLimit) {
+            checkBetween("memLimit", memLimit, PwHash.MEMLIMIT_MIN, PwHash.MEMLIMIT_MAX);
         }
     }
 
