@@ -2382,7 +2382,7 @@ public abstract class LazySodium implements
 
         if (method.equals(AEAD.Method.CHACHA20_POLY1305)) {
             byte[] messageBytes = new byte[cipherBytes.length - AEAD.CHACHA20POLY1305_ABYTES];
-            if(!cryptoAeadChaCha20Poly1305Decrypt(
+            if (!cryptoAeadChaCha20Poly1305Decrypt(
                     messageBytes,
                     null,
                     nSec,
