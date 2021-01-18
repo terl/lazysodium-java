@@ -2286,7 +2286,7 @@ public abstract class LazySodium implements
                 return Key.fromBytes(key2);
             case XCHACHA20_POLY1305_IETF:
                 byte[] key3 = randomBytesBuf(AEAD.XCHACHA20POLY1305_IETF_KEYBYTES);
-                cryptoAeadChaCha20Poly1305IetfKeygen(key3);
+                cryptoAeadXChaCha20Poly1305IetfKeygen(key3);
                 return Key.fromBytes(key3);
             case AES256GCM:
                 byte[] key4 = randomBytesBuf(AEAD.AES256GCM_KEYBYTES);
