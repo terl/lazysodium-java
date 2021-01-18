@@ -8,20 +8,16 @@
 
 package com.goterl.lazycode.lazysodium;
 
-import com.goterl.lazycode.lazysodium.interfaces.MessageEncoder;
-import com.goterl.lazycode.lazysodium.utils.HexMessageEncoder;
 import com.goterl.lazycode.lazysodium.utils.LibraryLoader;
 import org.junit.Before;
 
 public class BaseTest {
 
     public static LazySodiumJava lazySodium;
-    public static MessageEncoder encoder;
 
     @Before
     public void doBeforeEverything() {
         lazySodium = new LazySodiumJava(new SodiumJava(LibraryLoader.Mode.BUNDLED_ONLY));
-        encoder = new HexMessageEncoder();
     }
 
 }
