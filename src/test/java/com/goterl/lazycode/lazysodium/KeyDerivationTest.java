@@ -16,7 +16,6 @@ import com.goterl.lazycode.lazysodium.utils.Key;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 
 import static junit.framework.TestCase.assertEquals;
@@ -94,9 +93,12 @@ public class KeyDerivationTest extends BaseTest {
         keyDerivation.cryptoKdfKeygen(masterKey);
     }
 
-    private byte[] generateKeyOfAnyLength(int length) throws NoSuchAlgorithmException {
+    private byte[] generateKeyOfAnyLength(int length) {
         byte[] masterKey = new byte[length];
-        SecureRandom.getInstanceStrong().nextBytes(masterKey);
+        // Using default instance for expedience. While some real-world
+        // use-cases might need blocking random, the default provider (which
+        // is usually non-blocking) is sufficient for tests.
+        new SecureRandom().nextBytes(masterKey);
         return masterKey;
     }
 
@@ -105,14 +107,14 @@ public class KeyDerivationTest extends BaseTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void doesntAllowShortKeys() throws NoSuchAlgorithmException {
+    public void doesntAllowShortKeys() {
         byte[] masterKey = generateKeyOfAnyLength(KeyDerivation.MASTER_KEY_BYTES - 5);
         byte[] out = makeValidOut();
         keyDerivation.cryptoKdfDeriveFromKey(out, out.length, 1L, VALID_CONTEXT, masterKey);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void doesntAllowLongKeys() throws NoSuchAlgorithmException {
+    public void doesntAllowLongKeys() {
         byte[] masterKey = generateKeyOfAnyLength(KeyDerivation.MASTER_KEY_BYTES + 5);
         byte[] out = makeValidOut();
         keyDerivation.cryptoKdfDeriveFromKey(out, out.length, 1L, VALID_CONTEXT, masterKey);
