@@ -16,6 +16,7 @@ import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.ptr.PointerByReference;
 
+import javax.crypto.AEADBadTagException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -2368,12 +2369,12 @@ public abstract class LazySodium implements
 
 
     @Override
-    public String decrypt(String cipher, String additionalData, byte[] nPub, Key k, AEAD.Method method) {
+    public String decrypt(String cipher, String additionalData, byte[] nPub, Key k, AEAD.Method method) throws AEADBadTagException {
         return decrypt(cipher, additionalData, null, nPub, k, method);
     }
 
     @Override
-    public String decrypt(String cipher, String additionalData, byte[] nSec, byte[] nPub, Key k, AEAD.Method method) {
+    public String decrypt(String cipher, String additionalData, byte[] nSec, byte[] nPub, Key k, AEAD.Method method) throws AEADBadTagException {
         byte[] cipherBytes = messageEncoder.decode(cipher);
         byte[] additionalDataBytes = additionalData == null ? new byte[0] : bytes(additionalData);
         long additionalBytesLen = additionalData == null ? 0L : additionalDataBytes.length;
@@ -2381,7 +2382,7 @@ public abstract class LazySodium implements
 
         if (method.equals(AEAD.Method.CHACHA20_POLY1305)) {
             byte[] messageBytes = new byte[cipherBytes.length - AEAD.CHACHA20POLY1305_ABYTES];
-            cryptoAeadChaCha20Poly1305Decrypt(
+            if (!cryptoAeadChaCha20Poly1305Decrypt(
                     messageBytes,
                     null,
                     nSec,
@@ -2391,11 +2392,13 @@ public abstract class LazySodium implements
                     additionalBytesLen,
                     nPub,
                     keyBytes
-            );
+            )) {
+                throw new AEADBadTagException();
+            }
             return str(messageBytes);
         } else if (method.equals(AEAD.Method.CHACHA20_POLY1305_IETF)) {
             byte[] messageBytes = new byte[cipherBytes.length - AEAD.CHACHA20POLY1305_IETF_ABYTES];
-            cryptoAeadChaCha20Poly1305IetfDecrypt(
+            if (!cryptoAeadChaCha20Poly1305IetfDecrypt(
                     messageBytes,
                     null,
                     nSec,
@@ -2405,11 +2408,13 @@ public abstract class LazySodium implements
                     additionalBytesLen,
                     nPub,
                     keyBytes
-            );
+            )) {
+                throw new AEADBadTagException();
+            }
             return str(messageBytes);
         } else if (method.equals(AEAD.Method.XCHACHA20_POLY1305_IETF)) {
             byte[] messageBytes = new byte[cipherBytes.length - AEAD.XCHACHA20POLY1305_IETF_ABYTES];
-            cryptoAeadXChaCha20Poly1305IetfDecrypt(
+            if (!cryptoAeadXChaCha20Poly1305IetfDecrypt(
                     messageBytes,
                     null,
                     nSec,
@@ -2419,11 +2424,13 @@ public abstract class LazySodium implements
                     additionalBytesLen,
                     nPub,
                     keyBytes
-            );
+            )) {
+                throw new AEADBadTagException();
+            }
             return str(messageBytes);
         } else {
             byte[] messageBytes = new byte[cipherBytes.length - AEAD.AES256GCM_ABYTES];
-            cryptoAeadAES256GCMDecrypt(
+            if (!cryptoAeadAES256GCMDecrypt(
                     messageBytes,
                     null,
                     nSec,
@@ -2433,7 +2440,9 @@ public abstract class LazySodium implements
                     additionalBytesLen,
                     nPub,
                     keyBytes
-            );
+            )) {
+                throw new AEADBadTagException();
+            }
             return str(messageBytes);
         }
     }
@@ -2511,7 +2520,7 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public DetachedDecrypt decryptDetached(DetachedEncrypt detachedEncrypt, String additionalData, byte[] nSec, byte[] nPub, Key k, AEAD.Method method) {
+    public DetachedDecrypt decryptDetached(DetachedEncrypt detachedEncrypt, String additionalData, byte[] nSec, byte[] nPub, Key k, AEAD.Method method) throws AEADBadTagException {
         byte[] cipherBytes = detachedEncrypt.getCipher();
         byte[] additionalDataBytes = additionalData == null ? new byte[0] : bytes(additionalData);
         long additionalBytesLen = additionalData == null ? 0L : additionalDataBytes.length;
@@ -2520,7 +2529,7 @@ public abstract class LazySodium implements
         byte[] macBytes = detachedEncrypt.getMac();
 
         if (method.equals(AEAD.Method.CHACHA20_POLY1305)) {
-            cryptoAeadChaCha20Poly1305DecryptDetached(
+            if (!cryptoAeadChaCha20Poly1305DecryptDetached(
                     messageBytes,
                     nSec,
                     cipherBytes,
@@ -2530,10 +2539,12 @@ public abstract class LazySodium implements
                     additionalBytesLen,
                     nPub,
                     keyBytes
-            );
+            )) {
+                throw new AEADBadTagException();
+            }
             return new DetachedDecrypt(messageBytes, macBytes, charset);
         } else if (method.equals(AEAD.Method.CHACHA20_POLY1305_IETF)) {
-            cryptoAeadChaCha20Poly1305IetfDecryptDetached(
+            if (!cryptoAeadChaCha20Poly1305IetfDecryptDetached(
                     messageBytes,
                     nSec,
                     cipherBytes,
@@ -2543,10 +2554,12 @@ public abstract class LazySodium implements
                     additionalBytesLen,
                     nPub,
                     keyBytes
-            );
+            )) {
+                throw new AEADBadTagException();
+            }
             return new DetachedDecrypt(messageBytes, macBytes, charset);
         } else if (method.equals(AEAD.Method.XCHACHA20_POLY1305_IETF)) {
-            cryptoAeadXChaCha20Poly1305IetfDecryptDetached(
+            if (!cryptoAeadXChaCha20Poly1305IetfDecryptDetached(
                     messageBytes,
                     nSec,
                     cipherBytes,
@@ -2556,10 +2569,12 @@ public abstract class LazySodium implements
                     additionalBytesLen,
                     nPub,
                     keyBytes
-            );
+            )) {
+                throw new AEADBadTagException();
+            }
             return new DetachedDecrypt(messageBytes, macBytes, charset);
         } else {
-            cryptoAeadAES256GCMDecryptDetached(
+            if (!cryptoAeadAES256GCMDecryptDetached(
                     messageBytes,
                     nSec,
                     cipherBytes,
@@ -2569,7 +2584,9 @@ public abstract class LazySodium implements
                     additionalBytesLen,
                     nPub,
                     keyBytes
-            );
+            )) {
+                throw new AEADBadTagException();
+            }
             return new DetachedDecrypt(messageBytes, macBytes, charset);
         }
     }

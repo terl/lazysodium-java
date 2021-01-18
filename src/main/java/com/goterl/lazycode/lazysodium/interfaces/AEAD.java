@@ -14,6 +14,7 @@ import com.goterl.lazycode.lazysodium.utils.DetachedEncrypt;
 import com.goterl.lazycode.lazysodium.utils.Key;
 import com.sun.jna.Structure;
 
+import javax.crypto.AEADBadTagException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -313,7 +314,7 @@ public interface AEAD {
                 byte[] nPub,
                 Key k,
                 AEAD.Method method
-        );
+        ) throws AEADBadTagException;
 
         String decrypt(
                 String cipher,
@@ -322,7 +323,7 @@ public interface AEAD {
                 byte[] nPub,
                 Key k,
                 Method method
-        );
+        ) throws AEADBadTagException;
 
         DetachedEncrypt encryptDetached(
                 String m,
@@ -340,7 +341,7 @@ public interface AEAD {
                 byte[] nPub,
                 Key k,
                 Method method
-        );
+        ) throws AEADBadTagException;
 
 
     }
