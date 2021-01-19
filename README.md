@@ -16,6 +16,9 @@ Lazysodium is a **complete** Java (JNA) wrapper over the [Libsodium](https://git
 
 
 ## Features
+
+**This library is fully compatible with Kotlin.**
+
 You can find an up-to-date feature list [here](https://docs.lazycode.co/lazysodium/about-1/features).
 
 ## Quick start
