@@ -1,10 +1,4 @@
-
-<br />
-
-<p align="center"><img width="260" style="float: center;" style="display: inline;" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/lazycode/lazysodium/large_logo.png" /></p>
-
-<br />
-
+<p align="center"><img width="260" src="https://filedn.com/lssh2fV92SE8dRT5CWJvvSy/lazysodium_large_transparent.png" /></p>
 
 # Lazysodium for Java
 
