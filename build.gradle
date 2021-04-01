@@ -19,7 +19,7 @@ plugins {
 
 ext {
     artifactId = "lazysodium-java"
-    groupId = "com.goterl.lazycode"
+    groupId = "com.goterl"
     version = '4.3.4'
     description = "Lazysodium (Java) makes it effortless for Java " +
             "developers to get started with Libsodium's cryptography."
@@ -33,7 +33,7 @@ repositories {
 group project.ext.groupId
 version = project.ext.version
 
-mainClassName = "com.goterl.lazycode.lazysodium.LazySodium"
+mainClassName = "com.goterl.lazysodium.LazySodium"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
