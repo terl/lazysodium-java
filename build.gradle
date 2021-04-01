@@ -89,7 +89,20 @@ artifacts {
     archives sourcesJar, javadocJar
 }
 
+void loadProps() {
+    File secretPropsFile = project.rootProject.file('local.properties')
+    if (secretPropsFile.exists()) {
+        Properties p = new Properties()
+        new FileInputStream(secretPropsFile).withCloseable { is ->
+            p.load(is)
+        }
+        p.each { name, value ->
+            ext[name] = value
+        }
+    }
+}
 
+loadProps()
 
 publishing {
     publications {
@@ -138,27 +151,15 @@ publishing {
             }
         }
     }
-}
 
-
-bintray {
-    user = findProperty("bintray.user")
-    key = findProperty("bintray.apiKey")
-    publications = ['mavenJava']
-    publish = true
-    pkg {
-        repo = 'lazysodium-maven'
-        name = project.ext.artifactId
-        userOrg = 'terl'
-        desc = project.ext.description
-        licenses = ['MPL-2.0']
-        issueTrackerUrl = "https://github.com/terl/lazysodium-java/issues"
-        vcsUrl = 'https://github.com/terl/lazysodium-java.git'
-
-        version {
-            name = project.ext.version
-            released = new java.util.Date()
-            vcsTag = project.ext.version
+    repositories {
+        maven {
+            name = "sonatype"
+            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username ossrhUsername
+                password ossrhPassword
+            }
         }
     }
 }
