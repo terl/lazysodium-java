@@ -10,7 +10,6 @@ package com.goterl.lazysodium.interfaces;
 
 
 import com.goterl.lazysodium.exceptions.SodiumException;
-import com.goterl.lazycode.lazysodium.utils.*;
 import com.goterl.lazysodium.utils.Constants;
 import com.goterl.lazysodium.utils.Key;
 import com.goterl.lazysodium.utils.KeyPair;

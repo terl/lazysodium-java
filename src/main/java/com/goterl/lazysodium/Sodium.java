@@ -8,7 +8,6 @@
 
 package com.goterl.lazysodium;
 
-import com.goterl.lazycode.lazysodium.interfaces.*;
 import com.goterl.lazysodium.interfaces.*;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
