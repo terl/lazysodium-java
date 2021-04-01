@@ -80,6 +80,7 @@ public final class LibraryLoader {
      *
      * @param mode controls which sodium library (installed in the system or bundled in the JAR)
      *     is loaded, and in which order
+     * @param systemFallBack If loading directly fails then it will fall to the system fallback specified here
      * @throws LibraryLoadingException if fails to load the library
      * @see Native#register(Class, String)
      */
