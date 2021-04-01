@@ -60,7 +60,7 @@ signing {
     // This will use the GPG Agent
     // to sign the jar
     useGpgCmd()
-    sign configurations.archives
+    sign publishing.publications
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -161,16 +161,6 @@ publishing {
                 password ossrhPassword
             }
         }
-    }
-}
-
-
-model {
-    tasks.publishMavenJavaPublicationToMavenLocal {
-        dependsOn project.tasks.withType(Sign)
-    }
-    tasks.signPom {
-        dependsOn tasks.generatePomFileForMavenJavaPublication
     }
 }
 
