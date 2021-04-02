@@ -11,21 +11,25 @@ Lazysodium is a **complete** Java (JNA) wrapper over the [Libsodium](https://git
 
 **This library is fully compatible with Kotlin.**
 
-You can find an up-to-date feature list [here](https://docs.lazycode.co/lazysodium/about-1/features).
+You can find an up-to-date feature list [here](https://terl.gitbook.io/lazysodium/about-1/features).
 
 ## Quick start
-Please view the [official documentation](https://docs.lazycode.co/lazysodium/usage/installation) for a more comprehensive guide.
+Please view the [official documentation](https://terl.gitbook.io/lazysodium/usage/installation) for a more comprehensive guide.
 
 ### 1. Install
-Install by adding the bintray repository and the dependency. For Maven users, please see [here](https://docs.lazycode.co/lazysodium/usage/installation).
+Whatever build tool you're using the general gist is to add the `mavenCentral()` repository and then add the Lazysodium dependency. 
+More detailed instructions [here](https://terl.gitbook.io/lazysodium/usage/installation).
+
+The following example is for users of the build tool Gradle:
 
 ```groovy
 // Top level build file
 repositories {
-    jcenter()
+    // Add this to the end of any existing repositories
+    mavenCentral() 
 }
 
-// Add to dependencies section
+// Project level dependencies section
 dependencies {
     implementation "com.goterl.lazycode:lazysodium-java:VERSION_NUMBER"
     implementation "net.java.dev.jna:jna:JNA_NUMBER"
@@ -34,7 +38,7 @@ dependencies {
 
 Substitute `VERSION_NUMBER` for the version in this box:
 
-[![Download](https://api.bintray.com/packages/terl/lazysodium-maven/lazysodium-java/images/download.svg) ](https://bintray.com/terl/lazysodium-maven/lazysodium-java/_latestVersion)
+![Maven Central](https://img.shields.io/maven-central/v/com.goterl/lazysodium-java?color=%23fff&label=Maven%20Central)
 
 Substitute `JNA_NUMBER` for the [latest version of JNA](https://github.com/java-native-access/jna/releases).
 
@@ -60,7 +64,7 @@ You can use the `Native` or `Lazy` interfaces to encrypt at a lower or a higher 
 
 ## Documentation
 
-Please view our [official documentation](https://docs.lazycode.co/lazysodium/) to get started.
+Please view our [official documentation](https://terl.gitbook.io/lazysodium/) to get started.
 
 
 ## Examples
