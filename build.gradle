@@ -105,6 +105,22 @@ void loadProps() {
 
 loadProps()
 
+String getProp(String propName) {
+    if (ext[propName] != null) {
+        return ext[propName]
+    } else {
+        ""
+    }
+}
+
+String getUserName() {
+    return getProp("ossrhUsername")
+}
+
+String getPassword() {
+    return getProp("ossrhPassword")
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
@@ -143,8 +159,8 @@ publishing {
             name = "sonatype"
             url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
             credentials {
-                username ossrhUsername ?: ""
-                password ossrhPassword ?: ""
+                username getUserName()
+                password getPassword()
             }
         }
     }
