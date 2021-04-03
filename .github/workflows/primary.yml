@@ -1,9 +1,16 @@
-name: Build and test
+name: Checks
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   test:
+    name: ${{ matrix.os }} check
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -14,8 +21,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-      - name: Build with Gradle
-        run: ./gradlew build
-      - name: Test
+      - name: Test with Gradle
         run: ./gradlew test
 
