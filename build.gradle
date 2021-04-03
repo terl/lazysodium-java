@@ -106,7 +106,7 @@ void loadProps() {
 loadProps()
 
 String getProp(String propName) {
-    if (ext[propName] != null) {
+    if (ext.hasProperty(propName) != null) {
         return ext[propName]
     } else {
         ""
