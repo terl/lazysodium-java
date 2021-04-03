@@ -105,6 +105,8 @@ void loadProps() {
 
 loadProps()
 
+// Return an empty string if a property
+// cannot be found
 String getProp(String propName) {
     if (ext.hasProperty(propName) != null) {
         return ext[propName]
