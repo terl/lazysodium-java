@@ -12,8 +12,8 @@ plugins {
     id 'java-library'
     id 'maven'
     id 'maven-publish'
-    id 'osgi'
     id 'signing'
+    id 'biz.aQute.bnd.builder'
 }
 
 ext {
@@ -26,6 +26,7 @@ ext {
 
 repositories {
     jcenter()
+    mavenCentral()
 }
 
 

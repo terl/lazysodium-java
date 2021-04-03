@@ -1,6 +1,6 @@
-FROM gradle:alpine
+FROM gradle:latest
 
 COPY . /app
 WORKDIR /app
 
-RUN gradle test
+RUN ./gradlew test --info
