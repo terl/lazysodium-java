@@ -111,7 +111,7 @@ String getProp(String propName) {
     if (ext.hasProperty(propName) != null) {
         return ext[propName]
     } else {
-        ""
+        return ""
     }
 }
 
