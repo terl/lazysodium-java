@@ -55,7 +55,6 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
 }
 
-
 // Tasks
 signing {
     // This will use the GPG Agent
@@ -115,17 +114,48 @@ String getProp(String propName) {
     }
 }
 
-String getUserName() {
-    return getProp("ossrhUsername")
+String getSonatypeUserName() {
+    return findProperty("ossrhUsername")
 }
 
-String getPassword() {
-    return getProp("ossrhPassword")
+String getSonatypePassword() {
+    return findProperty("ossrhPassword")
+}
+
+Closure createPomClosure = {
+    def root = asNode()
+    root.appendNode('description', project.ext.description)
+    root.appendNode('name', project.ext.artifactId)
+    root.appendNode('url', 'https://github.com/terl/lazysodium-java')
+
+    def scm = root.appendNode('scm')
+    scm.appendNode("connection", "scm:git:git://github.com/terl/lazysodium-java.git")
+    scm.appendNode("developerConnection", "scm:git:ssh://github.com/terl/lazysodium-java")
+    scm.appendNode("url", "http://github.com/terl/lazysodium-java")
+
+    def license = root.appendNode('licenses').appendNode('license')
+    license.appendNode('name', 'Mozilla Public License, Version 2.0')
+    license.appendNode('url', 'http://www.mozilla.org/MPL/2.0/index.txt')
+    license.appendNode('distribution', 'repo')
+
+    def developer = root.appendNode('developers').appendNode('developer')
+    developer.appendNode('name', 'Terl Tech Ltd')
+    developer.appendNode('email', 'hello@terl.co')
 }
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        snapshot(MavenPublication) {
+            from components.java
+            groupId project.ext.groupId
+            artifactId project.ext.artifactId
+            version project.ext.version + "-SNAPSHOT"
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom.withXml createPomClosure
+        }
+        release(MavenPublication) {
             from components.java
             groupId project.ext.groupId
             artifactId project.ext.artifactId
@@ -133,36 +163,25 @@ publishing {
             artifact sourcesJar
             artifact javadocJar
 
-            pom.withXml {
-                def root = asNode()
-                root.appendNode('description', project.ext.description)
-                root.appendNode('name', project.ext.artifactId)
-                root.appendNode('url', 'https://github.com/terl/lazysodium-java')
-
-                def scm = root.appendNode('scm')
-                scm.appendNode("connection", "scm:git:git://github.com/terl/lazysodium-java.git")
-                scm.appendNode("developerConnection", "scm:git:ssh://github.com/terl/lazysodium-java")
-                scm.appendNode("url", "http://github.com/terl/lazysodium-java")
-
-                def license = root.appendNode('licenses').appendNode('license')
-                license.appendNode('name', 'Mozilla Public License, Version 2.0')
-                license.appendNode('url', 'http://www.mozilla.org/MPL/2.0/index.txt')
-                license.appendNode('distribution', 'repo')
-
-                def developer = root.appendNode('developers').appendNode('developer')
-                developer.appendNode('name', 'Terl Tech Ltd')
-                developer.appendNode('email', 'hello@terl.co')
-            }
+            pom.withXml createPomClosure
         }
     }
 
     repositories {
         maven {
-            name = "sonatype"
+            name = "release"
             url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
             credentials {
-                username getUserName()
-                password getPassword()
+                username getSonatypeUserName()
+                password getSonatypePassword()
+            }
+        }
+        maven {
+            name = "snapshot"
+            url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+            credentials {
+                username getSonatypeUserName()
+                password getSonatypePassword()
             }
         }
     }
