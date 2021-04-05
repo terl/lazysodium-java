@@ -7,7 +7,7 @@
  */
 package com.goterl.lazysodium.utils;
 
-import co.libly.resourceloader.SharedLibraryLoader;
+import com.goterl.resourceloader.SharedLibraryLoader;
 import com.goterl.lazysodium.Sodium;
 import com.goterl.lazysodium.SodiumJava;
 import com.sun.jna.Native;
