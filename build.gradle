@@ -8,32 +8,31 @@
  */
 
 plugins {
-    id 'java-library'
     id 'application'
-    id 'signing'
+    id 'java-library'
     id 'maven'
     id 'maven-publish'
-    id "com.jfrog.bintray" version "1.8.4"
-    id 'osgi'
+    id 'signing'
+    id 'biz.aQute.bnd.builder'
 }
 
 ext {
     artifactId = "lazysodium-java"
-    groupId = "com.goterl.lazycode"
-    version = '4.3.4'
+    groupId = "com.goterl"
+    version = '5.0.1'
     description = "Lazysodium (Java) makes it effortless for Java " +
             "developers to get started with Libsodium's cryptography."
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 
 group project.ext.groupId
 version = project.ext.version
 
-mainClassName = "com.goterl.lazycode.lazysodium.LazySodium"
+mainClassName = "com.goterl.lazysodium.LazySodium"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -49,20 +48,18 @@ sourceSets {
 
 // Dependencies
 dependencies {
-    implementation 'net.java.dev.jna:jna:5.5.0'
-    implementation 'co.libly:resource-loader:1.3.10'
-    implementation 'org.slf4j:slf4j-api:2.0.0-alpha1'
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.28.2'
+    implementation 'net.java.dev.jna:jna:5.8.0'
+    implementation 'com.goterl:resource-loader:2.0.1'
+    implementation 'org.slf4j:slf4j-api:1.7.30'
+    testImplementation 'junit:junit:4.13.2'
 }
-
 
 // Tasks
 signing {
     // This will use the GPG Agent
     // to sign the jar
     useGpgCmd()
-    sign configurations.archives
+    sign publishing.publications
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -91,11 +88,73 @@ artifacts {
     archives sourcesJar, javadocJar
 }
 
+void loadProps() {
+    File secretPropsFile = project.rootProject.file('local.properties')
+    if (secretPropsFile.exists()) {
+        Properties p = new Properties()
+        new FileInputStream(secretPropsFile).withCloseable { is ->
+            p.load(is)
+        }
+        p.each { name, value ->
+            ext[name] = value
+        }
+    }
+}
 
+loadProps()
+
+// Return an empty string if a property
+// cannot be found
+String getProp(String propName) {
+    if (ext.hasProperty(propName) != null) {
+        return ext[propName]
+    } else {
+        return ""
+    }
+}
+
+String getSonatypeUserName() {
+    return findProperty("ossrhUsername")
+}
+
+String getSonatypePassword() {
+    return findProperty("ossrhPassword")
+}
+
+Closure createPomClosure = {
+    def root = asNode()
+    root.appendNode('description', project.ext.description)
+    root.appendNode('name', project.ext.artifactId)
+    root.appendNode('url', 'https://github.com/terl/lazysodium-java')
+
+    def scm = root.appendNode('scm')
+    scm.appendNode("connection", "scm:git:git://github.com/terl/lazysodium-java.git")
+    scm.appendNode("developerConnection", "scm:git:ssh://github.com/terl/lazysodium-java")
+    scm.appendNode("url", "http://github.com/terl/lazysodium-java")
+
+    def license = root.appendNode('licenses').appendNode('license')
+    license.appendNode('name', 'Mozilla Public License, Version 2.0')
+    license.appendNode('url', 'http://www.mozilla.org/MPL/2.0/index.txt')
+    license.appendNode('distribution', 'repo')
+
+    def developer = root.appendNode('developers').appendNode('developer')
+    developer.appendNode('name', 'Terl Tech Ltd')
+    developer.appendNode('email', 'hello@terl.co')
+}
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        snapshot(MavenPublication) {
+            from components.java
+            groupId project.ext.groupId
+            artifactId project.ext.artifactId
+            version project.ext.version + "-SNAPSHOT"
+            artifact sourcesJar
+            artifact javadocJar
+
+            pom.withXml createPomClosure
+        }
+        release(MavenPublication) {
             from components.java
             groupId project.ext.groupId
             artifactId project.ext.artifactId
@@ -103,76 +162,33 @@ publishing {
             artifact sourcesJar
             artifact javadocJar
 
+            pom.withXml createPomClosure
+        }
+    }
 
-            project.tasks.withType(Sign) {
-                signatures.all {
-                    def type = it.type
-                    if (it.file.name.endsWith('.tar.gz.asc')) {
-                        // Workaround in case a tar.gz file should published
-                        type = 'tar.gz.asc'
-                    } else if (it.type.equals('xml.asc')) {
-                        // Set correct extension for signature of pom file
-                        type = 'pom.asc'
-                    }
-                    artifact source: it.file, classifier: it.classifier ?: null, extension: type
-                }
+    repositories {
+        maven {
+            name = "release"
+            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username getSonatypeUserName()
+                password getSonatypePassword()
             }
-
-            pom.withXml {
-                def root = asNode()
-                root.appendNode('description', project.ext.description)
-                root.appendNode('name', project.ext.artifactId)
-                root.appendNode('url', 'https://github.com/terl/lazysodium-java')
-
-                def scm = root.appendNode('scm')
-                scm.appendNode("connection", "scm:git:git://github.com/terl/lazysodium-java.git")
-                scm.appendNode("developerConnection", "scm:git:ssh://github.com/terl/lazysodium-java")
-                scm.appendNode("url", "http://github.com/terl/lazysodium-java")
-
-                def license = root.appendNode('licenses').appendNode('license')
-                license.appendNode('name', 'Mozilla Public License, Version 2.0')
-                license.appendNode('url', 'http://www.mozilla.org/MPL/2.0/index.txt')
-                license.appendNode('distribution', 'repo')
-
-                def developer = root.appendNode('developers').appendNode('developer')
-                developer.appendNode('name', 'Terl Tech Ltd')
-                developer.appendNode('email', 'hello@terl.co')
+        }
+        maven {
+            name = "snapshot"
+            url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+            credentials {
+                username getSonatypeUserName()
+                password getSonatypePassword()
             }
         }
     }
 }
 
-
-bintray {
-    user = findProperty("bintray.user")
-    key = findProperty("bintray.apiKey")
-    publications = ['mavenJava']
-    publish = true
-    pkg {
-        repo = 'lazysodium-maven'
-        name = project.ext.artifactId
-        userOrg = 'terl'
-        desc = project.ext.description
-        licenses = ['MPL-2.0']
-        issueTrackerUrl = "https://github.com/terl/lazysodium-java/issues"
-        vcsUrl = 'https://github.com/terl/lazysodium-java.git'
-
-        version {
-            name = project.ext.version
-            released = new java.util.Date()
-            vcsTag = project.ext.version
-        }
-    }
-}
-
-
-model {
-    tasks.publishMavenJavaPublicationToMavenLocal {
-        dependsOn project.tasks.withType(Sign)
-    }
-    tasks.signPom {
-        dependsOn tasks.generatePomFileForMavenJavaPublication
-    }
+// Force character encoding in case the workspace was not set up correctly
+tasks.withType(Javadoc) {
+    options.encoding = 'UTF-8'
 }
 
 tasks.withType(Test) {

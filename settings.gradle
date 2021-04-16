@@ -6,6 +6,15 @@
  * file, you can obtain one at http://mozilla.org/MPL/2.0/. 
  */
 
+buildscript {
+    repositories {
+        maven {
+            url 'https://bndtools.jfrog.io/bndtools/libs-snapshot'
+        }
+    }
+    dependencies {
+        classpath 'biz.aQute.bnd:biz.aQute.bnd.gradle:+'
+    }
+}
+
 rootProject.name = 'lazysodium-java'
-
-
