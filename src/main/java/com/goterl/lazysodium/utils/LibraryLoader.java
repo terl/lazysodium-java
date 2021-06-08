@@ -146,6 +146,14 @@ public final class LibraryLoader {
                 return getPath("windows", "libsodium.dll");
             }
         }
+        if (Platform.isMac()) {
+            // check for Apple Silicon
+            if(Platform.isARM()) {
+                return getPath("mac/aarch64", "libsodium.dylib");
+            } else {
+                return getPath("mac/intel", "libsodium.dylib");
+            }
+        }
         if (Platform.isARM()) {
             return getPath("armv6", "libsodium.so");
         }
@@ -155,9 +163,6 @@ public final class LibraryLoader {
             } else {
                 return getPath("linux", "libsodium.so");
             }
-        }
-        if (Platform.isMac()) {
-            return getPath("mac", "libsodium.dylib");
         }
 
         String message = String.format("Unsupported platform: %s/%s", System.getProperty("os.name"),
