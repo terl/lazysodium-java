@@ -11,6 +11,7 @@ package com.goterl.lazysodium;
 import com.goterl.lazysodium.interfaces.*;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
+import com.sun.jna.ptr.IntByReference;
 
 public class Sodium {
 
@@ -89,9 +90,9 @@ public class Sodium {
     //// PADDING
     //// -------------------------------------------|
 
-    public native int sodium_pad(Pointer paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize, int maxBufLen);
+    public native int sodium_pad(IntByReference paddedBuffLen, Pointer buf, int unpaddedBufLen, int blockSize, int maxBufLen);
 
-    public native int sodium_unpad(Pointer paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize);
+    public native int sodium_unpad(IntByReference unPaddedBuffLen, Pointer buf, int paddedBufLen, int blockSize);
 
 
 

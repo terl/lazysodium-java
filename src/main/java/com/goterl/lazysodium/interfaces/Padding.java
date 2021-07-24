@@ -9,6 +9,7 @@
 package com.goterl.lazysodium.interfaces;
 
 
+import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 
 public interface Padding {
@@ -27,11 +28,11 @@ public interface Padding {
          *                  to be.
          * @return False if the padded buffer length would exceed {@code maxBufLen}.
          */
-        boolean sodiumPad(IntByReference paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize, int maxBufLen);
+        boolean sodiumPad(IntByReference paddedBuffLen, Pointer buf, int unpaddedBufLen, int blockSize, int maxBufLen);
 
         /**
          * Computes the original, unpadded length of a message previously padded using
-         * {@link #sodiumPad(IntByReference, char[], int, int, int)}. The original length is put into
+         * {@link #sodiumPad(IntByReference, Pointer, int, int, int)}. The original length is put into
          * {@code unpaddedBufLen}.
          * @param unpaddedBufLen This will be populated with the unpadded buffer length.
          * @param buf The buffer.
@@ -39,7 +40,7 @@ public interface Padding {
          * @param blockSize The block size.
          * @return True if the buffer was unpadded.
          */
-        boolean sodiumUnpad(IntByReference unpaddedBufLen, char[] buf, int paddedBufLen, int blockSize);
+        boolean sodiumUnpad(IntByReference unpaddedBufLen, Pointer buf, int paddedBufLen, int blockSize);
     }
 
     interface Lazy {

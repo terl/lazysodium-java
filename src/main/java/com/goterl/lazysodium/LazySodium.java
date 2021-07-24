@@ -182,13 +182,13 @@ public abstract class LazySodium implements
     //// -------------------------------------------|
 
     @Override
-    public boolean sodiumPad(IntByReference paddedBuffLen, char[] buf, int unpaddedBufLen, int blockSize, int maxBufLen) {
-        return successful(getSodium().sodium_pad(paddedBuffLen.getPointer(), buf, unpaddedBufLen, blockSize, maxBufLen));
+    public boolean sodiumPad(IntByReference paddedBuffLen, Pointer buf, int unpaddedBufLen, int blockSize, int maxBufLen) {
+        return successful(getSodium().sodium_pad(paddedBuffLen, buf, unpaddedBufLen, blockSize, maxBufLen));
     }
 
     @Override
-    public boolean sodiumUnpad(IntByReference unPaddedBuffLen, char[] buf, int paddedBufLen, int blockSize) {
-        return successful(getSodium().sodium_unpad(unPaddedBuffLen.getPointer(), buf, paddedBufLen, blockSize));
+    public boolean sodiumUnpad(IntByReference unPaddedBuffLen, Pointer buf, int paddedBufLen, int blockSize) {
+        return successful(getSodium().sodium_unpad(unPaddedBuffLen, buf, paddedBufLen, blockSize));
     }
 
 
