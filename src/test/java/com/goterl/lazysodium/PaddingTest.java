@@ -34,15 +34,33 @@ public class PaddingTest extends BaseTest {
         pad(padThis, blockSize, maxBufLen, expectedPadLength);
     }
 
+    @Test
+    public void paddingTest3() {
+        int maxBufLen = 20;
+        int blockSize = 3;
+        int expectedPadLength = 9;
+        String padThis = "zebras";
+        pad(padThis, blockSize, maxBufLen, expectedPadLength);
+    }
+
     private void pad(String padThis, int blockSize, int maxBufLen, int expectedPadLength) {
+        // This asks the C side to store the final padded size
+        // inside this JNA object.
         IntByReference finalPaddedLength = new IntByReference();
         int contentsLength = padThis.length();
+
+        // Create some native memory that is of the maximum
+        // size and then set the string into it.
         Pointer p = new Memory(maxBufLen);
         p.setString(0, padThis);
 
+        // Pad
         lazySodium.getSodium().sodium_pad(finalPaddedLength, p, contentsLength, blockSize, maxBufLen);
+
+        // Test
         TestCase.assertEquals(expectedPadLength, finalPaddedLength.getValue());
 
+        // Test unpadding of this padded string
         int finalLength = finalPaddedLength.getValue();
         printString(p, finalLength);
         unPad(p, finalLength, blockSize, contentsLength);
