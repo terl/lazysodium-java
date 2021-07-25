@@ -13,6 +13,8 @@ import com.sun.jna.ptr.IntByReference;
 import junit.framework.TestCase;
 import org.junit.Test;
 
+import static junit.framework.TestCase.*;
+
 public class PaddingTest extends BaseTest {
 
 
@@ -58,23 +60,31 @@ public class PaddingTest extends BaseTest {
         lazySodium.getSodium().sodium_pad(finalPaddedLength, p, contentsLength, blockSize, maxBufLen);
 
         // Test
-        TestCase.assertEquals(expectedPadLength, finalPaddedLength.getValue());
+        assertEquals(expectedPadLength, finalPaddedLength.getValue());
 
         // Test unpadding of this padded string
         int finalLength = finalPaddedLength.getValue();
-        printString(p, finalLength);
-        unPad(p, finalLength, blockSize, contentsLength);
+
+        // Uncomment to print the string at this point
+        //printString(p, finalLength);
+
+        unPad(padThis, p, finalLength, blockSize, contentsLength);
     }
 
-    public void unPad(Pointer paddedPointer, int lengthOfArray, int blockSize, int expectedUnpaddedLength) {
+    public void unPad(String startingString, Pointer paddedPointer, int lengthOfArray, int blockSize, int expectedUnpaddedLength) {
         IntByReference unpadRef = new IntByReference();
         lazySodium.getSodium().sodium_unpad(unpadRef, paddedPointer, lengthOfArray, blockSize);
-        TestCase.assertEquals(expectedUnpaddedLength, unpadRef.getValue());
-        printString(paddedPointer, unpadRef.getValue());
+        assertEquals(expectedUnpaddedLength, unpadRef.getValue());
+
+        String finishingString = pointerToString(paddedPointer, unpadRef.getValue());
+        assertEquals(startingString, finishingString);
+    }
+
+    private String pointerToString(Pointer p, int length) {
+        return new String(p.getByteArray(0, length));
     }
 
     private void printString(Pointer p, int length) {
-        String paddedString = new String(p.getByteArray(0, length));
-        System.out.println(paddedString);
+        System.out.println(pointerToString(p, length));
     }
 }
