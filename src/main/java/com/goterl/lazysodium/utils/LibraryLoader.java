@@ -136,6 +136,7 @@ public final class LibraryLoader {
 
     /**
      * Returns the absolute path to sodium library inside JAR (beginning with '/'), e.g. /linux/libsodium.so.
+     * @return The path to the libsodium binary.
      */
     public static String getSodiumPathInResources() {
         boolean is64Bit = Native.POINTER_SIZE == 8;

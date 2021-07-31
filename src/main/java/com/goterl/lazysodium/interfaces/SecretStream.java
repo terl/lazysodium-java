@@ -75,7 +75,7 @@ public interface SecretStream {
 
         /**
          * Encrypt a {@code message}.
-         * @param state State as initialised in {@link #cryptoSecretStreamInitPush(State, byte[], byte[])}}.
+         * @param state State as initialised in cryptoSecretStreamInitPush.
          * @param cipher The resulting cipher of size {@link #ABYTES} + {@code messageLen}.
          * @param cipherAddr The cipher address will be stored here if not null.
          * @param message The message to encrypt.
@@ -119,7 +119,7 @@ public interface SecretStream {
         /**
          * Encrypt a {@code message}. This is like cryptoSecretStreamPush
          * but without additional data or an address to store the cipher.
-         * @param state State as initialised in {@link #cryptoSecretStreamInitPush(State, byte[], byte[])}}.
+         * @param state State as initialised in cryptoSecretStreamInitPush.
          * @param cipher The resulting cipher of size {@link #ABYTES} + {@code messageLen}.
          * @param message The message to encrypt.
          * @param messageLen The message length.
@@ -151,7 +151,7 @@ public interface SecretStream {
 
         /**
          * Decrypt a message.
-         * @param state The state as put into {@link #cryptoSecretStreamInitPull(State, byte[], byte[])}.
+         * @param state The state as put into cryptoSecretStreamInitPull.
          * @param message The message of size {@code cipherLen} - {@link #ABYTES}.
          * @param messageAddress The place to store the message.
          * @param tag The tag.
@@ -174,7 +174,7 @@ public interface SecretStream {
 
         /**
          * Decrypt a message without additional data.
-         * @param state The state as put into {@link #cryptoSecretStreamInitPull(State, byte[], byte[])}.
+         * @param state The state as put into cryptoSecretStreamInitPull.
          * @param message The message of size {@code cipherLen} - {@link #ABYTES}.
          * @param tag The tag.
          * @param cipher The resulting encrypted message.
