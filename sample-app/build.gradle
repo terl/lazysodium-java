@@ -1,0 +1,20 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.5.10'
+    id 'java'
+    id 'application'
+}
+
+group 'com.goterl'
+version '1.0.0'
+mainClassName = "Main"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation "net.java.dev.jna:jna:5.5.0"
+    implementation 'com.goterl:lazysodium-java:5.1.0'
+}
