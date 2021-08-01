@@ -18,3 +18,5 @@ buildscript {
 }
 
 rootProject.name = 'lazysodium-java'
+include 'sample-app'
+
