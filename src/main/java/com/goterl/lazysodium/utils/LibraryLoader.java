@@ -156,7 +156,11 @@ public final class LibraryLoader {
             }
         }
         if (Platform.isARM()) {
-            return getPath("armv6", "libsodium.so");
+            if(is64Bit) {
+                return getPath("arm64", "libsodium.so");
+            } else {
+                return getPath("armv6", "libsodium.so");
+            }
         }
         if (Platform.isLinux()) {
             if (is64Bit) {
