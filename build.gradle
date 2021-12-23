@@ -26,11 +26,6 @@ ext {
 
 repositories {
     mavenCentral()
-
-    maven {
-        name = "snapshot"
-        url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-    }
 }
 
 
@@ -54,7 +49,7 @@ sourceSets {
 // Dependencies
 dependencies {
     implementation 'net.java.dev.jna:jna:5.8.0'
-    implementation 'com.goterl:resource-loader:2.0.2-SNAPSHOT'
+    implementation 'com.goterl:resource-loader:2.0.1'
     implementation 'org.slf4j:slf4j-api:1.7.30'
     testImplementation 'junit:junit:4.13.2'
 }
