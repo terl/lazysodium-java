@@ -10,7 +10,7 @@ on:
 
 jobs:
   test:
-    name: ${{ matrix.os }} check
+    name: ${{ matrix.os }} ${{ matrix.arch }} check
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -22,7 +22,7 @@ jobs:
         uses: actions/setup-java@v2
         with:
           distribution: liberica
-          java-version: '8'
+          java-version: '11.0.0'
           architecture: ${{ matrix.arch }}
       - name: Test with Gradle
         run: ./gradlew test
