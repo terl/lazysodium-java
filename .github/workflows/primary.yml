@@ -21,8 +21,8 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v2
         with:
-          distribution: liberica
-          java-version: '11.0.0'
+          distribution: 'zulu'
+          java-version: '11'
           architecture: ${{ matrix.arch }}
       - name: Test with Gradle
         run: ./gradlew test
