@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
-        arch: [x86, x64]
+        arch: [x64]
     steps:
       - uses: actions/checkout@v2
       - name: Set up Java
