@@ -1,7 +1,5 @@
 package com.goterl.lazysodium.interfaces;
 
-import static com.goterl.lazysodium.LazySodium.toBin;
-
 import com.goterl.lazysodium.LazySodium;
 import com.goterl.lazysodium.exceptions.SodiumException;
 import java.math.BigInteger;
@@ -21,25 +19,23 @@ public interface Ristretto255 {
     }
 
     static byte[] scalarToBytes(BigInteger n, boolean reduced) {
-        byte[] bytes = n.toByteArray();
+        byte[] bigEndianBytes = n.toByteArray();
         int expectedCount =
             reduced ? RISTRETTO255_SCALAR_BYTES : RISTRETTO255_NON_REDUCED_SCALAR_BYTES;
 
-        if (bytes.length > expectedCount) {
+        if (bigEndianBytes.length > expectedCount) {
             throw new IllegalArgumentException(
                 "The scalar value is too big to be represented in " + expectedCount + " bytes");
         }
 
         // Convert big-endian to little-endian
-        byte[] temp = new byte[expectedCount];
+        byte[] littleEndianBytes = new byte[expectedCount];
 
-        for (int i = 0; i < bytes.length; ++i) {
-            temp[i] = bytes[bytes.length - i - 1];
+        for (int i = 0; i < bigEndianBytes.length; ++i) {
+            littleEndianBytes[i] = bigEndianBytes[bigEndianBytes.length - i - 1];
         }
 
-        bytes = temp;
-
-        return bytes;
+        return littleEndianBytes;
     }
 
     static BigInteger bytesToScalar(byte[] bytes) {
@@ -231,7 +227,7 @@ public interface Ristretto255 {
     interface Lazy {
 
         /**
-         * Returns whether the passed hexadecimal string represents a valid Ristretto255 point.
+         * Returns whether the passed encoded string represents a valid Ristretto255 point.
          *
          * @param point the point to check
          * @return true if valid
@@ -246,18 +242,13 @@ public interface Ristretto255 {
         RistrettoPoint cryptoCoreRistretto255Random();
 
         /**
-         * Maps a {@link Ristretto255#RISTRETTO255_HASH_BYTES} bytes hash in hexadecimal notation.
+         * Maps a {@link Ristretto255#RISTRETTO255_HASH_BYTES} bytes hash to a {@link
+         * RistrettoPoint}.
          *
          * @param hash the hash in hexadecimal notation
          * @return the corresponding Ristretto255 point
          */
-        default RistrettoPoint cryptoCoreRistretto255FromHash(String hash) throws SodiumException {
-            if (hash == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255FromHash(toBin(hash));
-        }
+        RistrettoPoint cryptoCoreRistretto255FromHash(String hash) throws SodiumException;
 
         /**
          * Maps a {@link Ristretto255#RISTRETTO255_HASH_BYTES} bytes hash to a Ristretto255 point.
@@ -275,31 +266,19 @@ public interface Ristretto255 {
          * @param point the Ristretto255 point in hexadecimal notation
          * @return the result
          */
-        default RistrettoPoint cryptoScalarmultRistretto255(BigInteger n, RistrettoPoint point)
-            throws SodiumException {
-            if (n == null || point == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoScalarmultRistretto255(scalarToBytes(n), point);
-        }
+        RistrettoPoint cryptoScalarmultRistretto255(BigInteger n, RistrettoPoint point)
+            throws SodiumException;
 
         /**
          * Multiplies the given Ristretto255 {@code point} by the scalar {@code n} and returns the
          * resulting point.
          *
-         * @param nHex  the scalar in hexadecimal notation, in little-endian encoding
+         * @param nEnc  the encoded scalar bytes, in little-endian byte order
          * @param point the Ristretto255 point in hexadecimal notation
          * @return the result
          */
-        default RistrettoPoint cryptoScalarmultRistretto255(String nHex, RistrettoPoint point)
-            throws SodiumException {
-            if (nHex == null || point == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoScalarmultRistretto255(toBin(nHex), point);
-        }
+        RistrettoPoint cryptoScalarmultRistretto255(String nEnc, RistrettoPoint point)
+            throws SodiumException;
 
         /**
          * Multiplies the given Ristretto255 {@code point} by the scalar {@code n} and returns the
@@ -319,13 +298,7 @@ public interface Ristretto255 {
          * @param n the scalar
          * @return the result
          */
-        default RistrettoPoint cryptoScalarmultRistretto255Base(BigInteger n)
-            throws SodiumException {
-            if (n == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-            return cryptoScalarmultRistretto255Base(scalarToBytes(n));
-        }
+        RistrettoPoint cryptoScalarmultRistretto255Base(BigInteger n) throws SodiumException;
 
         /**
          * Multiplies the Ristretto255 base point by the scalar {@code n} and returns the result.
@@ -333,14 +306,7 @@ public interface Ristretto255 {
          * @param nHex the scalar in hexadecimal notation, in little-endian encoding
          * @return the result
          */
-        default RistrettoPoint cryptoScalarmultRistretto255Base(String nHex)
-            throws SodiumException {
-            if (nHex == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoScalarmultRistretto255Base(toBin(nHex));
-        }
+        RistrettoPoint cryptoScalarmultRistretto255Base(String nHex) throws SodiumException;
 
         /**
          * Multiplies the Ristretto255 base point by the scalar {@code n} and returns the result.
@@ -386,35 +352,23 @@ public interface Ristretto255 {
          * @param scalar the scalar to reduce
          * @return the reduced scalar
          */
-        default BigInteger cryptoCoreRistretto255ScalarReduce(BigInteger scalar) {
-            if (scalar == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarReduce(scalarToBytes(scalar, false));
-        }
+        BigInteger cryptoCoreRistretto255ScalarReduce(BigInteger scalar);
 
         /**
          * Reduces a possibly larger scalar value to {@code [0, l[} with {@code L} being the order
          * of the Ristretto255 group.
          *
-         * @param scalarHex the scalar to reduce in hexadecimal notation
+         * @param scalarEnc the encoded scalar to reduce
          * @return the reduced scalar
          */
-        default BigInteger cryptoCoreRistretto255ScalarReduce(String scalarHex) {
-            if (scalarHex == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarReduce(toBin(scalarHex));
-        }
+        BigInteger cryptoCoreRistretto255ScalarReduce(String scalarEnc);
 
         /**
          * Reduces a possibly larger scalar value to {@code [0, L[} with {@code L} being the order
          * of the Ristretto255 group.
          *
-         * @param scalar the scalar to reduce, must be
-         *               {@link Ristretto255#RISTRETTO255_NON_REDUCED_SCALAR_BYTES}  bytes
+         * @param scalar the scalar to reduce, must be {@link Ristretto255#RISTRETTO255_NON_REDUCED_SCALAR_BYTES}
+         *               bytes
          * @return the reduced scalar
          */
         BigInteger cryptoCoreRistretto255ScalarReduce(byte[] scalar);
@@ -425,29 +379,15 @@ public interface Ristretto255 {
          * @param scalar the scalar to invert
          * @return the multiplicative inverse
          */
-        default BigInteger cryptoCoreRistretto255ScalarInvert(BigInteger scalar)
-            throws SodiumException {
-            if (scalar == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarInvert(scalarToBytes(scalar));
-        }
+        BigInteger cryptoCoreRistretto255ScalarInvert(BigInteger scalar) throws SodiumException;
 
         /**
          * Calculates the multiplicative inverse of the given scalar value.
          *
-         * @param scalarHex the scalar to invert in hexadecimal notation
+         * @param scalarEnc the encoded scalar to invert
          * @return the multiplicative inverse
          */
-        default BigInteger cryptoCoreRistretto255ScalarInvert(String scalarHex)
-            throws SodiumException {
-            if (scalarHex == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarInvert(toBin(scalarHex));
-        }
+        BigInteger cryptoCoreRistretto255ScalarInvert(String scalarEnc) throws SodiumException;
 
         /**
          * Calculates the multiplicative inverse of the given scalar value.
@@ -464,27 +404,15 @@ public interface Ristretto255 {
          * @param scalar the scalar to negate
          * @return the additive inverse
          */
-        default BigInteger cryptoCoreRistretto255ScalarNegate(BigInteger scalar) {
-            if (scalar == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarNegate(scalarToBytes(scalar));
-        }
+        BigInteger cryptoCoreRistretto255ScalarNegate(BigInteger scalar);
 
         /**
          * Calculates the additive inverse of the given scalar value.
          *
-         * @param scalarHex the scalar to negate in hexadecimal notation
+         * @param scalarEnc the encoded scalar to negate
          * @return the additive inverse
          */
-        default BigInteger cryptoCoreRistretto255ScalarNegate(String scalarHex) {
-            if (scalarHex == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarNegate(toBin(scalarHex));
-        }
+        BigInteger cryptoCoreRistretto255ScalarNegate(String scalarEnc);
 
         /**
          * Calculates the additive inverse of the given scalar value.
@@ -502,28 +430,16 @@ public interface Ristretto255 {
          * @param scalar the scalar to complement
          * @return the complement
          */
-        default BigInteger cryptoCoreRistretto255ScalarComplement(BigInteger scalar) {
-            if (scalar == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarComplement(scalarToBytes(scalar));
-        }
+        BigInteger cryptoCoreRistretto255ScalarComplement(BigInteger scalar);
 
         /**
          * Calculates the result R for the given scalar value such that {@code R + scalar = 1 (mod
          * L)} with {@code L} being the order of the Ristretto255 group.
          *
-         * @param scalarHex the scalar to complement in hexadecimal notation
+         * @param scalarEnc the encoded scalar to complement
          * @return the complement
          */
-        default BigInteger cryptoCoreRistretto255ScalarComplement(String scalarHex) {
-            if (scalarHex == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarComplement(toBin(scalarHex));
-        }
+        BigInteger cryptoCoreRistretto255ScalarComplement(String scalarEnc);
 
         /**
          * Calculates the result R for the given scalar value such that {@code R + scalar = 1 (mod
@@ -543,93 +459,57 @@ public interface Ristretto255 {
          * @param y the second scalar
          * @return the sum
          */
-        default BigInteger cryptoCoreRistretto255ScalarAdd(BigInteger x, BigInteger y) {
-            if (x == null || y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarAdd(scalarToBytes(x), scalarToBytes(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarAdd(BigInteger x, BigInteger y);
 
         /**
          * Adds two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the order
          * of the Ristretto255 group.
          *
          * @param x the first scalar
-         * @param y the second scalar in hexadecimal notation
+         * @param y the second scalar (encoded)
          * @return the sum
          */
-        default BigInteger cryptoCoreRistretto255ScalarAdd(BigInteger x, String y) {
-            if (x == null || y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarAdd(scalarToBytes(x), toBin(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarAdd(BigInteger x, String y);
 
         /**
          * Adds two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the order
          * of the Ristretto255 group.
          *
-         * @param x the first scalar in hexadecimal notation
+         * @param x the first scalar (encoded)
          * @param y the second scalar
          * @return the sum
          */
-        default BigInteger cryptoCoreRistretto255ScalarAdd(String x, BigInteger y) {
-            if (x == null || y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarAdd(toBin(x), scalarToBytes(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarAdd(String x, BigInteger y);
 
         /**
          * Adds two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the order
          * of the Ristretto255 group.
          *
-         * @param x the first scalar in hexadecimal notation
-         * @param y the second scalar in hexadecimal notation
+         * @param x the first scalar (encoded)
+         * @param y the second scalar (encoded)
          * @return the sum
          */
-        default BigInteger cryptoCoreRistretto255ScalarAdd(String x, String y) {
-            if (x == null || y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarAdd(toBin(x), toBin(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarAdd(String x, String y);
 
         /**
          * Adds two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the order
          * of the Ristretto255 group.
          *
-         * @param x the first scalar in hexadecimal notation
+         * @param x the first scalar (encoded)
          * @param y the second scalar, must be {@link Ristretto255#RISTRETTO255_SCALAR_BYTES} bytes
          * @return the sum
          */
-        default BigInteger cryptoCoreRistretto255ScalarAdd(String x, byte[] y) {
-            if (x == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarAdd(toBin(x), y);
-        }
+        BigInteger cryptoCoreRistretto255ScalarAdd(String x, byte[] y);
 
         /**
          * Adds two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the order
          * of the Ristretto255 group.
          *
          * @param x the first scalar, must be {@link Ristretto255#RISTRETTO255_SCALAR_BYTES} bytes
-         * @param y the second scalar in hexadecimal notation
+         * @param y the second scalar (encoded)
          * @return the sum
          */
-        default BigInteger cryptoCoreRistretto255ScalarAdd(byte[] x, String y) {
-            if (y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarAdd(x, toBin(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarAdd(byte[] x, String y);
 
         /**
          * Adds two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the order
@@ -639,13 +519,7 @@ public interface Ristretto255 {
          * @param y the second scalar, must be {@link Ristretto255#RISTRETTO255_SCALAR_BYTES} bytes
          * @return the sum
          */
-        default BigInteger cryptoCoreRistretto255ScalarAdd(BigInteger x, byte[] y) {
-            if (x == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarAdd(scalarToBytes(x), y);
-        }
+        BigInteger cryptoCoreRistretto255ScalarAdd(BigInteger x, byte[] y);
 
         /**
          * Adds two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the order
@@ -655,13 +529,7 @@ public interface Ristretto255 {
          * @param y the second scalar
          * @return the sum
          */
-        default BigInteger cryptoCoreRistretto255ScalarAdd(byte[] x, BigInteger y) {
-            if (y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarAdd(x, Ristretto255.scalarToBytes(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarAdd(byte[] x, BigInteger y);
 
         /**
          * Adds two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the order
@@ -681,94 +549,57 @@ public interface Ristretto255 {
          * @param y the second scalar
          * @return the difference
          */
-        default BigInteger cryptoCoreRistretto255ScalarSub(BigInteger x, BigInteger y) {
-            if (x == null || y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarSub(Ristretto255.scalarToBytes(x),
-                Ristretto255.scalarToBytes(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarSub(BigInteger x, BigInteger y);
 
         /**
          * Subtracts two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the
          * order of the Ristretto255 group.
          *
          * @param x the first scalar
-         * @param y the second scalar in hexadecimal notation
+         * @param y the second scalar (encoded)
          * @return the difference
          */
-        default BigInteger cryptoCoreRistretto255ScalarSub(BigInteger x, String y) {
-            if (x == null || y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarSub(Ristretto255.scalarToBytes(x), toBin(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarSub(BigInteger x, String y);
 
         /**
          * Subtracts two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the
          * order of the Ristretto255 group.
          *
-         * @param x the first scalar in hexadecimal notation
+         * @param x the first scalar (encoded)
          * @param y the second scalar
          * @return the difference
          */
-        default BigInteger cryptoCoreRistretto255ScalarSub(String x, BigInteger y) {
-            if (x == null || y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarSub(toBin(x), Ristretto255.scalarToBytes(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarSub(String x, BigInteger y);
 
         /**
          * Subtracts two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the
          * order of the Ristretto255 group.
          *
-         * @param x the first scalar in hexadecimal notation
-         * @param y the second scalar in hexadecimal notation
+         * @param x the first scalar (encoded)
+         * @param y the second scalar (encoded)
          * @return the difference
          */
-        default BigInteger cryptoCoreRistretto255ScalarSub(String x, String y) {
-            if (x == null || y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarSub(toBin(x), toBin(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarSub(String x, String y);
 
         /**
          * Subtracts two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the
          * order of the Ristretto255 group.
          *
-         * @param x the first scalar in hexadecimal notation
+         * @param x the first scalar (encoded)
          * @param y the second scalar, must be {@link Ristretto255#RISTRETTO255_SCALAR_BYTES} bytes
          * @return the difference
          */
-        default BigInteger cryptoCoreRistretto255ScalarSub(String x, byte[] y) {
-            if (x == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarSub(toBin(x), y);
-        }
+        BigInteger cryptoCoreRistretto255ScalarSub(String x, byte[] y);
 
         /**
          * Subtracts two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the
          * order of the Ristretto255 group.
          *
          * @param x the first scalar, must be {@link Ristretto255#RISTRETTO255_SCALAR_BYTES} bytes
-         * @param y the second scalar in hexadecimal notation
+         * @param y the second scalar (encoded)
          * @return the difference
          */
-        default BigInteger cryptoCoreRistretto255ScalarSub(byte[] x, String y) {
-            if (y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarSub(x, toBin(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarSub(byte[] x, String y);
 
         /**
          * Subtracts two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the
@@ -778,13 +609,7 @@ public interface Ristretto255 {
          * @param y the second scalar, must be {@link Ristretto255#RISTRETTO255_SCALAR_BYTES} bytes
          * @return the difference
          */
-        default BigInteger cryptoCoreRistretto255ScalarSub(BigInteger x, byte[] y) {
-            if (x == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarSub(scalarToBytes(x), y);
-        }
+        BigInteger cryptoCoreRistretto255ScalarSub(BigInteger x, byte[] y);
 
         /**
          * Subtracts two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the
@@ -794,13 +619,7 @@ public interface Ristretto255 {
          * @param y the second scalar
          * @return the difference
          */
-        default BigInteger cryptoCoreRistretto255ScalarSub(byte[] x, BigInteger y) {
-            if (y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarSub(x, scalarToBytes(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarSub(byte[] x, BigInteger y);
 
         /**
          * Subtracts two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the
@@ -820,93 +639,57 @@ public interface Ristretto255 {
          * @param y the second scalar
          * @return the product
          */
-        default BigInteger cryptoCoreRistretto255ScalarMul(BigInteger x, BigInteger y) {
-            if (x == null || y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarMul(scalarToBytes(x), scalarToBytes(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarMul(BigInteger x, BigInteger y);
 
         /**
          * Multiplies two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the
          * order of the Ristretto255 group.
          *
          * @param x the first scalar
-         * @param y the second scalar in hexadecimal notation
+         * @param y the second scalar (encoded)
          * @return the product
          */
-        default BigInteger cryptoCoreRistretto255ScalarMul(BigInteger x, String y) {
-            if (x == null || y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarMul(scalarToBytes(x), toBin(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarMul(BigInteger x, String y);
 
         /**
          * Multiplies two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the
          * order of the Ristretto255 group.
          *
-         * @param x the first scalar in hexadecimal notation
+         * @param x the first scalar (encoded)
          * @param y the second scalar
          * @return the product
          */
-        default BigInteger cryptoCoreRistretto255ScalarMul(String x, BigInteger y) {
-            if (x == null || y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarMul(toBin(x), scalarToBytes(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarMul(String x, BigInteger y);
 
         /**
          * Multiplies two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the
          * order of the Ristretto255 group.
          *
-         * @param x the first scalar in hexadecimal notation
-         * @param y the second scalar in hexadecimal notation
+         * @param x the first scalar (encoded)
+         * @param y the second scalar (encoded)
          * @return the product
          */
-        default BigInteger cryptoCoreRistretto255ScalarMul(String x, String y) {
-            if (x == null || y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarMul(toBin(x), toBin(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarMul(String x, String y);
 
         /**
          * Multiplies two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the
          * order of the Ristretto255 group.
          *
-         * @param x the first scalar in hexadecimal notation
+         * @param x the first scalar (encoded)
          * @param y the second scalar, must be {@link Ristretto255#RISTRETTO255_SCALAR_BYTES} bytes
          * @return the product
          */
-        default BigInteger cryptoCoreRistretto255ScalarMul(String x, byte[] y) {
-            if (x == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarMul(toBin(x), y);
-        }
+        BigInteger cryptoCoreRistretto255ScalarMul(String x, byte[] y);
 
         /**
          * Multiplies two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the
          * order of the Ristretto255 group.
          *
          * @param x the first scalar, must be {@link Ristretto255#RISTRETTO255_SCALAR_BYTES} bytes
-         * @param y the second scalar in hexadecimal notation
+         * @param y the second scalar (encoded)
          * @return the product
          */
-        default BigInteger cryptoCoreRistretto255ScalarMul(byte[] x, String y) {
-            if (y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarMul(x, toBin(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarMul(byte[] x, String y);
 
         /**
          * Multiplies two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the
@@ -916,13 +699,7 @@ public interface Ristretto255 {
          * @param y the second scalar, must be {@link Ristretto255#RISTRETTO255_SCALAR_BYTES} bytes
          * @return the product
          */
-        default BigInteger cryptoCoreRistretto255ScalarMul(BigInteger x, byte[] y) {
-            if (x == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarMul(scalarToBytes(x), y);
-        }
+        BigInteger cryptoCoreRistretto255ScalarMul(BigInteger x, byte[] y);
 
         /**
          * Multiplies two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the
@@ -932,13 +709,7 @@ public interface Ristretto255 {
          * @param y the second scalar
          * @return the product
          */
-        default BigInteger cryptoCoreRistretto255ScalarMul(byte[] x, BigInteger y) {
-            if (y == null) {
-                throw new IllegalArgumentException("null arguments are invalid");
-            }
-
-            return cryptoCoreRistretto255ScalarMul(x, scalarToBytes(y));
-        }
+        BigInteger cryptoCoreRistretto255ScalarMul(byte[] x, BigInteger y);
 
         /**
          * Multiplies two scalars {@code x} and {@code y} modulo {@code L} with {@code L} being the
@@ -952,6 +723,7 @@ public interface Ristretto255 {
     }
 
     class Checker {
+        private Checker() {}
 
         public static void ensurePointFits(byte[] point) {
             if (point == null) {
@@ -1048,13 +820,13 @@ public interface Ristretto255 {
             this.ls = ls;
         }
 
-        private RistrettoPoint(LazySodium ls, String hex) {
-            this(ls, toBin(hex));
+        private RistrettoPoint(LazySodium ls, String encoded) {
+            this(ls, ls.decodeFromString(encoded));
         }
 
         @Override
         public String toString() {
-            return toHex();
+            return encode();
         }
 
         @Override
@@ -1082,7 +854,7 @@ public interface Ristretto255 {
          * @return the point in hexadecimal notation
          */
         public String toHex() {
-            return LazySodium.toHex(repr).toLowerCase();
+            return ls.toHexStr(repr);
         }
 
         /**
@@ -1092,6 +864,14 @@ public interface Ristretto255 {
          */
         public byte[] toBytes() {
             return repr;
+        }
+
+        /**
+         * Encodes the point using the {@link LazySodium}'s associated {@link MessageEncoder}.
+         * @return the encoded point
+         */
+        public String encode() {
+            return ls.encodeToString(repr);
         }
 
         /**
@@ -1188,7 +968,20 @@ public interface Ristretto255 {
          * @return the corresponding {@link RistrettoPoint}
          */
         public static RistrettoPoint fromHex(LazySodium ls, String hex) {
-            return new RistrettoPoint(ls, hex);
+            return new RistrettoPoint(ls, ls.toBinary(hex));
+        }
+
+        /**
+         * Creates a new {@link RistrettoPoint} from the encoded representation, using the
+         * {@link LazySodium}'s associated {@link MessageEncoder}. The decoded bytes must be a valid
+         * canonical encoding.
+         *
+         * @param ls the {@link LazySodium} instance
+         * @param encoded the encoded Ristretto255 point
+         * @return the corresponding {@link RistrettoPoint}
+         */
+        public static RistrettoPoint fromString(LazySodium ls, String encoded) {
+            return new RistrettoPoint(ls, encoded);
         }
 
         /**
@@ -1201,6 +994,40 @@ public interface Ristretto255 {
          */
         public static RistrettoPoint fromBytes(LazySodium ls, byte[] bytes) {
             return new RistrettoPoint(ls, bytes);
+        }
+
+        /**
+         * Maps the encoded input to a {@link RistrettoPoint}, using the {@link LazySodium}'s
+         * associated {@link MessageEncoder}. The resulting bytes are hashed using SHA-512 and
+         * mapped to the Ristretto 255 group, using {@code crypto_code_ristretto255_from_hash},
+         * i.e. the standard hash-to-group algorithm.
+         *
+         * @param ls the {@link LazySodium} instance
+         * @param encodedInput the encoded bytes
+         * @return the mapped {@link RistrettoPoint}
+         * @throws SodiumException if the mapping failed
+         */
+        public static RistrettoPoint hashToPoint(LazySodium ls, String encodedInput)
+            throws SodiumException {
+            return hashToPoint(ls, ls.decodeFromString(encodedInput));
+        }
+
+        /**
+         * Maps the input to a {@link RistrettoPoint}, by calculating the SHA-512 hash and
+         * mapping it to the Ristretto 255 group, using {@code crypto_code_ristretto255_from_hash},
+         * i.e. the standard hash-to-group algorithm.
+         *
+         * @param ls the {@link LazySodium} instance
+         * @param input the input bytes
+         * @return the mapped {@link RistrettoPoint}
+         * @throws SodiumException if the mapping failed
+         */
+        public static RistrettoPoint hashToPoint(LazySodium ls, byte[] input)
+            throws SodiumException {
+            byte[] hash = new byte[Hash.SHA512_BYTES];
+            ls.cryptoHashSha512(hash, input, input.length);
+
+            return ls.cryptoCoreRistretto255FromHash(hash);
         }
     }
 }
