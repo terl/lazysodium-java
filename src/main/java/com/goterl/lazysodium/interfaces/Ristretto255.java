@@ -245,7 +245,7 @@ public interface Ristretto255 {
          * Maps a {@link Ristretto255#RISTRETTO255_HASH_BYTES} bytes hash to a {@link
          * RistrettoPoint}.
          *
-         * @param hash the hash in hexadecimal notation
+         * @param hash the encoded hash
          * @return the corresponding Ristretto255 point
          */
         RistrettoPoint cryptoCoreRistretto255FromHash(String hash) throws SodiumException;
@@ -263,7 +263,7 @@ public interface Ristretto255 {
          * resulting point.
          *
          * @param n     the scalar
-         * @param point the Ristretto255 point in hexadecimal notation
+         * @param point the Ristretto255 point
          * @return the result
          */
         RistrettoPoint cryptoScalarmultRistretto255(BigInteger n, RistrettoPoint point)
@@ -274,7 +274,7 @@ public interface Ristretto255 {
          * resulting point.
          *
          * @param nEnc  the encoded scalar bytes, in little-endian byte order
-         * @param point the Ristretto255 point in hexadecimal notation
+         * @param point the Ristretto255 point
          * @return the result
          */
         RistrettoPoint cryptoScalarmultRistretto255(String nEnc, RistrettoPoint point)
@@ -286,7 +286,7 @@ public interface Ristretto255 {
          *
          * @param n     the scalar, must be {@link Ristretto255#RISTRETTO255_BYTES} bytes, in
          *              little-endian encoding
-         * @param point the Ristretto255 point in hexadecimal notation
+         * @param point the Ristretto255 point
          * @return the result
          */
         RistrettoPoint cryptoScalarmultRistretto255(byte[] n, RistrettoPoint point)
@@ -303,10 +303,10 @@ public interface Ristretto255 {
         /**
          * Multiplies the Ristretto255 base point by the scalar {@code n} and returns the result.
          *
-         * @param nHex the scalar in hexadecimal notation, in little-endian encoding
+         * @param nEnc the encoded scalar, in little-endian byte order
          * @return the result
          */
-        RistrettoPoint cryptoScalarmultRistretto255Base(String nHex) throws SodiumException;
+        RistrettoPoint cryptoScalarmultRistretto255Base(String nEnc) throws SodiumException;
 
         /**
          * Multiplies the Ristretto255 base point by the scalar {@code n} and returns the result.

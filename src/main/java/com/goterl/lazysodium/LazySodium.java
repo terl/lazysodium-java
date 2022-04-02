@@ -2806,13 +2806,13 @@ public abstract class LazySodium implements
     }
 
     @Override
-    public RistrettoPoint cryptoScalarmultRistretto255Base(String nHex)
+    public RistrettoPoint cryptoScalarmultRistretto255Base(String nEnc)
         throws SodiumException {
-        if (nHex == null) {
+        if (nEnc == null) {
             throw new IllegalArgumentException("null arguments are invalid");
         }
 
-        return cryptoScalarmultRistretto255Base(messageEncoder.decode(nHex));
+        return cryptoScalarmultRistretto255Base(messageEncoder.decode(nEnc));
     }
 
     @Override
