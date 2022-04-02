@@ -3,16 +3,21 @@ package com.goterl.lazysodium;
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.fail;
+import static org.junit.Assert.assertNotEquals;
 
 import com.goterl.lazysodium.exceptions.SodiumException;
 import com.goterl.lazysodium.interfaces.Ristretto255;
 import com.goterl.lazysodium.interfaces.Ristretto255.RistrettoPoint;
+import com.goterl.lazysodium.utils.Base64MessageEncoder;
+import com.goterl.lazysodium.utils.HexMessageEncoder;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.Base64;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import junit.framework.TestCase;
 import org.junit.Test;
 
 public class Ristretto255Test extends BaseTest {
@@ -41,7 +46,7 @@ public class Ristretto255Test extends BaseTest {
         RistrettoPoint q = RistrettoPoint.random(lazySodium);
 
         // Random points should be non-equal
-        assertFalse(p.equals(q));
+        assertNotEquals(p, q);
     }
 
     @Test
@@ -133,7 +138,7 @@ public class Ristretto255Test extends BaseTest {
 
         byte[] differentHash = new byte[64];
         RistrettoPoint different = lazySodium.cryptoCoreRistretto255FromHash(differentHash);
-        assertFalse(p.equals(different));
+        assertNotEquals(p, different);
 
         byte[] invalidHash = new byte[42];
         try {
@@ -170,7 +175,11 @@ public class Ristretto255Test extends BaseTest {
             byte[] hashed = sha512.digest(testInput[i].getBytes(StandardCharsets.UTF_8));
             RistrettoPoint encoded = lazySodium.cryptoCoreRistretto255FromHash(hashed);
 
+            RistrettoPoint alternative = RistrettoPoint.hashToPoint(lazySodium,
+                lazySodium.encodeToString(testInput[i].getBytes(StandardCharsets.UTF_8)));
+
             assertEquals(RistrettoPoint.fromHex(lazySodium, expectedPoint[i]), encoded);
+            assertEquals(encoded, alternative);
         }
     }
 
@@ -313,9 +322,9 @@ public class Ristretto255Test extends BaseTest {
         assertFalse(s2.compareTo(BigInteger.ZERO) < 0);
         assertFalse(s3.compareTo(BigInteger.ZERO) < 0);
 
-        assertFalse(s1.equals(s2));
-        assertFalse(s1.equals(s3));
-        assertFalse(s2.equals(s3));
+        assertNotEquals(s1, s2);
+        assertNotEquals(s1, s3);
+        assertNotEquals(s2, s3);
     }
 
     @Test
@@ -574,5 +583,22 @@ public class Ristretto255Test extends BaseTest {
         } catch (IllegalArgumentException e) {
             // expected
         }
+    }
+
+    @Test
+    public void encoders() {
+        LazySodiumJava lsHex = new LazySodiumJava(new SodiumJava(), new HexMessageEncoder());
+        LazySodiumJava lsBase64 = new LazySodiumJava(new SodiumJava(), new Base64MessageEncoder());
+
+        RistrettoPoint randomPoint = RistrettoPoint.random(lazySodium);
+
+        RistrettoPoint hexPoint = RistrettoPoint.fromBytes(lsHex, randomPoint.toBytes());
+        RistrettoPoint base64Point = RistrettoPoint.fromBytes(lsBase64, randomPoint.toBytes());
+
+        String hexEncoded = hexPoint.encode();
+        String base64Encoded = base64Point.encode();
+
+        assertEquals(randomPoint.toHex(), hexEncoded);
+        assertEquals(Base64.getEncoder().encodeToString(randomPoint.toBytes()), base64Encoded);
     }
 }

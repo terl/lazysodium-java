@@ -122,7 +122,7 @@ public abstract class LazySodium implements
     }
 
 
-    private final static char[] hexArray = "0123456789ABCDEF".toCharArray();
+    private static final char[] hexArray = "0123456789ABCDEF".toCharArray();
 
     // The following is from https://stackoverflow.com/a/9855338/3526705
     private static String bytesToHex(byte[] bytes) {
@@ -2731,7 +2731,7 @@ public abstract class LazySodium implements
             throw new IllegalArgumentException("null arguments are invalid");
         }
 
-        return cryptoCoreRistretto255IsValidPoint(toBin(point));
+        return cryptoCoreRistretto255IsValidPoint(messageEncoder.decode(point));
     }
 
     @Override
@@ -2740,6 +2740,15 @@ public abstract class LazySodium implements
         cryptoCoreRistretto255Random(point);
 
         return RistrettoPoint.fromBytes(this, point);
+    }
+
+    @Override
+    public RistrettoPoint cryptoCoreRistretto255FromHash(String hash) throws SodiumException {
+        if (hash == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255FromHash(messageEncoder.decode(hash));
     }
 
 
@@ -2755,6 +2764,26 @@ public abstract class LazySodium implements
     }
 
     @Override
+    public RistrettoPoint cryptoScalarmultRistretto255(BigInteger n, RistrettoPoint point)
+        throws SodiumException {
+        if (n == null || point == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoScalarmultRistretto255(Ristretto255.scalarToBytes(n), point);
+    }
+
+    @Override
+    public RistrettoPoint cryptoScalarmultRistretto255(String nEnc, RistrettoPoint point)
+        throws SodiumException {
+        if (nEnc == null || point == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoScalarmultRistretto255(messageEncoder.decode(nEnc), point);
+    }
+
+    @Override
     public RistrettoPoint cryptoScalarmultRistretto255(byte[] n, RistrettoPoint point)
         throws SodiumException {
 
@@ -2766,6 +2795,24 @@ public abstract class LazySodium implements
         }
 
         return RistrettoPoint.fromBytes(this, result);
+    }
+
+    @Override
+    public RistrettoPoint cryptoScalarmultRistretto255Base(BigInteger n) throws SodiumException {
+        if (n == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+        return cryptoScalarmultRistretto255Base(Ristretto255.scalarToBytes(n));
+    }
+
+    @Override
+    public RistrettoPoint cryptoScalarmultRistretto255Base(String nHex)
+        throws SodiumException {
+        if (nHex == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoScalarmultRistretto255Base(messageEncoder.decode(nHex));
     }
 
     @Override
@@ -2820,11 +2867,49 @@ public abstract class LazySodium implements
     }
 
     @Override
+    public BigInteger cryptoCoreRistretto255ScalarReduce(BigInteger scalar) {
+        if (scalar == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarReduce(Ristretto255.scalarToBytes(scalar, false));
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarReduce(String scalarEnc) {
+        if (scalarEnc == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarReduce(messageEncoder.decode(scalarEnc));
+    }
+
+    @Override
     public BigInteger cryptoCoreRistretto255ScalarReduce(byte[] scalar) {
         byte[] result = Ristretto255.scalarBuffer();
         cryptoCoreRistretto255ScalarReduce(result, scalar);
 
         return Ristretto255.bytesToScalar(result);
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarInvert(BigInteger scalar)
+        throws SodiumException {
+        if (scalar == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarInvert(Ristretto255.scalarToBytes(scalar));
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarInvert(String scalarEnc)
+        throws SodiumException {
+        if (scalarEnc == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarInvert(messageEncoder.decode(scalarEnc));
     }
 
     @Override
@@ -2839,11 +2924,47 @@ public abstract class LazySodium implements
     }
 
     @Override
+    public BigInteger cryptoCoreRistretto255ScalarNegate(BigInteger scalar) {
+        if (scalar == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarNegate(Ristretto255.scalarToBytes(scalar));
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarNegate(String scalarEnc) {
+        if (scalarEnc == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarNegate(messageEncoder.decode(scalarEnc));
+    }
+
+    @Override
     public BigInteger cryptoCoreRistretto255ScalarNegate(byte[] scalar) {
         byte[] result = Ristretto255.scalarBuffer();
         cryptoCoreRistretto255ScalarNegate(result, scalar);
 
         return Ristretto255.bytesToScalar(result);
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarComplement(BigInteger scalar) {
+        if (scalar == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarComplement(Ristretto255.scalarToBytes(scalar));
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarComplement(String scalarEnc) {
+        if (scalarEnc == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarComplement(messageEncoder.decode(scalarEnc));
     }
 
     @Override
@@ -2855,6 +2976,79 @@ public abstract class LazySodium implements
     }
 
     @Override
+    public BigInteger cryptoCoreRistretto255ScalarAdd(BigInteger x, BigInteger y) {
+        if (x == null || y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarAdd(
+            Ristretto255.scalarToBytes(x), Ristretto255.scalarToBytes(y));
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarAdd(BigInteger x, String y) {
+        if (x == null || y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarAdd(Ristretto255.scalarToBytes(x), messageEncoder.decode(y));
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarAdd(String x, BigInteger y) {
+        if (x == null || y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarAdd(messageEncoder.decode(x), Ristretto255.scalarToBytes(y));
+    }
+    
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarAdd(String x, String y) {
+        if (x == null || y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarAdd(messageEncoder.decode(x), messageEncoder.decode(y));
+    }
+    
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarAdd(String x, byte[] y) {
+        if (x == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarAdd(messageEncoder.decode(x), y);
+    }
+    
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarAdd(byte[] x, String y) {
+        if (y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarAdd(x, messageEncoder.decode(y));
+    }
+    
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarAdd(BigInteger x, byte[] y) {
+        if (x == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarAdd(Ristretto255.scalarToBytes(x), y);
+    }
+    
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarAdd(byte[] x, BigInteger y) {
+        if (y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarAdd(x, Ristretto255.scalarToBytes(y));
+    }
+
+    @Override
     public BigInteger cryptoCoreRistretto255ScalarAdd(byte[] x, byte[] y) {
         byte[] result = Ristretto255.scalarBuffer();
         cryptoCoreRistretto255ScalarAdd(result, x, y);
@@ -2863,11 +3057,157 @@ public abstract class LazySodium implements
     }
 
     @Override
+    public BigInteger cryptoCoreRistretto255ScalarSub(BigInteger x, BigInteger y) {
+        if (x == null || y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarSub(
+            Ristretto255.scalarToBytes(x), Ristretto255.scalarToBytes(y));
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarSub(BigInteger x, String y) {
+        if (x == null || y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarSub(Ristretto255.scalarToBytes(x), messageEncoder.decode(y));
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarSub(String x, BigInteger y) {
+        if (x == null || y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarSub(messageEncoder.decode(x), Ristretto255.scalarToBytes(y));
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarSub(String x, String y) {
+        if (x == null || y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarSub(messageEncoder.decode(x), messageEncoder.decode(y));
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarSub(String x, byte[] y) {
+        if (x == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarSub(messageEncoder.decode(x), y);
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarSub(byte[] x, String y) {
+        if (y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarSub(x, messageEncoder.decode(y));
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarSub(BigInteger x, byte[] y) {
+        if (x == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarSub(Ristretto255.scalarToBytes(x), y);
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarSub(byte[] x, BigInteger y) {
+        if (y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarSub(x, Ristretto255.scalarToBytes(y));
+    }
+
+    @Override
     public BigInteger cryptoCoreRistretto255ScalarSub(byte[] x, byte[] y) {
         byte[] result = Ristretto255.scalarBuffer();
         cryptoCoreRistretto255ScalarSub(result, x, y);
 
         return Ristretto255.bytesToScalar(result);
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarMul(BigInteger x, BigInteger y) {
+        if (x == null || y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarMul(
+            Ristretto255.scalarToBytes(x), Ristretto255.scalarToBytes(y));
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarMul(BigInteger x, String y) {
+        if (x == null || y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarMul(Ristretto255.scalarToBytes(x), messageEncoder.decode(y));
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarMul(String x, BigInteger y) {
+        if (x == null || y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarMul(messageEncoder.decode(x), Ristretto255.scalarToBytes(y));
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarMul(String x, String y) {
+        if (x == null || y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarMul(messageEncoder.decode(x), messageEncoder.decode(y));
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarMul(String x, byte[] y) {
+        if (x == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarMul(messageEncoder.decode(x), y);
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarMul(byte[] x, String y) {
+        if (y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarMul(x, messageEncoder.decode(y));
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarMul(BigInteger x, byte[] y) {
+        if (x == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarMul(Ristretto255.scalarToBytes(x), y);
+    }
+
+    @Override
+    public BigInteger cryptoCoreRistretto255ScalarMul(byte[] x, BigInteger y) {
+        if (y == null) {
+            throw new IllegalArgumentException("null arguments are invalid");
+        }
+
+        return cryptoCoreRistretto255ScalarMul(x, Ristretto255.scalarToBytes(y));
     }
 
     @Override
@@ -2908,6 +3248,28 @@ public abstract class LazySodium implements
     @Override
     public byte[] bytes(String s) {
         return s.getBytes(charset);
+    }
+
+    /**
+     * Encodes the given bytes, using this {@link LazySodium}'s associated
+     * {@link MessageEncoder}.
+     *
+     * @param bytes the bytes to encode
+     * @return the encoded string
+     */
+    public String encodeToString(byte[] bytes) {
+        return messageEncoder.encode(bytes);
+    }
+
+    /**
+     * Decodes the given string to bytes, using this {@link LazySodium}'s associated
+     * {@link MessageEncoder}.
+     *
+     * @param encoded the encoded string
+     * @return the decoded bytes
+     */
+    public byte[] decodeFromString(String encoded) {
+        return messageEncoder.decode(encoded);
     }
 
     @Override
