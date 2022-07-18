@@ -69,8 +69,6 @@ public class SecureMemoryTest extends BaseTest {
         byte[] arr = ptr.getByteArray(0, size);
 
         TestCase.assertEquals(arr.length, size);
-
-        lazySodium.sodiumFree(ptr);
     }
 
     @Test
@@ -82,8 +80,6 @@ public class SecureMemoryTest extends BaseTest {
         byte[] arr = ptr.getByteArray(0, size * 2);
 
         TestCase.assertEquals(arr.length, size * 2);
-
-        lazySodium.sodiumFree(ptr);
     }
 
     @Test
