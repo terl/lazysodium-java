@@ -202,12 +202,14 @@ public abstract class LazySodium implements
 
     @Override
     public boolean sodiumMemZero(byte[] pnt, int len) {
-        return successful(getSodium().sodium_memzero(pnt, len));
+        getSodium().sodium_memzero(pnt, len);
+        return true;
     }
 
     @Override
     public boolean sodiumMemZero(Pointer pnt, int len) {
-        return successful(getSodium().sodium_memzero(pnt, len));
+        getSodium().sodium_memzero(pnt, len);
+        return true;
     }
 
     @Override

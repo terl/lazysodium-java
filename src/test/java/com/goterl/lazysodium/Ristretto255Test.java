@@ -170,7 +170,7 @@ public class Ristretto255Test extends BaseTest {
         };
 
         for (int i = 0; i < testInput.length; ++i) {
-            MessageDigest sha512 = MessageDigest.getInstance("SHA512");
+            MessageDigest sha512 = MessageDigest.getInstance("SHA-512");
 
             byte[] hashed = sha512.digest(testInput[i].getBytes(StandardCharsets.UTF_8));
             RistrettoPoint encoded = lazySodium.cryptoCoreRistretto255FromHash(hashed);
