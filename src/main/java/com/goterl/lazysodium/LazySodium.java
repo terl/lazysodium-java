@@ -206,13 +206,28 @@ public abstract class LazySodium implements
     }
 
     @Override
+    public boolean sodiumMemZero(Pointer pnt, int len) {
+        return successful(getSodium().sodium_memzero(pnt, len));
+    }
+
+    @Override
     public boolean sodiumMLock(byte[] array, int len) {
         return successful(getSodium().sodium_mlock(array, len));
     }
 
     @Override
+    public boolean sodiumMLock(Pointer pnt, int len) {
+        return successful(getSodium().sodium_mlock(pnt, len));
+    }
+
+    @Override
     public boolean sodiumMUnlock(byte[] array, int len) {
         return successful(getSodium().sodium_munlock(array, len));
+    }
+
+    @Override
+    public boolean sodiumMUnlock(Pointer pnt, int len) {
+        return successful(getSodium().sodium_munlock(pnt, len));
     }
 
     @Override

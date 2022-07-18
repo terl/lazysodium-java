@@ -6,13 +6,14 @@
  * file, you can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package com.goterl.lazysodium;import com.sun.jna.Pointer;
+package com.goterl.lazysodium;
+
+import com.sun.jna.Memory;
+import com.sun.jna.Pointer;
 import junit.framework.TestCase;
 import org.junit.Test;
 
 public class SecureMemoryTest extends BaseTest {
-
-
     @Test
     public void memZero() {
         byte[] b = new byte[] { 4, 2, 2, 1 };
@@ -21,11 +22,42 @@ public class SecureMemoryTest extends BaseTest {
     }
 
     @Test
+    public void memZeroPtr() {
+        Pointer p = new Memory(32);
+        p.write(0, lazySodium.randomBytesBuf(32), 0, 32);
+        TestCase.assertFalse(isZero(p.getByteArray(0, 32)));
+
+        boolean res = lazySodium.sodiumMemZero(p, 32);
+
+        TestCase.assertTrue(res);
+        TestCase.assertTrue(isZero(p.getByteArray(0, 32)));
+
+    }
+
+    @Test
     public void mLock() {
         byte[] b = new byte[] { 4, 5, 2, 1 };
+
         boolean res = lazySodium.sodiumMLock(b, b.length);
         boolean res2 = lazySodium.sodiumMUnlock(b, b.length);
+
+        TestCase.assertTrue(res);
+        TestCase.assertTrue(res2);
         TestCase.assertTrue(isZero(b));
+    }
+
+    @Test
+    public void mLockPtr() {
+        Pointer p = new Memory(32);
+        p.write(0, lazySodium.randomBytesBuf(32), 0, 32);
+        TestCase.assertFalse(isZero(p.getByteArray(0, 32)));
+
+        boolean res = lazySodium.sodiumMLock(p, 32);
+        boolean res2 = lazySodium.sodiumMUnlock(p, 32);
+
+        TestCase.assertTrue(res);
+        TestCase.assertTrue(res2);
+        TestCase.assertTrue(isZero(p.getByteArray(0, 32)));
     }
 
     @Test
@@ -37,6 +69,17 @@ public class SecureMemoryTest extends BaseTest {
         byte[] arr = ptr.getByteArray(0, size);
 
         TestCase.assertEquals(arr.length, size);
+    }
+
+    @Test
+    public void allocArray() {
+        int size = 10;
+
+        Pointer ptr = lazySodium.sodiumAllocArray(size, 2);
+
+        byte[] arr = ptr.getByteArray(0, size * 2);
+
+        TestCase.assertEquals(arr.length, size * 2);
     }
 
     @Test
