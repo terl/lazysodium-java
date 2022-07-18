@@ -72,9 +72,12 @@ public class Sodium {
     //// SECURE MEMORY
     //// -------------------------------------------|
 
-    public native int sodium_memzero(byte[] pnt, int len);
+    public native void sodium_memzero(byte[] pnt, int len);
+    public native void sodium_memzero(Pointer pnt, int len);
     public native int sodium_mlock(byte[] addr, int len);
+    public native int sodium_mlock(Pointer addr, int len);
     public native int sodium_munlock(byte[] addr, int len);
+    public native int sodium_munlock(Pointer addr, int len);
     public native Pointer sodium_malloc(int size);
     public native Pointer sodium_allocarray(int count, int size);
     public native void sodium_free(Pointer p);

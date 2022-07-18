@@ -26,6 +26,15 @@ public interface SecureMemory {
         boolean sodiumMemZero(byte[] pnt, int len);
 
         /**
+         * The sodium_memzero() function tries to effectively zero len bytes starting at pnt,
+         * even if optimizations are being applied to the code.
+         * @param pnt The pointer to zero out.
+         * @param len How many bytes to zero out.
+         * @return True if zeroed
+         */
+        boolean sodiumMemZero(Pointer pnt, int len);
+
+        /**
          * Locks at least len bytes of memory from the array.
          * This can help avoid swapping sensitive data to disk.
          * @param array Array to lock.
@@ -35,12 +44,29 @@ public interface SecureMemory {
         boolean sodiumMLock(byte[] array, int len);
 
         /**
+         * Locks at least len bytes of memory from the pointer.
+         * This can help avoid swapping sensitive data to disk.
+         * @param pnt pointer to the memory to lock.
+         * @param len Number of bytes to lock.
+         * @return True if locked, false otherwise.
+         */
+        boolean sodiumMLock(Pointer pnt, int len);
+
+        /**
          * Unlocks at least len bytes of memory from the array.
          * @param array Array to unlock.
          * @param len Number of bytes to unlock.
          * @return True if unlocked, false otherwise.
          */
         boolean sodiumMUnlock(byte[] array, int len);
+
+        /**
+         * Unlocks at least len bytes of memory from the pointer.
+         * @param pnt pointer to the memory to unlock.
+         * @param len Number of bytes to unlock.
+         * @return True if locked, false otherwise.
+         */
+        boolean sodiumMUnlock(Pointer pnt, int len);
 
         /**
          * Returns a pointer from which exactly
