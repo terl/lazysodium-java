@@ -74,6 +74,13 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 
+tasks.named('jar') {
+    manifest {
+        attributes('Automatic-Module-Name': 'com.goterl.lazysodium')
+    }
+}
+
+
 task signPom(type: Sign) {
     sign project.file("$buildDir/publications/mavenJava/pom-default.xml")
 
