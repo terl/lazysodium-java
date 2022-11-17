@@ -40,8 +40,8 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
-          java-version: '11'
-          architecture: aarch64
+          java-version: '16'
+          architecture: 'aarch64'
       - name: Test with Gradle
         run: ./gradlew test
 
