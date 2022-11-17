@@ -7,8 +7,10 @@
  */
 
 package com.goterl.lazysodium;import com.sun.jna.Pointer;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SecureMemoryTest extends BaseTest {
 
@@ -17,7 +19,7 @@ public class SecureMemoryTest extends BaseTest {
     public void memZero() {
         byte[] b = new byte[] { 4, 2, 2, 1 };
         boolean res = lazySodium.sodiumMemZero(b, b.length);
-        TestCase.assertTrue(isZero(b));
+        assertTrue(isZero(b));
     }
 
     @Test
@@ -25,7 +27,7 @@ public class SecureMemoryTest extends BaseTest {
         byte[] b = new byte[] { 4, 5, 2, 1 };
         boolean res = lazySodium.sodiumMLock(b, b.length);
         boolean res2 = lazySodium.sodiumMUnlock(b, b.length);
-        TestCase.assertTrue(isZero(b));
+        assertTrue(isZero(b));
     }
 
     @Test
@@ -36,7 +38,7 @@ public class SecureMemoryTest extends BaseTest {
 
         byte[] arr = ptr.getByteArray(0, size);
 
-        TestCase.assertEquals(arr.length, size);
+        assertEquals(arr.length, size);
     }
 
     @Test
@@ -46,7 +48,7 @@ public class SecureMemoryTest extends BaseTest {
         lazySodium.sodiumFree(ptr);
         // If this test reached this comment it didn't segfault
         // so it passes
-        TestCase.assertTrue(true);
+        assertTrue(true);
     }
 
 

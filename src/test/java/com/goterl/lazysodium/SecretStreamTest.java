@@ -11,8 +11,9 @@ package com.goterl.lazysodium;
 import com.goterl.lazysodium.exceptions.SodiumException;
 import com.goterl.lazysodium.interfaces.SecretStream;
 import com.goterl.lazysodium.utils.Key;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SecretStreamTest extends BaseTest {
 
@@ -43,7 +44,7 @@ public class SecretStreamTest extends BaseTest {
         String decryptedMessage3 = lazySodium.cryptoSecretStreamPull(state2, c3, tag);
 
         if (tag[0] == SecretStream.XCHACHA20POLY1305_TAG_FINAL) {
-            TestCase.assertTrue(
+            assertTrue(
                     decryptedMessage.equals(message1) &&
                     decryptedMessage2.equals(message2) &&
                     decryptedMessage3.equals(message3)

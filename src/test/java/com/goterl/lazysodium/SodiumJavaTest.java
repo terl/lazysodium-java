@@ -8,10 +8,10 @@
 
 package com.goterl.lazysodium;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import jdk.nashorn.internal.ir.annotations.Ignore;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class SodiumJavaTest {
 
@@ -27,6 +27,4 @@ public class SodiumJavaTest {
         int initResult = sodium.sodium_init();
         assertNotEquals(-1, initResult);
     }
-
-
 }

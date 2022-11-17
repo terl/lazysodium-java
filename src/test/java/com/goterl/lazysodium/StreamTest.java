@@ -11,8 +11,9 @@ package com.goterl.lazysodium;
 import com.goterl.lazysodium.interfaces.Stream;
 import com.goterl.lazysodium.interfaces.StreamJava;
 import com.goterl.lazysodium.utils.Key;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class StreamTest extends BaseTest {
 
@@ -27,7 +28,7 @@ public class StreamTest extends BaseTest {
         String cipher = streamLazy.cryptoStreamXor(message1, nonce, key, StreamJava.Method.XCHACHA20);
         String finalMsg = streamLazy.cryptoStreamXorDecrypt(cipher, nonce, key, StreamJava.Method.XCHACHA20);
 
-        TestCase.assertEquals(message1, finalMsg);
+        assertEquals(message1, finalMsg);
     }
 
     @Test
@@ -39,7 +40,7 @@ public class StreamTest extends BaseTest {
         String cipher = streamLazy.cryptoStreamXor(message1, nonce, key, StreamJava.Method.SALSA20_12);
         String finalMsg = streamLazy.cryptoStreamXorDecrypt(cipher, nonce, key, StreamJava.Method.SALSA20_12);
 
-        TestCase.assertEquals(message1, finalMsg);
+        assertEquals(message1, finalMsg);
     }
 
     @Test
@@ -51,7 +52,7 @@ public class StreamTest extends BaseTest {
         String cipher = streamLazy.cryptoStreamXor(message1, nonce, key, StreamJava.Method.SALSA20_8);
         String finalMsg = streamLazy.cryptoStreamXorDecrypt(cipher, nonce, key, StreamJava.Method.SALSA20_8);
 
-        TestCase.assertEquals(message1, finalMsg);
+        assertEquals(message1, finalMsg);
     }
 
     @Test
@@ -72,7 +73,7 @@ public class StreamTest extends BaseTest {
         byte[] result = new byte[mBytes.length];
         lazySodium.cryptoStreamChaCha20Xor(result, cipher, cipher.length, nonce, key);
 
-        TestCase.assertEquals(message1, lazySodium.str(result));
+        assertEquals(message1, lazySodium.str(result));
     }
 
     @Test
@@ -84,7 +85,7 @@ public class StreamTest extends BaseTest {
         String cipher = streamLazy.cryptoStreamXor(message1, nonce, key, Stream.Method.CHACHA20);
         String finalMsg = streamLazy.cryptoStreamXorDecrypt(cipher, nonce, key, Stream.Method.CHACHA20);
 
-        TestCase.assertEquals(message1, finalMsg);
+        assertEquals(message1, finalMsg);
     }
 
     @Test
@@ -96,7 +97,7 @@ public class StreamTest extends BaseTest {
         String cipher = streamLazy.cryptoStreamXor(message1, nonce, key, Stream.Method.CHACHA20_IETF);
         String finalMsg = streamLazy.cryptoStreamXorDecrypt(cipher, nonce, key, Stream.Method.CHACHA20_IETF);
 
-        TestCase.assertEquals(message1, finalMsg);
+        assertEquals(message1, finalMsg);
     }
 
 
@@ -111,7 +112,7 @@ public class StreamTest extends BaseTest {
         String cipher = streamLazy.cryptoStreamXor(message, nonce, key, Stream.Method.SALSA20);
         String finalMsg = streamLazy.cryptoStreamXorDecrypt(cipher, nonce, key, Stream.Method.SALSA20);
 
-        TestCase.assertEquals(message, finalMsg);
+        assertEquals(message, finalMsg);
     }
 
     @Test
@@ -123,7 +124,7 @@ public class StreamTest extends BaseTest {
         String cipher = streamLazy.cryptoStreamXor(message1, nonce, key, Stream.Method.XSALSA20);
         String finalMsg = streamLazy.cryptoStreamXorDecrypt(cipher, nonce, key, Stream.Method.XSALSA20);
 
-        TestCase.assertEquals(message1, finalMsg);
+        assertEquals(message1, finalMsg);
     }
 
 

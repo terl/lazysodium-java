@@ -10,19 +10,21 @@ package com.goterl.lazysodium.utils;
 
 import com.goterl.lazysodium.SodiumJava;
 import com.sun.jna.ptr.IntByReference;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.util.Arrays;
 
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class SodiumConversionsTest {
 
     public static SodiumJava sodium;
 
-    @Before
+    @BeforeAll
     public void doBefore() {
         sodium = new SodiumJava(LibraryLoader.Mode.BUNDLED_ONLY);
     }
@@ -53,8 +55,6 @@ public class SodiumConversionsTest {
         );
         assertArrayEquals(bin, reconstructedBin);
         assertEquals(10, binLenReference.getValue());
-
-
     }
 
     @Test

@@ -1,15 +1,13 @@
 package com.goterl.lazysodium;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertFalse;
-import static junit.framework.TestCase.fail;
-import static org.junit.Assert.assertNotEquals;
 
 import com.goterl.lazysodium.exceptions.SodiumException;
 import com.goterl.lazysodium.interfaces.Ristretto255;
 import com.goterl.lazysodium.interfaces.Ristretto255.RistrettoPoint;
 import com.goterl.lazysodium.utils.Base64MessageEncoder;
 import com.goterl.lazysodium.utils.HexMessageEncoder;
+import org.junit.jupiter.api.Test;
+
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -17,8 +15,8 @@ import java.util.Base64;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import junit.framework.TestCase;
-import org.junit.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Ristretto255Test extends BaseTest {
 
@@ -170,7 +168,7 @@ public class Ristretto255Test extends BaseTest {
         };
 
         for (int i = 0; i < testInput.length; ++i) {
-            MessageDigest sha512 = MessageDigest.getInstance("SHA512");
+            MessageDigest sha512 = MessageDigest.getInstance("SHA-512");
 
             byte[] hashed = sha512.digest(testInput[i].getBytes(StandardCharsets.UTF_8));
             RistrettoPoint encoded = lazySodium.cryptoCoreRistretto255FromHash(hashed);

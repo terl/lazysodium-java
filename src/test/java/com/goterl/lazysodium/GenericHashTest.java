@@ -11,15 +11,16 @@ package com.goterl.lazysodium;
 import com.goterl.lazysodium.exceptions.SodiumException;
 import com.goterl.lazysodium.interfaces.GenericHash;
 import com.goterl.lazysodium.utils.Key;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class GenericHashTest extends BaseTest {
 
     @Test
     public void genKey() {
         Key key = lazySodium.cryptoGenericHashKeygen();
-        TestCase.assertNotNull(key);
+        assertNotNull(key);
     }
 
     @Test
@@ -27,14 +28,14 @@ public class GenericHashTest extends BaseTest {
         String message = "https://terl.co";
         Key key = lazySodium.cryptoGenericHashKeygen();
         String hash = lazySodium.cryptoGenericHash(message);
-        TestCase.assertNotNull(hash);
+        assertNotNull(hash);
     }
 
     @Test
     public void hashNoKey() throws SodiumException {
         String message = "https://terl.co";
         String hash = lazySodium.cryptoGenericHash(message);
-        TestCase.assertNotNull(hash);
+        assertNotNull(hash);
     }
 
 
@@ -51,7 +52,7 @@ public class GenericHashTest extends BaseTest {
         );
 
 
-        TestCase.assertNotNull(hash);
+        assertNotNull(hash);
     }
 
 
@@ -69,7 +70,7 @@ public class GenericHashTest extends BaseTest {
                 message3
         );
 
-        TestCase.assertNotNull(hash);
+        assertNotNull(hash);
     }
 
 

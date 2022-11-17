@@ -11,13 +11,12 @@ package com.goterl.lazysodium;
 import com.goterl.lazysodium.exceptions.SodiumException;
 import com.goterl.lazysodium.interfaces.KeyDerivation;
 import com.goterl.lazysodium.utils.Key;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.security.SecureRandom;
 
-import static junit.framework.TestCase.assertEquals;
-import static org.junit.Assert.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class KeyDerivationTest extends BaseTest {
@@ -30,7 +29,7 @@ public class KeyDerivationTest extends BaseTest {
     private KeyDerivation.Native keyDerivation;
     private KeyDerivation.Lazy keyDerivationLazy;
 
-    @Before
+    @BeforeAll
     public void before() {
         keyDerivation = lazySodium;
         keyDerivationLazy = lazySodium;
@@ -79,16 +78,20 @@ public class KeyDerivationTest extends BaseTest {
         assertArrayEquals(OUT_VALID_KEY_VALID_CONTEXT_1, out);
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void doesntGenerateShortKeys() {
-        byte[] masterKey = new byte[KeyDerivation.MASTER_KEY_BYTES - 5];
-        keyDerivation.cryptoKdfKeygen(masterKey);
+        assertThrows(IllegalArgumentException.class, () -> {
+            byte[] masterKey = new byte[KeyDerivation.MASTER_KEY_BYTES - 5];
+            keyDerivation.cryptoKdfKeygen(masterKey);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void doesntGenerateLongKeys() {
-        byte[] masterKey = new byte[KeyDerivation.MASTER_KEY_BYTES + 5];
-        keyDerivation.cryptoKdfKeygen(masterKey);
+        assertThrows(IllegalArgumentException.class, () -> {
+            byte[] masterKey = new byte[KeyDerivation.MASTER_KEY_BYTES + 5];
+            keyDerivation.cryptoKdfKeygen(masterKey);
+        });
     }
 
     private byte[] generateKeyOfAnyLength(int length) {
@@ -104,48 +107,61 @@ public class KeyDerivationTest extends BaseTest {
         return new byte[KeyDerivation.BYTES_MAX];
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void doesntAllowShortKeys() {
-        byte[] masterKey = generateKeyOfAnyLength(KeyDerivation.MASTER_KEY_BYTES - 5);
-        byte[] out = makeValidOut();
-        keyDerivation.cryptoKdfDeriveFromKey(out, out.length, 1L, VALID_CONTEXT, masterKey);
+        assertThrows(IllegalArgumentException.class, () -> {
+            byte[] masterKey = generateKeyOfAnyLength(KeyDerivation.MASTER_KEY_BYTES - 5);
+            byte[] out = makeValidOut();
+            keyDerivation.cryptoKdfDeriveFromKey(out, out.length, 1L, VALID_CONTEXT, masterKey);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void doesntAllowLongKeys() {
-        byte[] masterKey = generateKeyOfAnyLength(KeyDerivation.MASTER_KEY_BYTES + 5);
-        byte[] out = makeValidOut();
-        keyDerivation.cryptoKdfDeriveFromKey(out, out.length, 1L, VALID_CONTEXT, masterKey);
+        assertThrows(IllegalArgumentException.class, () -> {
+            byte[] masterKey = generateKeyOfAnyLength(KeyDerivation.MASTER_KEY_BYTES + 5);
+            byte[] out = makeValidOut();
+            keyDerivation.cryptoKdfDeriveFromKey(out, out.length, 1L, VALID_CONTEXT, masterKey);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void doesntAllowShortContext() {
-        byte[] out = makeValidOut();
-        keyDerivation.cryptoKdfDeriveFromKey(out, out.length, 1L, SHORT_CONTEXT, VALID_KEY);
+        assertThrows(IllegalArgumentException.class, () -> {
+            byte[] out = makeValidOut();
+            keyDerivation.cryptoKdfDeriveFromKey(out, out.length, 1L, SHORT_CONTEXT, VALID_KEY);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void doesntAllowLongContext() {
-        byte[] out = makeValidOut();
-        keyDerivation.cryptoKdfDeriveFromKey(out, out.length, 1L, LONG_CONTEXT, VALID_KEY);
+        assertThrows(IllegalArgumentException.class, () -> {
+            byte[] out = makeValidOut();
+            keyDerivation.cryptoKdfDeriveFromKey(out, out.length, 1L, LONG_CONTEXT, VALID_KEY);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void doesntAllowShortSubKey() {
-        byte[] out = new byte[KeyDerivation.BYTES_MIN - 1];
-        keyDerivation.cryptoKdfDeriveFromKey(out, out.length, 1L, VALID_CONTEXT, VALID_KEY);
+        assertThrows(IllegalArgumentException.class, () -> {
+            byte[] out = new byte[KeyDerivation.BYTES_MIN - 1];
+            keyDerivation.cryptoKdfDeriveFromKey(out, out.length, 1L, VALID_CONTEXT, VALID_KEY);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void doesntAllowLongSubKey() {
-        byte[] out = new byte[KeyDerivation.BYTES_MAX + 1];
-        keyDerivation.cryptoKdfDeriveFromKey(out, out.length, 1L, VALID_CONTEXT, VALID_KEY);
+        assertThrows(IllegalArgumentException.class, () -> {
+            byte[] out = new byte[KeyDerivation.BYTES_MAX + 1];
+            keyDerivation.cryptoKdfDeriveFromKey(out, out.length, 1L, VALID_CONTEXT, VALID_KEY);
+        });
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void doesntAllowSubKeyShorterThanSpecified() {
-        byte[] out = new byte[KeyDerivation.BYTES_MAX - 1];
-        keyDerivation.cryptoKdfDeriveFromKey(out, KeyDerivation.BYTES_MAX, 1L, VALID_CONTEXT, VALID_KEY);
+        assertThrows(IllegalArgumentException.class, () -> {
+            byte[] out = new byte[KeyDerivation.BYTES_MAX - 1];
+            keyDerivation.cryptoKdfDeriveFromKey(out, KeyDerivation.BYTES_MAX, 1L, VALID_CONTEXT, VALID_KEY);
+        });
     }
-
 }

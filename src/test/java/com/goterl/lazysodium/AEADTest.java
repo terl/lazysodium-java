@@ -14,20 +14,17 @@ import com.goterl.lazysodium.utils.DetachedDecrypt;
 import com.goterl.lazysodium.utils.DetachedEncrypt;
 import com.goterl.lazysodium.utils.HexMessageEncoder;
 import com.goterl.lazysodium.utils.Key;
-import junit.framework.TestCase;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import javax.crypto.AEADBadTagException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class AEADTest extends BaseTest {
 
     private final String PASSWORD = "superSecurePassword";
     private final MessageEncoder encoder = new HexMessageEncoder();
-
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void encryptChacha() throws AEADBadTagException {
@@ -39,18 +36,19 @@ public class AEADTest extends BaseTest {
         String cipher = lazySodium.encrypt(PASSWORD, null, nPub, key, AEAD.Method.CHACHA20_POLY1305);
         String decrypted = lazySodium.decrypt(cipher, null, nPub, key, AEAD.Method.CHACHA20_POLY1305);
 
-        TestCase.assertEquals(decrypted, PASSWORD);
+        assertEquals(decrypted, PASSWORD);
     }
 
-    @Test(expected = AEADBadTagException.class)
+    @Test
     public void encryptChachaMalformedCipher() throws AEADBadTagException {
+        assertThrows(AEADBadTagException.class, () -> {
+            Key key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305);
 
-        Key key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305);
+            byte[] nPub = lazySodium.nonce(AEAD.CHACHA20POLY1305_NPUBBYTES);
 
-        byte[] nPub = lazySodium.nonce(AEAD.CHACHA20POLY1305_NPUBBYTES);
-
-        String cipher = lazySodium.encrypt(PASSWORD, null, nPub, key, AEAD.Method.CHACHA20_POLY1305);
-        String decrypted = lazySodium.decrypt(malformCipher(cipher), null, nPub, key, AEAD.Method.CHACHA20_POLY1305);
+            String cipher = lazySodium.encrypt(PASSWORD, null, nPub, key, AEAD.Method.CHACHA20_POLY1305);
+            String decrypted = lazySodium.decrypt(malformCipher(cipher), null, nPub, key, AEAD.Method.CHACHA20_POLY1305);
+        });
     }
 
     @Test
@@ -63,18 +61,19 @@ public class AEADTest extends BaseTest {
         String cipher = lazySodium.encrypt(PASSWORD, null, nPub, key, AEAD.Method.CHACHA20_POLY1305_IETF);
         String decrypted = lazySodium.decrypt(cipher, null, nPub, key, AEAD.Method.CHACHA20_POLY1305_IETF);
 
-        TestCase.assertEquals(decrypted, PASSWORD);
+        assertEquals(decrypted, PASSWORD);
     }
 
-    @Test(expected = AEADBadTagException.class)
+    @Test
     public void encryptChachaIetfMalformedCipher() throws AEADBadTagException {
+        assertThrows(AEADBadTagException.class, () -> {
+            Key key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305_IETF);
 
-        Key key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305_IETF);
+            byte[] nPub = lazySodium.nonce(AEAD.CHACHA20POLY1305_IETF_NPUBBYTES);
 
-        byte[] nPub = lazySodium.nonce(AEAD.CHACHA20POLY1305_IETF_NPUBBYTES);
-
-        String cipher = lazySodium.encrypt(PASSWORD, null, nPub, key, AEAD.Method.CHACHA20_POLY1305_IETF);
-        String decrypted = lazySodium.decrypt(malformCipher(cipher), null, nPub, key, AEAD.Method.CHACHA20_POLY1305_IETF);
+            String cipher = lazySodium.encrypt(PASSWORD, null, nPub, key, AEAD.Method.CHACHA20_POLY1305_IETF);
+            String decrypted = lazySodium.decrypt(malformCipher(cipher), null, nPub, key, AEAD.Method.CHACHA20_POLY1305_IETF);
+        });
     }
 
     @Test
@@ -87,18 +86,19 @@ public class AEADTest extends BaseTest {
         String cipher = lazySodium.encrypt(PASSWORD, null, nPub, key, AEAD.Method.XCHACHA20_POLY1305_IETF);
         String decrypted = lazySodium.decrypt(cipher, null, nPub, key, AEAD.Method.XCHACHA20_POLY1305_IETF);
 
-        TestCase.assertEquals(decrypted, PASSWORD);
+        assertEquals(decrypted, PASSWORD);
     }
 
-    @Test(expected = AEADBadTagException.class)
+    @Test
     public void encryptXChachaMalformedCipher() throws AEADBadTagException {
+        assertThrows(AEADBadTagException.class, () -> {
+            Key key = lazySodium.keygen(AEAD.Method.XCHACHA20_POLY1305_IETF);
 
-        Key key = lazySodium.keygen(AEAD.Method.XCHACHA20_POLY1305_IETF);
+            byte[] nPub = lazySodium.nonce(AEAD.XCHACHA20POLY1305_IETF_NPUBBYTES);
 
-        byte[] nPub = lazySodium.nonce(AEAD.XCHACHA20POLY1305_IETF_NPUBBYTES);
-
-        String cipher = lazySodium.encrypt(PASSWORD, null, nPub, key, AEAD.Method.XCHACHA20_POLY1305_IETF);
-        String decrypted = lazySodium.decrypt(malformCipher(cipher), null, nPub, key, AEAD.Method.XCHACHA20_POLY1305_IETF);
+            String cipher = lazySodium.encrypt(PASSWORD, null, nPub, key, AEAD.Method.XCHACHA20_POLY1305_IETF);
+            String decrypted = lazySodium.decrypt(malformCipher(cipher), null, nPub, key, AEAD.Method.XCHACHA20_POLY1305_IETF);
+        });
     }
 
     @Test
@@ -113,80 +113,72 @@ public class AEADTest extends BaseTest {
 
         DetachedDecrypt detachedDecrypt = lazySodium.decryptDetached(detachedEncrypt, null, null, nPub, key, AEAD.Method.CHACHA20_POLY1305);
 
-        TestCase.assertEquals(detachedDecrypt.getMessageString(), PASSWORD);
+        assertEquals(detachedDecrypt.getMessageString(), PASSWORD);
     }
 
-    @Test(expected = AEADBadTagException.class)
+    @Test
     public void encryptChachaDetachedMalformedCipher() throws AEADBadTagException {
+        assertThrows(AEADBadTagException.class, () -> {
+            Key key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305);
 
-        Key key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305);
+            byte[] nPub = lazySodium.nonce(AEAD.CHACHA20POLY1305_NPUBBYTES);
 
-        byte[] nPub = lazySodium.nonce(AEAD.CHACHA20POLY1305_NPUBBYTES);
+            DetachedEncrypt detachedEncrypt
+                    = lazySodium.encryptDetached(PASSWORD, null, null, nPub, key, AEAD.Method.CHACHA20_POLY1305);
 
-        DetachedEncrypt detachedEncrypt
-                = lazySodium.encryptDetached(PASSWORD, null, null, nPub, key, AEAD.Method.CHACHA20_POLY1305);
-
-        DetachedEncrypt malformed = new DetachedEncrypt(malformCipherBytes(detachedEncrypt.getCipherString()), detachedEncrypt.getMac());
-        DetachedDecrypt detachedDecrypt = lazySodium.decryptDetached(malformed, null, null, nPub, key, AEAD.Method.CHACHA20_POLY1305);
+            DetachedEncrypt malformed = new DetachedEncrypt(malformCipherBytes(detachedEncrypt.getCipherString()), detachedEncrypt.getMac());
+            DetachedDecrypt detachedDecrypt = lazySodium.decryptDetached(malformed, null, null, nPub, key, AEAD.Method.CHACHA20_POLY1305);
+        });
     }
 
 
     @Test
     public void encryptChachaIetfDetached() throws AEADBadTagException {
-
         Key key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305_IETF);
-
         byte[] nPub = lazySodium.nonce(AEAD.CHACHA20POLY1305_IETF_NPUBBYTES);
 
         DetachedEncrypt detachedEncrypt
                 = lazySodium.encryptDetached(PASSWORD, null, null, nPub, key, AEAD.Method.CHACHA20_POLY1305_IETF);
-
         DetachedDecrypt detachedDecrypt = lazySodium.decryptDetached(detachedEncrypt, null, null, nPub, key, AEAD.Method.CHACHA20_POLY1305_IETF);
-
-        TestCase.assertEquals(detachedDecrypt.getMessageString(), PASSWORD);
+        assertEquals(detachedDecrypt.getMessageString(), PASSWORD);
     }
 
-    @Test(expected = AEADBadTagException.class)
-    public void encryptChachaIetfDetachedMalformedCipher() throws AEADBadTagException {
+    @Test
+    public void encryptChachaIetfDetachedMalformedCipher() {
+        assertThrows(AEADBadTagException.class, () -> {
+            Key key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305_IETF);
+            byte[] nPub = lazySodium.nonce(AEAD.CHACHA20POLY1305_IETF_NPUBBYTES);
 
-        Key key = lazySodium.keygen(AEAD.Method.CHACHA20_POLY1305_IETF);
-
-        byte[] nPub = lazySodium.nonce(AEAD.CHACHA20POLY1305_IETF_NPUBBYTES);
-
-        DetachedEncrypt detachedEncrypt
-                = lazySodium.encryptDetached(PASSWORD, null, null, nPub, key, AEAD.Method.CHACHA20_POLY1305_IETF);
-        DetachedEncrypt malformed = new DetachedEncrypt(malformCipherBytes(detachedEncrypt.getCipherString()), detachedEncrypt.getMac());
-
-        DetachedDecrypt detachedDecrypt = lazySodium.decryptDetached(malformed, null, null, nPub, key, AEAD.Method.CHACHA20_POLY1305_IETF);
+            DetachedEncrypt detachedEncrypt
+                    = lazySodium.encryptDetached(PASSWORD, null, null, nPub, key, AEAD.Method.CHACHA20_POLY1305_IETF);
+            DetachedEncrypt malformed = new DetachedEncrypt(malformCipherBytes(detachedEncrypt.getCipherString()), detachedEncrypt.getMac());
+            DetachedDecrypt detachedDecrypt = lazySodium.decryptDetached(malformed, null, null, nPub, key, AEAD.Method.CHACHA20_POLY1305_IETF);
+        });
     }
 
     @Test
     public void encryptXChachaDetached() throws AEADBadTagException {
-
         Key key = lazySodium.keygen(AEAD.Method.XCHACHA20_POLY1305_IETF);
-
         byte[] nPub = lazySodium.nonce(AEAD.XCHACHA20POLY1305_IETF_NPUBBYTES);
 
         DetachedEncrypt detachedEncrypt
                 = lazySodium.encryptDetached(PASSWORD, null, null, nPub, key, AEAD.Method.XCHACHA20_POLY1305_IETF);
 
         DetachedDecrypt detachedDecrypt = lazySodium.decryptDetached(detachedEncrypt, null, null, nPub, key, AEAD.Method.XCHACHA20_POLY1305_IETF);
-
-        TestCase.assertEquals(detachedDecrypt.getMessageString(), PASSWORD);
+        assertEquals(detachedDecrypt.getMessageString(), PASSWORD);
     }
 
-    @Test(expected = AEADBadTagException.class)
+    @Test
     public void encryptXChachaDetachedMalformedCipher() throws AEADBadTagException {
+        assertThrows(AEADBadTagException.class, () -> {
+            Key key = lazySodium.keygen(AEAD.Method.XCHACHA20_POLY1305_IETF);
+            byte[] nPub = lazySodium.nonce(AEAD.XCHACHA20POLY1305_IETF_NPUBBYTES);
 
-        Key key = lazySodium.keygen(AEAD.Method.XCHACHA20_POLY1305_IETF);
-
-        byte[] nPub = lazySodium.nonce(AEAD.XCHACHA20POLY1305_IETF_NPUBBYTES);
-
-        DetachedEncrypt detachedEncrypt
-                = lazySodium.encryptDetached(PASSWORD, null, null, nPub, key, AEAD.Method.XCHACHA20_POLY1305_IETF);
-        DetachedEncrypt malformed = new DetachedEncrypt(malformCipherBytes(detachedEncrypt.getCipherString()), detachedEncrypt.getMac());
-
-        DetachedDecrypt detachedDecrypt = lazySodium.decryptDetached(malformed, null, null, nPub, key, AEAD.Method.XCHACHA20_POLY1305_IETF);
+            DetachedEncrypt detachedEncrypt
+                    = lazySodium.encryptDetached(PASSWORD, null, null, nPub, key, AEAD.Method.XCHACHA20_POLY1305_IETF);
+            DetachedEncrypt malformed = new DetachedEncrypt(malformCipherBytes(detachedEncrypt.getCipherString()), detachedEncrypt.getMac());
+            DetachedDecrypt detachedDecrypt = lazySodium.decryptDetached(malformed, null, null, nPub, key, AEAD.Method.XCHACHA20_POLY1305_IETF);
+        });
     }
 
 
@@ -200,21 +192,23 @@ public class AEADTest extends BaseTest {
             String cipher = lazySodium.encrypt(PASSWORD, null, nPub, key, AEAD.Method.AES256GCM);
             String decrypted = lazySodium.decrypt(cipher, null, nPub, key, AEAD.Method.AES256GCM);
 
-            TestCase.assertEquals(decrypted, PASSWORD);
+            assertEquals(decrypted, PASSWORD);
         }
     }
 
-    public void encryptAESMalformedCipher() throws AEADBadTagException {
+    @Test
+    public void encryptAESMalformedCipher() {
         if (lazySodium.cryptoAeadAES256GCMIsAvailable()) {
-            expectedException.expect(AEADBadTagException.class);
-            Key key = lazySodium.keygen(AEAD.Method.AES256GCM);
+            assertThrows(AEADBadTagException.class, () -> {
+                Key key = lazySodium.keygen(AEAD.Method.AES256GCM);
 
-            byte[] nPub = lazySodium.nonce(AEAD.AES256GCM_NPUBBYTES);
+                byte[] nPub = lazySodium.nonce(AEAD.AES256GCM_NPUBBYTES);
 
-            String cipher = lazySodium.encrypt(PASSWORD, null, nPub, key, AEAD.Method.AES256GCM);
-            String decrypted = lazySodium.decrypt(malformCipher(cipher), null, nPub, key, AEAD.Method.AES256GCM);
+                String cipher = lazySodium.encrypt(PASSWORD, null, nPub, key, AEAD.Method.AES256GCM);
+                String decrypted = lazySodium.decrypt(malformCipher(cipher), null, nPub, key, AEAD.Method.AES256GCM);
 
-            TestCase.assertEquals(decrypted, PASSWORD);
+                assertEquals(decrypted, PASSWORD);
+            });
         }
     }
 
@@ -226,21 +220,22 @@ public class AEADTest extends BaseTest {
             DetachedEncrypt detachedEncrypt
                     = lazySodium.encryptDetached(PASSWORD, null, null, nPub, key, AEAD.Method.AES256GCM);
             DetachedDecrypt detachedDecrypt = lazySodium.decryptDetached(detachedEncrypt, null, null, nPub, key, AEAD.Method.AES256GCM);
-            TestCase.assertEquals(detachedDecrypt.getMessageString(), PASSWORD);
+            assertEquals(detachedDecrypt.getMessageString(), PASSWORD);
         }
     }
 
     @Test
     public void encryptAESDetachedMalformedCipher() throws AEADBadTagException {
         if (lazySodium.cryptoAeadAES256GCMIsAvailable()) {
-            expectedException.expect(AEADBadTagException.class);
-            Key key = lazySodium.keygen(AEAD.Method.AES256GCM);
-            byte[] nPub = lazySodium.nonce(AEAD.AES256GCM_NPUBBYTES);
+            assertThrows(AEADBadTagException.class, () -> {
+                Key key = lazySodium.keygen(AEAD.Method.AES256GCM);
+                byte[] nPub = lazySodium.nonce(AEAD.AES256GCM_NPUBBYTES);
 
-            DetachedEncrypt detachedEncrypt
-                    = lazySodium.encryptDetached(PASSWORD, null, null, nPub, key, AEAD.Method.AES256GCM);
-            DetachedEncrypt malformed = new DetachedEncrypt(malformCipherBytes(detachedEncrypt.getCipherString()), detachedEncrypt.getMac());
-            lazySodium.decryptDetached(malformed, null, null, nPub, key, AEAD.Method.AES256GCM);
+                DetachedEncrypt detachedEncrypt
+                        = lazySodium.encryptDetached(PASSWORD, null, null, nPub, key, AEAD.Method.AES256GCM);
+                DetachedEncrypt malformed = new DetachedEncrypt(malformCipherBytes(detachedEncrypt.getCipherString()), detachedEncrypt.getMac());
+                lazySodium.decryptDetached(malformed, null, null, nPub, key, AEAD.Method.AES256GCM);
+            });
         }
     }
 

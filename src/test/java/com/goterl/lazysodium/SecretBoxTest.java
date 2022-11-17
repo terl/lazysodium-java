@@ -11,16 +11,17 @@ package com.goterl.lazysodium;
 import com.goterl.lazysodium.exceptions.SodiumException;
 import com.goterl.lazysodium.interfaces.SecretBox;
 import com.goterl.lazysodium.utils.Key;
-import junit.framework.TestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SecretBoxTest extends BaseTest {
 
 
     private SecretBox.Lazy secretBoxLazy;
 
-    @Before
+    @BeforeAll
     public void before() {
         secretBoxLazy = (SecretBox.Lazy) lazySodium;
     }
@@ -38,7 +39,7 @@ public class SecretBoxTest extends BaseTest {
         String cipher = secretBoxLazy.cryptoSecretBoxEasy(message, nonce, key);
         String decrypted = secretBoxLazy.cryptoSecretBoxOpenEasy(cipher, nonce, key);
 
-        TestCase.assertEquals(decrypted, message);
+        assertEquals(decrypted, message);
     }
 
 }

@@ -9,13 +9,15 @@
 package com.goterl.lazysodium;
 
 import com.goterl.lazysodium.utils.LibraryLoader;
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInstance;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BaseTest {
 
     public static LazySodiumJava lazySodium;
 
-    @Before
+    @BeforeAll
     public void doBeforeEverything() {
         lazySodium = new LazySodiumJava(new SodiumJava(LibraryLoader.Mode.BUNDLED_ONLY));
     }

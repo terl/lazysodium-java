@@ -13,21 +13,17 @@ import com.goterl.lazysodium.interfaces.Hash;
 import com.goterl.lazysodium.interfaces.Sign;
 import com.goterl.lazysodium.utils.Key;
 import com.goterl.lazysodium.utils.KeyPair;
-import junit.framework.TestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertNotNull;
-
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SignTest extends BaseTest {
 
 
     private Sign.Lazy cryptoSignLazy;
 
-    @Before
+    @BeforeAll
     public void before() {
         cryptoSignLazy = (Sign.Lazy) lazySodium;
     }
@@ -68,7 +64,7 @@ public class SignTest extends BaseTest {
         // Now we can verify the signed message.
         String resultingMessage = cryptoSignLazy.cryptoSignOpen(signed, keyPair.getPublicKey());
 
-        TestCase.assertNotNull(resultingMessage);
+        assertNotNull(resultingMessage);
     }
 
 
@@ -138,13 +134,13 @@ public class SignTest extends BaseTest {
 
         Sign.StateCryptoSign state = new Sign.StateCryptoSign();
         int started = lazySodium.getSodium().crypto_sign_init(state);
-        assertTrue("cryptoSignInit not started successfully.", started == 0);
+        assertTrue(started == 0, "cryptoSignInit not started successfully.");
 
         boolean update1 = lazySodium.cryptoSignUpdate(state, messageBytes, messageBytes.length);
-        assertTrue("First cryptoSignUpdate did not work.", update1);
+        assertTrue(update1, "First cryptoSignUpdate did not work.");
 
         boolean update2 = lazySodium.cryptoSignUpdate(state, messageBytes, messageBytes.length);
-        assertTrue("Second cryptoSignUpdate did not work.", update2);
+        assertTrue(update2, "Second cryptoSignUpdate did not work.");
 
         // Clone the state now as cryptoSignFinalCreate zeroes
         // all the values.
@@ -152,10 +148,10 @@ public class SignTest extends BaseTest {
 
         byte[] signature = new byte[Hash.SHA512_BYTES];
         boolean createdSignature = lazySodium.cryptoSignFinalCreate(state, signature, null, sk.getAsBytes());
-        assertTrue("cryptoSignFinalCreate unsuccessful", createdSignature);
+        assertTrue(createdSignature, "cryptoSignFinalCreate unsuccessful");
 
         boolean verified = lazySodium.cryptoSignFinalVerify(clonedState, signature, pk.getAsBytes());
-        assertTrue("cryptoSignFinalVerify did not work", verified);
+        assertTrue(verified, "cryptoSignFinalVerify did not work");
     }
 
 }

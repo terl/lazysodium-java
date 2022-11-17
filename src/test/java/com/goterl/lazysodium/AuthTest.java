@@ -11,10 +11,10 @@ package com.goterl.lazysodium;
 import com.goterl.lazysodium.exceptions.SodiumException;
 import com.goterl.lazysodium.interfaces.Auth;
 import com.goterl.lazysodium.utils.Key;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class AuthTest extends BaseTest {
 
@@ -71,19 +71,19 @@ public class AuthTest extends BaseTest {
 
         boolean res = lazySodium.cryptoAuthHMACShaInit(state, k);
         if (!res) {
-            TestCase.fail("Could not initialise HMAC Sha.");
+            fail("Could not initialise HMAC Sha.");
             return;
         }
 
         boolean res2 = lazySodium.cryptoAuthHMACShaUpdate(state, m);
         if (!res2) {
-            TestCase.fail("Could not update HMAC Sha.");
+            fail("Could not update HMAC Sha.");
             return;
         }
 
         boolean res3 = lazySodium.cryptoAuthHMACShaUpdate(state, m2);
         if (!res3) {
-            TestCase.fail("Could not update HMAC Sha (part 2).");
+            fail("Could not update HMAC Sha (part 2).");
             return;
         }
 
@@ -105,19 +105,19 @@ public class AuthTest extends BaseTest {
 
         boolean res = lazySodium.cryptoAuthHMACShaInit(state, k);
         if (!res) {
-            TestCase.fail("Could not initialise HMAC Sha.");
+            fail("Could not initialise HMAC Sha.");
             return;
         }
 
         boolean res2 = lazySodium.cryptoAuthHMACShaUpdate(state, m);
         if (!res2) {
-            TestCase.fail("Could not update HMAC Sha.");
+            fail("Could not update HMAC Sha.");
             return;
         }
 
         boolean res3 = lazySodium.cryptoAuthHMACShaUpdate(state, m2);
         if (!res3) {
-            TestCase.fail("Could not update HMAC Sha (part 2).");
+            fail("Could not update HMAC Sha (part 2).");
             return;
         }
 

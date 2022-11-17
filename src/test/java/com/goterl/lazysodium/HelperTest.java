@@ -6,8 +6,11 @@
  * file, you can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package com.goterl.lazysodium;import junit.framework.TestCase;
-import org.junit.Test;
+package com.goterl.lazysodium;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HelperTest extends BaseTest {
 
@@ -18,8 +21,6 @@ public class HelperTest extends BaseTest {
 
         int r = lazySodium.getSodium().sodium_compare(b1, b2, 4);
 
-        TestCase.assertEquals(0, r);
+        assertEquals(0, r);
     }
-
-
 }

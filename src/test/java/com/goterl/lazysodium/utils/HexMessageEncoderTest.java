@@ -9,8 +9,9 @@
 package com.goterl.lazysodium.utils;
 
 import com.goterl.lazysodium.BaseTest;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HexMessageEncoderTest extends BaseTest {
 
@@ -21,6 +22,6 @@ public class HexMessageEncoderTest extends BaseTest {
         String cipherText = "612D6865782D656E636F6465642D737472696E67";
         byte[] cipher = encoder.decode(cipherText);
 
-        TestCase.assertEquals(cipherText, encoder.encode(cipher));
+        assertEquals(cipherText, encoder.encode(cipher));
     }
 }

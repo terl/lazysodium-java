@@ -11,18 +11,18 @@ import com.goterl.lazysodium.exceptions.SodiumException;
 import com.goterl.lazysodium.interfaces.PwHash;
 import com.goterl.lazysodium.interfaces.Scrypt;
 import com.sun.jna.NativeLong;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class PwHashTest extends BaseTest {
 
     private final String PASSWORD = "Password123456!!!!@@";
     private PwHash.Lazy pwHashLazy;
 
-    @Before
+    @BeforeAll
     public void before() {
         pwHashLazy = (PwHash.Lazy) lazySodium;
     }
@@ -47,7 +47,7 @@ public class PwHashTest extends BaseTest {
         boolean isCorrect = lazySodium.cryptoPwHashScryptSalsa208Sha256StrVerify(hash, PASSWORD);
 
 
-        assertTrue("Minimum hashing failed.", isCorrect);
+        assertTrue(isCorrect, "Minimum hashing failed.");
     }
 
     @Test
@@ -74,7 +74,7 @@ public class PwHashTest extends BaseTest {
 
         boolean isCorrect = pwHashLazy.cryptoPwHashStrVerify(hash, PASSWORD);
 
-        assertTrue("Minimum hashing failed.", isCorrect);
+        assertTrue(isCorrect, "Minimum hashing failed.");
     }
 
 

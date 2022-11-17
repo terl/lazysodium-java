@@ -13,11 +13,11 @@ import com.goterl.lazysodium.interfaces.Box;
 import com.goterl.lazysodium.utils.DetachedDecrypt;
 import com.goterl.lazysodium.utils.DetachedEncrypt;
 import com.goterl.lazysodium.utils.KeyPair;
-import junit.framework.TestCase;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Tests public and private key encryption.
@@ -27,7 +27,7 @@ public class BoxTest extends BaseTest {
 
     private Box.Lazy cryptoBoxLazy;
 
-    @Before
+    @BeforeAll
     public void before() {
         cryptoBoxLazy = (Box.Lazy) lazySodium;
     }
@@ -44,7 +44,7 @@ public class BoxTest extends BaseTest {
         KeyPair keys = cryptoBoxLazy.cryptoBoxSeedKeypair(seed);
         KeyPair keys2 = cryptoBoxLazy.cryptoBoxSeedKeypair(seed);
 
-        TestCase.assertEquals(keys.getPublicKey().getAsHexString(), keys2.getPublicKey().getAsHexString());
+        assertEquals(keys.getPublicKey().getAsHexString(), keys2.getPublicKey().getAsHexString());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class BoxTest extends BaseTest {
         KeyPair keys = cryptoBoxLazy.cryptoBoxSeedKeypair(seed);
         KeyPair keys2 = cryptoBoxLazy.cryptoBoxSeedKeypair(seed);
 
-        TestCase.assertEquals(keys.getSecretKey().getAsHexString(), keys2.getSecretKey().getAsHexString());
+        assertEquals(keys.getSecretKey().getAsHexString(), keys2.getSecretKey().getAsHexString());
     }
 
 
@@ -82,7 +82,7 @@ public class BoxTest extends BaseTest {
         String decryptedMessage = cryptoBoxLazy.cryptoBoxOpenEasy(encrypted, nonce, decryptionKeyPair);
 
         // Public-private key encryption complete!
-        TestCase.assertEquals(message, decryptedMessage);
+        assertEquals(message, decryptedMessage);
     }
 
 
@@ -105,7 +105,7 @@ public class BoxTest extends BaseTest {
         // Decrypt the data using the shared key
         String decryptedMessage = cryptoBoxLazy.cryptoBoxOpenEasyAfterNm(encrypted, nonce, sharedKey);
 
-        TestCase.assertEquals(message, decryptedMessage);
+        assertEquals(message, decryptedMessage);
     }
 
     @Test
@@ -125,7 +125,7 @@ public class BoxTest extends BaseTest {
         DetachedEncrypt encDet = cryptoBoxLazy.cryptoBoxDetachedAfterNm(message, nonce2, sharedKey);
         DetachedDecrypt decryptDet = cryptoBoxLazy.cryptoBoxOpenDetachedAfterNm(encDet, nonce2, sharedKey);
 
-        TestCase.assertEquals(message, lazySodium.str(decryptDet.getMessage()));
+        assertEquals(message, lazySodium.str(decryptDet.getMessage()));
     }
 
     @Test
@@ -142,6 +142,6 @@ public class BoxTest extends BaseTest {
         String decryptedMessage = cryptoBoxLazy.cryptoBoxSealOpenEasy(encrypted, keyPair);
 
         // Public-private key encryption complete!
-        TestCase.assertEquals(message, decryptedMessage);
+        assertEquals(message, decryptedMessage);
     }
 }

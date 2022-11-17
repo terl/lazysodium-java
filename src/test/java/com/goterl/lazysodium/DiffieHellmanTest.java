@@ -13,8 +13,9 @@ import com.goterl.lazysodium.interfaces.Box;
 import com.goterl.lazysodium.interfaces.DiffieHellman;
 import com.goterl.lazysodium.interfaces.SecretBox;
 import com.goterl.lazysodium.utils.Key;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DiffieHellmanTest extends BaseTest {
 
@@ -58,9 +59,6 @@ public class DiffieHellmanTest extends BaseTest {
 
         // 'decrypted' == Hello
 
-        TestCase.assertEquals(message, decrypted);
+        assertEquals(message, decrypted);
     }
-
-
-
 }

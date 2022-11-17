@@ -12,10 +12,10 @@ import com.goterl.lazysodium.exceptions.SodiumException;
 import com.goterl.lazysodium.interfaces.KeyExchange;
 import com.goterl.lazysodium.utils.KeyPair;
 import com.goterl.lazysodium.utils.SessionPair;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class KeyExchangeTest extends BaseTest {
 
@@ -32,7 +32,7 @@ public class KeyExchangeTest extends BaseTest {
         KeyPair keys = lazySodium.cryptoKxKeypair(seed);
         KeyPair keys2 = lazySodium.cryptoKxKeypair(seed);
 
-        TestCase.assertEquals(keys.getPublicKey().getAsHexString(), keys2.getPublicKey().getAsHexString());
+        assertEquals(keys.getPublicKey().getAsHexString(), keys2.getPublicKey().getAsHexString());
     }
 
     @Test
@@ -41,7 +41,7 @@ public class KeyExchangeTest extends BaseTest {
         KeyPair keys = lazySodium.cryptoKxKeypair(seed);
         KeyPair keys2 = lazySodium.cryptoKxKeypair(seed);
 
-        TestCase.assertEquals(keys.getSecretKey().getAsHexString(), keys2.getSecretKey().getAsHexString());
+        assertEquals(keys.getSecretKey().getAsHexString(), keys2.getSecretKey().getAsHexString());
     }
 
 
@@ -61,7 +61,7 @@ public class KeyExchangeTest extends BaseTest {
         // lazySodium.cryptoSecretBoxEasy( ... );
 
         // The Rx of the client should equal the Tx of the server
-        TestCase.assertEquals(clientSession.getRxString(), serverSession.getTxString());
+        assertEquals(clientSession.getRxString(), serverSession.getTxString());
     }
 
 }

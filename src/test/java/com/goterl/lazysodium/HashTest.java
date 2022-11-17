@@ -10,8 +10,9 @@ package com.goterl.lazysodium;
 
 import com.goterl.lazysodium.exceptions.SodiumException;
 import com.goterl.lazysodium.interfaces.Hash;
-import junit.framework.TestCase;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class HashTest extends BaseTest {
 
@@ -24,21 +25,21 @@ public class HashTest extends BaseTest {
     public void sha256Compare() throws SodiumException {
         String hashed1 = lazySodium.cryptoHashSha256(MESSAGE);
         String hashed2 = lazySodium.cryptoHashSha256(MESSAGE);
-        TestCase.assertNotSame(hashed1, hashed2);
+        assertNotSame(hashed1, hashed2);
     }
 
     @Test
     public void sha512Compare() throws SodiumException {
         String hash1 = lazySodium.cryptoHashSha512(MESSAGE);
         String hash2 = lazySodium.cryptoHashSha512(MESSAGE);
-        TestCase.assertNotSame(hash1, hash2);
+        assertNotSame(hash1, hash2);
     }
 
     @Test
     public void sha512IsLonger() throws SodiumException {
         String hash1 = lazySodium.cryptoHashSha256(MESSAGE);
         String hash2 = lazySodium.cryptoHashSha512(MESSAGE);
-        TestCase.assertTrue(hash1.length() < hash2.length());
+        assertTrue(hash1.length() < hash2.length());
     }
 
     @Test
@@ -51,7 +52,7 @@ public class HashTest extends BaseTest {
         lazySodium.cryptoHashSha256Update(state, "more text to be hashed");
 
         String hash = lazySodium.cryptoHashSha256Final(state);
-        TestCase.assertNotNull(hash);
+        assertNotNull(hash);
     }
 
     @Test
@@ -65,6 +66,6 @@ public class HashTest extends BaseTest {
 
         String hash = lazySodium.cryptoHashSha512Final(state);
 
-        TestCase.assertNotNull(hash);
+        assertNotNull(hash);
     }
 }
