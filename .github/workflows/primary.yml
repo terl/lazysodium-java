@@ -15,15 +15,23 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
-        arch: [x64, arm64]
+        arch: [x64, ARM64]
     steps:
       - uses: actions/checkout@v3
+      - name: Set up Java on ARM64
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+          architecture: aarch64
+        if: matrix.arch == "ARM64"
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           distribution: 'zulu'
           java-version: '11'
           architecture: ${{ matrix.arch }}
+        if: matrix.arch != "ARM64"
       - name: Test with Gradle
         run: ./gradlew test
   publish:
@@ -32,8 +40,8 @@ jobs:
     needs: test
     if: github.ref == 'refs/heads/master' && always()
     steps:
-      - uses: technote-space/workflow-conclusion-action@v2
-      - uses: actions/checkout@v2
+      - uses: technote-space/workflow-conclusion-action@v3
+      - uses: actions/checkout@v3
         if: env.WORKFLOW_CONCLUSION == 'success'
       - name: Set up JDK 1.8
         uses: actions/setup-java@v1
