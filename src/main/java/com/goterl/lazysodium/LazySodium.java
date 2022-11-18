@@ -267,9 +267,6 @@ public abstract class LazySodium implements
         if (subKey.length < subKeyLen) {
             throw new IllegalArgumentException("Sub Key array is less than specified size");
         }
-        if (masterKey.length != KeyDerivation.MASTER_KEY_BYTES) {
-            throw new IllegalArgumentException("Master key length is wrong: " + masterKey.length);
-        }
         if (context.length != KeyDerivation.CONTEXT_BYTES) {
             throw new IllegalArgumentException("Context length is wrong: " + context.length);
         }
