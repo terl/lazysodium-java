@@ -9,11 +9,15 @@
 package com.goterl.lazysodium;
 
 import com.goterl.lazysodium.interfaces.*;
+import com.goterl.lazysodium.utils.Base64Facade;
+import com.goterl.lazysodium.utils.Base64Java;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 import com.sun.jna.ptr.IntByReference;
 
 public class Sodium {
+
+    public static Base64Facade base64Facade = new Base64Java();
 
     protected Sodium() {
     }
@@ -23,7 +27,6 @@ public class Sodium {
             throw new IllegalStateException("Sodium library could not be initialised properly.");
         }
     }
-
 
     //// -------------------------------------------|
     //// HELPERS

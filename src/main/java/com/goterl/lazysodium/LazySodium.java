@@ -48,21 +48,22 @@ public abstract class LazySodium implements
     protected final Charset charset;
     protected final MessageEncoder messageEncoder;
 
-    public LazySodium(Charset charset, MessageEncoder messageEncoder) {
-        this.charset = charset;
-        this.messageEncoder = messageEncoder;
-    }
+    public static Base64Facade base64Facade;
 
     public LazySodium() {
         this(StandardCharsets.UTF_8, new HexMessageEncoder());
     }
-
     public LazySodium(Charset charset) {
         this(charset, new HexMessageEncoder());
     }
 
     public LazySodium(MessageEncoder messageEncoder) {
         this(StandardCharsets.UTF_8, messageEncoder);
+    }
+
+    public LazySodium(Charset charset, MessageEncoder messageEncoder) {
+        this.charset = charset;
+        this.messageEncoder = messageEncoder;
     }
 
     public static Integer longToInt(long lng) {

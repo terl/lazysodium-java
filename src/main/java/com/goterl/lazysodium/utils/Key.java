@@ -9,9 +9,10 @@
 package com.goterl.lazysodium.utils;
 
 import com.goterl.lazysodium.LazySodium;
+import com.goterl.lazysodium.Sodium;
 
 import java.nio.charset.Charset;
-import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 
 public class Key {
     private byte[] key;
@@ -33,7 +34,7 @@ public class Key {
     }
 
     public String getAsPlainString() {
-        return getAsPlainString(Charset.forName("UTF-8"));
+        return getAsPlainString(StandardCharsets.UTF_8);
     }
 
 
@@ -49,10 +50,28 @@ public class Key {
     /**
      * Create a Key from a base64 string.
      * @param base64String A base64 encoded string.
+     * @param base64Facade A base64 encoder for Java or Android.
+     * @return A new Key.
+     */
+    public static Key fromBase64String(String base64String, Base64Facade base64Facade) {
+        return new Key(base64Facade.decode(base64String));
+    }
+
+    /**
+     * Create a Key from a base64 string. Only use this
+     * if you have initialised Sodium.base64Facade either directly
+     * or via calling LazySodiumJava() or LazySodiumAndroid().
+     * @param base64String A base64 encoded string.
      * @return A new Key.
      */
     public static Key fromBase64String(String base64String) {
-        return new Key(Base64.getDecoder().decode(base64String));
+        if (Sodium.base64Facade == null) {
+            throw new IllegalStateException(
+                    "Sodium.base64Facade not initialised. " +
+                    "Call LazySodiumJava() or LazySodiumAndroid().");
+        } else {
+            return fromBase64String(base64String, Sodium.base64Facade);
+        }
     }
 
     /**
@@ -61,7 +80,7 @@ public class Key {
      * @return A new Key.
      */
     public static Key fromPlainString(String str) {
-        return new Key(str.getBytes(Charset.forName("UTF-8")));
+        return new Key(str.getBytes(StandardCharsets.UTF_8));
     }
 
     /**

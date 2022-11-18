@@ -8,20 +8,17 @@
 
 package com.goterl.lazysodium.utils;
 
-import com.goterl.lazysodium.Sodium;
-import com.goterl.lazysodium.interfaces.MessageEncoder;
-
 import java.util.Base64;
 
-public class Base64MessageEncoder implements MessageEncoder {
+public class Base64Java implements Base64Facade {
 
     @Override
     public String encode(byte[] cipher) {
-        return Sodium.base64Facade.encode(cipher);
+        return Base64.getEncoder().encodeToString(cipher);
     }
 
     @Override
     public byte[] decode(String cipherText) {
-        return Sodium.base64Facade.decode(cipherText);
+        return Base64.getDecoder().decode(cipherText);
     }
 }
