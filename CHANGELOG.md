@@ -1,1 +1,1 @@
-Please see the releases page on github https://github.com/terl/lazysodium-java/releases
+Please see the releases page on github https://github.com/sean-codevasp/code-sodium-java

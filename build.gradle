@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) Terl Tech Ltd • 14/06/19 17:54 • goterl.com
  *
@@ -7,20 +6,21 @@
  * file, you can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     id 'application'
     id 'java-library'
-    id 'maven'
     id 'maven-publish'
+    id 'com.vanniktech.maven.publish' version '0.29.0'
     id 'signing'
-    id 'biz.aQute.bnd.builder'
 }
 
 ext {
-    artifactId = "lazysodium-java"
-    groupId = "com.goterl"
-    version = '5.1.5'
-    description = "Lazysodium (Java) makes it effortless for Java " +
+    artifactId = "lazysodium-java-code"
+    groupId = "io.github.sean-codevasp"
+    version = '0.1.0'
+    description = "Lazy sodium (Java) makes it effortless for Java " +
             "developers to get started with Libsodium's cryptography."
 }
 
@@ -28,14 +28,13 @@ repositories {
     mavenCentral()
 }
 
-
 group project.ext.groupId
 version = project.ext.version
 
-mainClassName = "com.goterl.lazysodium.LazySodium"
+mainClassName = "com.codevasp.lazysodium.LazySodium"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+sourceCompatibility = 17
+targetCompatibility = 17
 
 sourceSets {
     main {
@@ -45,55 +44,66 @@ sourceSets {
     }
 }
 
-
-// Dependencies
-dependencies {
-    implementation 'net.java.dev.jna:jna:5.12.1'
-    implementation 'com.goterl:resource-loader:2.0.2'
-    implementation 'org.slf4j:slf4j-api:2.0.3'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
-}
-
-// Tasks
 signing {
-    // This will use the GPG Agent
-    // to sign the jar
-    useGpgCmd()
     sign publishing.publications
 }
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
+mavenPublishing {
+    signAllPublications()
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
+    coordinates("io.github.sean-codevasp", "lazysodium-java-code", "0.1.0")
 
+    // POM 설정
+    pom {
+        /**
+         name = '[라이브러리 이름]'
+         description = '[라이브러리 설명]'
+         url = '[오픈소스 Repository Url]'
+         */
+        name = 'lazysodium-java-code'
+        description = "Lazy sodium (Java) makes it effortless for Java " +
+                "developers to get started with Libsodium's cryptography."
+        url = '<https://github.com/sean-codevasp/lazysodium-java-code>'
 
-tasks.named('jar') {
-    manifest {
-        attributes('Automatic-Module-Name': 'com.goterl.lazysodium')
+        // 라이선스 정보
+        licenses {
+            license {
+                name = 'Mozilla Public License Version 2.0'
+                url = '<https://github.com/sean-codevasp/lazysodium-java-code/blob/master/LICENSE>'
+            }
+        }
+
+        // 개발자 정보
+        developers {
+            developer {
+                id = 'sean-codevasp'
+                name = 'Seonghoon Ju'
+                email = 'sean.ju@codevasp.com'
+            }
+        }
+
+        /**
+         connection = 'scm:git:github.com/[Github 사용자명]/[오픈소스 Repository 이름].git'
+         developerConnection = 'scm:git:ssh://github.com/[Github 사용자명]/[오픈소스 Repository 이름].git'
+         url = '<https://github.com/>[Github 사용자명]/[오픈소스 Repository 이름]/tree/[배포 브랜치명]'
+         */
+        scm {
+            connection = 'scm:git:github.com/sean-codevasp/lazysodium-java-code.git'
+            developerConnection = 'scm:git:ssh://github.com/sean-codevasp/lazysodium-java-code.git'
+            url = '<https://github.com/sean-codevasp/lazysodium-java-code/tree/master>'
+        }
     }
 }
 
+// Dependencies
+dependencies {
+    implementation 'net.java.dev.jna:jna:5.14.0'
+    implementation 'org.slf4j:slf4j-api:2.0.16'
+    implementation 'org.slf4j:slf4j-simple:2.0.16'
 
-task signPom(type: Sign) {
-    sign project.file("$buildDir/publications/mavenJava/pom-default.xml")
-
-    // The signing plugin does not seem to notice
-    // it when the publications folder with the
-    // signature has been deleted. So we always
-    // create a new signature
-    outputs.upToDateWhen { false }
-}
-
-
-artifacts {
-    archives sourcesJar, javadocJar
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.3'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.3'
 }
 
 void loadProps() {
@@ -111,95 +121,12 @@ void loadProps() {
 
 loadProps()
 
-// Return an empty string if a property
-// cannot be found
-String getProp(String propName) {
-    if (ext.hasProperty(propName) != null) {
-        return ext[propName]
-    } else {
-        return ""
-    }
-}
-
-String getSonatypeUserName() {
-    return findProperty("ossrhUsername")
-}
-
-String getSonatypePassword() {
-    return findProperty("ossrhPassword")
-}
-
-Closure createPomClosure = {
-    def root = asNode()
-    root.appendNode('description', project.ext.description)
-    root.appendNode('name', project.ext.artifactId)
-    root.appendNode('url', 'https://github.com/terl/lazysodium-java')
-
-    def scm = root.appendNode('scm')
-    scm.appendNode("connection", "scm:git:git://github.com/terl/lazysodium-java.git")
-    scm.appendNode("developerConnection", "scm:git:ssh://github.com/terl/lazysodium-java")
-    scm.appendNode("url", "http://github.com/terl/lazysodium-java")
-
-    def license = root.appendNode('licenses').appendNode('license')
-    license.appendNode('name', 'Mozilla Public License, Version 2.0')
-    license.appendNode('url', 'http://www.mozilla.org/MPL/2.0/index.txt')
-    license.appendNode('distribution', 'repo')
-
-    def developer = root.appendNode('developers').appendNode('developer')
-    developer.appendNode('name', 'Terl Tech Ltd')
-    developer.appendNode('email', 'hello@terl.co')
-}
-
-publishing {
-    publications {
-        snapshot(MavenPublication) {
-            from components.java
-            groupId project.ext.groupId
-            artifactId project.ext.artifactId
-            version project.ext.version + "-SNAPSHOT"
-            artifact sourcesJar
-            artifact javadocJar
-
-            pom.withXml createPomClosure
-        }
-        release(MavenPublication) {
-            from components.java
-            groupId project.ext.groupId
-            artifactId project.ext.artifactId
-            version project.ext.version
-            artifact sourcesJar
-            artifact javadocJar
-
-            pom.withXml createPomClosure
-        }
-    }
-
-    repositories {
-        maven {
-            name = "release"
-            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            credentials {
-                username getSonatypeUserName()
-                password getSonatypePassword()
-            }
-        }
-        maven {
-            name = "snapshot"
-            url = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
-            credentials {
-                username getSonatypeUserName()
-                password getSonatypePassword()
-            }
-        }
-    }
-}
-
 // Force character encoding in case the workspace was not set up correctly
-tasks.withType(Javadoc) {
+tasks.withType(Javadoc).configureEach {
     options.encoding = 'UTF-8'
 }
 
-tasks.withType(Test) {
+tasks.withType(Test).configureEach {
     // a collection to track failedTests
     ext.failedTests = []
 
@@ -222,4 +149,8 @@ tasks.withType(Test) {
             }
         }
     }
+}
+
+tasks.withType(Copy).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
