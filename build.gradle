@@ -108,8 +108,7 @@ tasks.withType(Jar).configureEach {
 dependencies {
     implementation 'net.java.dev.jna:jna:5.14.0'
     implementation 'org.slf4j:slf4j-api:2.0.16'
-    implementation 'org.slf4j:slf4j-simple:2.0.16'
-
+    testImplementation 'org.slf4j:slf4j-simple:2.0.16'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.10.3'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.10.3'
 }
