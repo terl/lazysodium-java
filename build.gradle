@@ -96,6 +96,14 @@ mavenPublishing {
     }
 }
 
+tasks.withType(Copy).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.withType(Jar).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
 // Dependencies
 dependencies {
     implementation 'net.java.dev.jna:jna:5.14.0'
@@ -149,8 +157,4 @@ tasks.withType(Test).configureEach {
             }
         }
     }
-}
-
-tasks.withType(Copy).configureEach {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
