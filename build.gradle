@@ -19,7 +19,7 @@ plugins {
 ext {
     artifactId = "lazysodium-java-code"
     groupId = "io.github.sean-codevasp"
-    version = '0.1.0'
+    version = '0.1.1'
     description = "Lazy sodium (Java) makes it effortless for Java " +
             "developers to get started with Libsodium's cryptography."
 }
@@ -52,21 +52,14 @@ mavenPublishing {
     signAllPublications()
     publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
 
-    coordinates("io.github.sean-codevasp", "lazysodium-java-code", "0.1.0")
+    coordinates("io.github.sean-codevasp", "lazysodium-java-code", "0.1.1")
 
-    // POM 설정
     pom {
-        /**
-         name = '[라이브러리 이름]'
-         description = '[라이브러리 설명]'
-         url = '[오픈소스 Repository Url]'
-         */
         name = 'lazysodium-java-code'
         description = "Lazy sodium (Java) makes it effortless for Java " +
                 "developers to get started with Libsodium's cryptography."
         url = '<https://github.com/sean-codevasp/lazysodium-java-code>'
 
-        // 라이선스 정보
         licenses {
             license {
                 name = 'Mozilla Public License Version 2.0'
@@ -74,7 +67,6 @@ mavenPublishing {
             }
         }
 
-        // 개발자 정보
         developers {
             developer {
                 id = 'sean-codevasp'
@@ -83,11 +75,6 @@ mavenPublishing {
             }
         }
 
-        /**
-         connection = 'scm:git:github.com/[Github 사용자명]/[오픈소스 Repository 이름].git'
-         developerConnection = 'scm:git:ssh://github.com/[Github 사용자명]/[오픈소스 Repository 이름].git'
-         url = '<https://github.com/>[Github 사용자명]/[오픈소스 Repository 이름]/tree/[배포 브랜치명]'
-         */
         scm {
             connection = 'scm:git:github.com/sean-codevasp/lazysodium-java-code.git'
             developerConnection = 'scm:git:ssh://github.com/sean-codevasp/lazysodium-java-code.git'
