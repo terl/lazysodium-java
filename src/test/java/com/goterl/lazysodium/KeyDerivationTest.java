@@ -110,18 +110,18 @@ public class KeyDerivationTest extends BaseTest {
     @Test
     public void doesntAllowShortKeys() {
         assertThrows(IllegalArgumentException.class, () -> {
-            byte[] masterKey = generateKeyOfAnyLength(KeyDerivation.MASTER_KEY_BYTES - 5);
-            byte[] out = makeValidOut();
-            keyDerivation.cryptoKdfDeriveFromKey(out, out.length, 1L, VALID_CONTEXT, masterKey);
+            byte[] masterKey = generateKeyOfAnyLength(KeyDerivation.MASTER_KEY_BYTES);
+            byte[] invalidLengthOut = new byte[2];
+            keyDerivation.cryptoKdfDeriveFromKey(invalidLengthOut, invalidLengthOut.length, 1L, VALID_CONTEXT, masterKey);
         });
     }
 
     @Test
     public void doesntAllowLongKeys() {
         assertThrows(IllegalArgumentException.class, () -> {
-            byte[] masterKey = generateKeyOfAnyLength(KeyDerivation.MASTER_KEY_BYTES + 5);
-            byte[] out = makeValidOut();
-            keyDerivation.cryptoKdfDeriveFromKey(out, out.length, 1L, VALID_CONTEXT, masterKey);
+            byte[] masterKey = generateKeyOfAnyLength(KeyDerivation.MASTER_KEY_BYTES);
+            byte[] invalidLengthOut = new byte[200];
+            keyDerivation.cryptoKdfDeriveFromKey(invalidLengthOut, invalidLengthOut.length, 1L, VALID_CONTEXT, masterKey);
         });
     }
 
