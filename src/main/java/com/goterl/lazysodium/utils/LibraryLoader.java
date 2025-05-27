@@ -38,10 +38,10 @@ public final class LibraryLoader {
     public enum Mode {
 
         /**
-         * Try to load the system sodium first, if that fails — load the bundled version.
+         * Try to load the system installed native sodium library first, if that fails, then load the bundled version.
          *
          * <p>This is the recommended mode, because it allows the clients to upgrade the sodium library
-         * as soon as it is available instead of waiting for lazysodium release and releasing a new version of
+         * as soon as it is available instead of waiting for another lazysodium release and releasing a new version of
          * the client library/application.
          */
         PREFER_SYSTEM,
