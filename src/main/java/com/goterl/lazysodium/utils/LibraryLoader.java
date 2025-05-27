@@ -149,14 +149,14 @@ public final class LibraryLoader {
         }
         if (Platform.isMac()) {
             // check for Apple Silicon
-            if(Platform.isARM()) {
-                return getPath("mac/aarch64", "libsodium.dylib");
+            if (Platform.isARM()) {
+                return getPath("mac_arm", "libsodium.dylib");
             } else {
-                return getPath("mac/intel", "libsodium.dylib");
+                return getPath("mac", "libsodium.dylib");
             }
         }
         if (Platform.isARM()) {
-            if(is64Bit) {
+            if (is64Bit) {
                 return getPath("arm64", "libsodium.so");
             } else {
                 return getPath("armv6", "libsodium.so");
