@@ -67,5 +67,5 @@ jobs:
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
         if: env.WORKFLOW_CONCLUSION == 'success'
       - name: Publish
-        run: ./gradlew publishSnapshotPublicationToSnapshotRepository -Psigning.gnupg.keyName="${{ secrets.GPG_SIGNING_SUBKEY_ID }}" -Psigning.password="${{ secrets.GPG_PASSPHRASE }}" -PossrhUsername="terl" -PossrhPassword="${{ secrets.SONATYPE_PASSWORD }}"
+        run: ./gradlew publishSnapshotPublicationToSnapshotRepository -Psigning.gnupg.keyName="${{ secrets.GPG_SIGNING_SUBKEY_ID }}" -Psigning.password="${{ secrets.GPG_PASSPHRASE }}" -PossrhUsername="${{ secrets.SONATYPE_USER }}" -PossrhPassword="${{ secrets.SONATYPE_PASSWORD }}"
         if: env.WORKFLOW_CONCLUSION == 'success'
