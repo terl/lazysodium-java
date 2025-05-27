@@ -70,17 +70,20 @@ signing {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
+    setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     archiveClassifier = 'sources'
     from sourceSets.main.allSource
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
+    setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     archiveClassifier = 'javadoc'
     from javadoc.destinationDir
 }
 
 
 tasks.named('jar') {
+    setDuplicatesStrategy(DuplicatesStrategy.EXCLUDE)
     manifest {
         attributes('Automatic-Module-Name': 'com.goterl.lazysodium')
     }
