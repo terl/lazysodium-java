@@ -18,7 +18,7 @@ plugins {
 ext {
     artifactId = "lazysodium-java"
     groupId = "com.goterl"
-    version = '5.1.5'
+    version = '5.2.0'
     description = "Lazysodium (Java) makes it effortless for Java " +
             "developers to get started with Libsodium's cryptography."
 }
@@ -186,7 +186,7 @@ publishing {
     repositories {
         maven {
             name = "release"
-            url = "https://ossrh-staging-api.central.sonatype.com/service/local/"
+            url = "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/"
             credentials {
                 username getSonatypeUserName()
                 password getSonatypePassword()
