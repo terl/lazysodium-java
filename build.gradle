@@ -11,6 +11,7 @@ plugins {
     id 'application'
     id 'java-library'
     id 'maven-publish'
+    id 'org.jreleaser' version '1.18.0'
     id 'signing'
     id 'biz.aQute.bnd.builder'
 }
@@ -91,7 +92,7 @@ tasks.named('jar') {
 
 
 task signPom(type: Sign) {
-    sign project.file("$buildDir/publications/mavenJava/pom-default.xml")
+    sign project.file("$buildDir/publications/release/pom-default.xml")
 
     // The signing plugin does not seem to notice
     // it when the publications folder with the
@@ -159,19 +160,59 @@ Closure createPomClosure = {
     developer.appendNode('email', 'hello@terl.co')
 }
 
+jreleaser {
+    signing {
+        active = 'ALWAYS'
+        mode = 'FILE'
+        armored = true
+        verify = true
+        passphrase = findProperty("signing.password")
+        publicKey = findProperty("key.public.path")
+        secretKey = findProperty("key.private.path")
+    }
+    release {
+        github {
+            token = findProperty("github.token")
+            repoOwner = "terl"
+            host = 'github.com'
+            username = 'gurpreet-'
+            branch = 'master'
+        }
+    }
+    deploy {
+        maven {
+            mavenCentral {
+                'release-deploy' {
+                    active = 'RELEASE'
+                    url = 'https://central.sonatype.com/api/v1/publisher'
+                    applyMavenCentralRules = true
+                    stagingRepository('build/staging-deploy')
+                    username = getSonatypeUserName()
+                    password = getSonatypePassword()
+                    namespace = 'com.goterl'
+                }
+            }
+            nexus2 {
+                'snapshot-deploy' {
+                    active = 'SNAPSHOT'
+                    url = 'https://central.sonatype.com/repository/maven-snapshots'
+                    snapshotUrl = 'https://central.sonatype.com/repository/maven-snapshots'
+                    applyMavenCentralRules = true
+                    snapshotSupported = true
+                    closeRepository = true
+                    releaseRepository = true
+                    stagingRepository('build/staging-deploy')
+                    username = getSonatypeUserName()
+                    password = getSonatypePassword()
+                }
+            }
+        }
+    }
+}
+
 publishing {
     publications {
-        snapshot(MavenPublication) {
-            from components.java
-            groupId project.ext.groupId
-            artifactId project.ext.artifactId
-            version project.ext.version + "-SNAPSHOT"
-            artifact sourcesJar
-            artifact javadocJar
-
-            pom.withXml createPomClosure
-        }
-        release(MavenPublication) {
+        maven(MavenPublication) {
             from components.java
             groupId project.ext.groupId
             artifactId project.ext.artifactId
@@ -182,23 +223,9 @@ publishing {
             pom.withXml createPomClosure
         }
     }
-
     repositories {
         maven {
-            name = "release"
-            url = "https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/"
-            credentials {
-                username getSonatypeUserName()
-                password getSonatypePassword()
-            }
-        }
-        maven {
-            name = "snapshot"
-            url = "https://central.sonatype.com/repository/maven-snapshots/"
-            credentials {
-                username getSonatypeUserName()
-                password getSonatypePassword()
-            }
+            url = layout.buildDirectory.dir('staging-deploy')
         }
     }
 }
